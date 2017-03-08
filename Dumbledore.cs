@@ -9,6 +9,9 @@ namespace ItsMagic
 {
     static class Dumbledore
     {
+        private static string itemGroup;
+        private static string packagesTag;
+
         public static void UpdateProjectReferenceWithNugetReference(string csProjFileToUpdate, CsProj projectReferenceToRemove,
             NugetPackageReference referenceToAdd)
         {

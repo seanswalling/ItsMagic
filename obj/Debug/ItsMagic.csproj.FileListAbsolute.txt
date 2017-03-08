@@ -1,2 +1,6 @@
 C:\source\ItsMagic\bin\Debug\ItsMagic.exe.config
 C:\source\ItsMagic\obj\Debug\ItsMagic.csprojResolveAssemblyReference.cache
+C:\source\ItsMagic\bin\Debug\ItsMagic.exe
+C:\source\ItsMagic\bin\Debug\ItsMagic.pdb
+C:\source\ItsMagic\obj\Debug\ItsMagic.exe
+C:\source\ItsMagic\obj\Debug\ItsMagic.pdb
