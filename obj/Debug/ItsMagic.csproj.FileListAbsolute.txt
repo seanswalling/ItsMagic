@@ -1,1 +1,2 @@
 C:\source\ItsMagic\bin\Debug\ItsMagic.exe.config
+C:\source\ItsMagic\obj\Debug\ItsMagic.csprojResolveAssemblyReference.cache
