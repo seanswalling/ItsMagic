@@ -14,20 +14,27 @@ namespace ItsMagic
         public string TargetFrameworkVersion { get; set; }
         public string [] NugetPackageReferences { get; set; }
         public CsProj [] ProjectReferences { get; set; }
-        public IEnumerable<CsFile> CsFiles { get; set; }
+        //public IEnumerable<CsFile> CsFiles { get; set; }
 
         public CsProj(string path)
         {
             Path = path;
-            CsFiles = GetCsFiles(path);
+            //CsFiles = GetCsFiles(path);
         }
 
-        public static IEnumerable<CsFile> GetCsFiles(string CsProjPath)
+        //private static IEnumerable<CsFile> GetCsFiles(string CsProjPath)
+        //{
+        //    var dir = System.IO.Path.GetDirectoryName(CsProjPath);
+        //    return RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, CsProjPath)
+        //            .Select(CsFileRelPath => System.IO.Path.Combine(dir, CsFileRelPath))
+        //            .Select(CsFilePath => new CsFile(CsFilePath));
+        //}
+
+        public static IEnumerable<string> GetCsFiles(string CsProjPath)
         {
             var dir = System.IO.Path.GetDirectoryName(CsProjPath);
             return RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, CsProjPath)
-                    .Select(CsFileRelPath => System.IO.Path.Combine(dir, CsFileRelPath))
-                    .Select(CsFilePath => new CsFile(CsProjPath));
+                    .Select(CsFileRelPath => System.IO.Path.Combine(dir, CsFileRelPath));
         }
     }
 }

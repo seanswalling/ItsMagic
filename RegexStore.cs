@@ -11,6 +11,7 @@ namespace ItsMagic
         public const string PackagesTag = "<packages>";
         public const string CsFilesFromCsProjPattern = "(?:<Compile Include=\\\")(?<capturegroup>(?:(?:\\w+)\\\\*(?:\\w+))*\\.cs)(?:\\\" \\/>)";
         public const string CsProjFromSlnPattern = "Project(.*) = .*, \"(?<capturegroup>.*\\.csproj)\", \".*\"";
+        public const string UsingsFromCsFilePattern = "using (?<capturegroup>(\\w+\\.*)*);";
 
         public static IEnumerable<string> Get(string pattern, string file)
         {

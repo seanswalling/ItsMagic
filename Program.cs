@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace ItsMagic
 {
@@ -7,11 +8,17 @@ namespace ItsMagic
         static void Main()
         {
             //var csFiles = Dumbledore.GetSlnFiles(@"C:\source\Mercury\src").SelectMany(Dumbledore.GetCsProjs);
-            var csFiles = Dumbledore.GetSlnFiles(@"E:\github\cc\Mercury");
-            foreach(CsFile csFile in csFiles)
+            var UsingStatements = Dumbledore.GetSlnFiles(@"E:\Users\illus\Leisure\C#")
+                .SelectMany(SlnFile.GetCsProjs)
+                .SelectMany(CsProj.GetCsFiles)
+                .SelectMany(CsFile.Usings)
+                .Distinct()
+                .OrderBy(i => i);
+            foreach(string statement in UsingStatements)
             {
-                CsFile 
+                Console.WriteLine(statement);
             }
+            Console.ReadLine();
         }
     }
 }

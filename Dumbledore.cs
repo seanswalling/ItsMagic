@@ -76,11 +76,14 @@ namespace ItsMagic
             }
         }
 
-        public static IEnumerable<SlnFile> GetSlnFiles(string projectDirectory)
+        //public static IEnumerable<SlnFile> GetSlnFiles(string projectDirectory)
+        //{
+        //    return Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories)
+        //                .Select(slnPath => new SlnFile(slnPath));
+        //}      
+        public static IEnumerable<string> GetSlnFiles(string projectDirectory)
         {
-            return Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories)
-                        .Select(slnPath => new SlnFile(slnPath));
-        }      
-
+            return Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories);
+        }
     }
 }

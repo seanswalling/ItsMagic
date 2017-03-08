@@ -9,20 +9,27 @@ namespace ItsMagic
     class SlnFile
     {
         public string Path {get; private set;}
-        public IEnumerable<CsProj> CsProjs { get; set; }
+        //public IEnumerable<CsProj> CsProjs { get; set; }
 
         public SlnFile(string path)
         {
             Path = path;
-            CsProjs = GetCsProjs(path);
+            //CsProjs = GetCsProjs(path);
         }
 
-        public static IEnumerable<CsProj> GetCsProjs(string slnPath)
+        //public static IEnumerable<CsProj> GetCsProjs(string slnPath)
+        //{
+        //    var dir = System.IO.Path.GetDirectoryName(slnPath);
+        //    return RegexStore.Get(RegexStore.CsProjFromSlnPattern,slnPath)
+        //        .Select(CsProjRelPath => System.IO.Path.Combine(dir, CsProjRelPath))
+        //        .Select(CsProjFilePath => new CsProj(CsProjFilePath));
+        //}
+
+        public static IEnumerable<string> GetCsProjs(string slnPath)
         {
             var dir = System.IO.Path.GetDirectoryName(slnPath);
-            return RegexStore.Get(RegexStore.CsProjFromSlnPattern,slnPath)
-                .Select(CsProjRelPath => System.IO.Path.Combine(dir, CsProjRelPath))
-                .Select(CsProjFilePath => new CsProj(CsProjFilePath));
+            return RegexStore.Get(RegexStore.CsProjFromSlnPattern, slnPath)
+                .Select(CsProjRelPath => System.IO.Path.Combine(dir, CsProjRelPath));
         }
     }
 }
