@@ -7,17 +7,18 @@ namespace ItsMagic
     {
         static void Main()
         {
-            //var csFiles = Dumbledore.GetSlnFiles(@"C:\source\Mercury\src").SelectMany(Dumbledore.GetCsProjs);
-            var UsingStatements = Dumbledore.GetSlnFiles(@"E:\Users\illus\Leisure\C#")
+            var getStuff = Dumbledore.GetFiles(@"C:\source\Mercury\src","sln")//.SelectMany(Dumbledore.GetCsProjs);
+            //var UsingStatements = Dumbledore.GetFiles(@"E:\Users\illus\Leisure\C#", "sln")
                 .SelectMany(SlnFile.GetCsProjs)
                 .SelectMany(CsProj.GetCsFiles)
                 .SelectMany(CsFile.Usings)
                 .Distinct()
                 .OrderBy(i => i);
-            foreach(string statement in UsingStatements)
+            foreach(string stuff in getStuff)
             {
-                Console.WriteLine(statement);
+                Console.WriteLine(stuff);
             }
+            Console.WriteLine("\nComplete");
             Console.ReadLine();
         }
     }

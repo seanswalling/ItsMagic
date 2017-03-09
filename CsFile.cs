@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace ItsMagic
@@ -15,9 +16,10 @@ namespace ItsMagic
             //Usings = GetUsings(path);
         }
 
-        public static IEnumerable<string> Usings(string CsFilePath)
+        public static IEnumerable<string> Usings(string csFilePath)
         {
-            return RegexStore.Get(RegexStore.UsingsFromCsFilePattern, CsFilePath);
+            Console.WriteLine("Get Using Statements for: " + csFilePath);
+            return RegexStore.Get(RegexStore.UsingsFromCsFilePattern, csFilePath);
         }
     }
 }

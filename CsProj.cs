@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -30,11 +31,12 @@ namespace ItsMagic
         //            .Select(CsFilePath => new CsFile(CsFilePath));
         //}
 
-        public static IEnumerable<string> GetCsFiles(string CsProjPath)
+        public static IEnumerable<string> GetCsFiles(string csProjPath)
         {
-            var dir = System.IO.Path.GetDirectoryName(CsProjPath);
-            return RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, CsProjPath)
-                    .Select(CsFileRelPath => System.IO.Path.Combine(dir, CsFileRelPath));
+            Console.WriteLine("Get Cs Files for: "+csProjPath);
+            var dir = System.IO.Path.GetDirectoryName(csProjPath);
+            return RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, csProjPath)
+                    .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath));
         }
     }
 }

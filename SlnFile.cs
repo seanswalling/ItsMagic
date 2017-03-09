@@ -27,9 +27,10 @@ namespace ItsMagic
 
         public static IEnumerable<string> GetCsProjs(string slnPath)
         {
+            Console.WriteLine("Get Csproj Files for: " + slnPath);
             var dir = System.IO.Path.GetDirectoryName(slnPath);
             return RegexStore.Get(RegexStore.CsProjFromSlnPattern, slnPath)
-                .Select(CsProjRelPath => System.IO.Path.Combine(dir, CsProjRelPath));
+                .Select(csProjRelPath => System.IO.Path.Combine(dir, csProjRelPath));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -15,7 +16,7 @@ namespace ItsMagic
         {
             RemoveReference(toUpdate, reference);
             AddNugetReference(toUpdate, reference);
-            reformatXML(toUpdate.Path);
+            ReformatXml(toUpdate.Path);
         }
 
         public static void RemoveReference(CsProj csProj, ProjectReference reference)
@@ -45,7 +46,7 @@ namespace ItsMagic
             var packagesText = File.ReadAllText(packages);
             packagesText = Regex.Replace(packagesText, RegexStore.PackagesTag + reference.PackagesRef, 1);
             File.WriteAllText(packages, packagesText);
-            reformatXML(packages);
+            ReformatXml(packages);
         }
 
         #region Abstract Later
@@ -66,7 +67,7 @@ namespace ItsMagic
         } 
         #endregion
 
-        private static void reformatXML(string file)
+        private static void ReformatXml(string file)
         {
             var doc = XDocument.Load(file);
             using (XmlTextWriter writer = new XmlTextWriter(file, System.Text.Encoding.UTF8))
@@ -76,14 +77,25 @@ namespace ItsMagic
             }
         }
 
-        //public static IEnumerable<SlnFile> GetSlnFiles(string projectDirectory)
+        //public static IEnumerable<SlnFile> GetFiles(string projectDirectory)
         //{
         //    return Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories)
         //                .Select(slnPath => new SlnFile(slnPath));
         //}      
-        public static IEnumerable<string> GetSlnFiles(string projectDirectory)
+        public static IEnumerable<string> GetFiles(string projectDirectory, string extension)
         {
-            return Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories);
+            return Directory.EnumerateFiles(projectDirectory, "*."+extension, SearchOption.AllDirectories);
+        }
+
+        public static IEnumerable<string> ReadLines(string file)
+        {
+            using(var reader = new StreamReader(file))
+            {
+                while (!reader.EndOfStream)
+                {
+                    yield return reader.ReadLine();
+                }
+            }
         }
     }
 }
