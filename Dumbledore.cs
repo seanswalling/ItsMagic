@@ -109,7 +109,7 @@ namespace ItsMagic
             foreach (string csFile in filteredCollection)
             {
                 CsFile.AddUsingToCsFile(csFile, "Mercury.Core.JsonExtensions");
-                //CsProj.AddReferenceToCsProj(csFile, "");
+                CsProj.AddProjectReference(csFile, "");
                 //SlnFile.AddCsProjToSolution(csFile, "");
             }
         }
