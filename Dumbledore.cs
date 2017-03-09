@@ -89,12 +89,25 @@ namespace ItsMagic
 
         public static IEnumerable<string> ReadLines(string file)
         {
-            using(var reader = new StreamReader(file))
+            if (File.Exists(file))
             {
-                while (!reader.EndOfStream)
+                using (var reader = new StreamReader(file))
                 {
-                    yield return reader.ReadLine();
+                    while (!reader.EndOfStream)
+                    {
+                        yield return reader.ReadLine();
+                    }
                 }
+            }
+        }
+
+        public static void AddMissingReferencesTo(IEnumerable<string> csFiles)
+        {
+            foreach (string csFile in csFiles.Where(CsFile.HasEvidenceOfJExt))
+            {
+                csFile.AddUsingToCsFile()
+                    .AddReferenceToCsProj()
+                    .AddCsProjToSolution();
             }
         }
     }
