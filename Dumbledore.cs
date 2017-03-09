@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -103,11 +104,13 @@ namespace ItsMagic
 
         public static void AddMissingReferencesTo(IEnumerable<string> csFiles)
         {
-            foreach (string csFile in csFiles.Where(CsFile.HasEvidenceOfJExt))
+            var collection = csFiles;
+            var filteredCollection = collection.Where(CsFile.HasEvidenceOfJExt);
+            foreach (string csFile in filteredCollection)
             {
-                csFile.AddUsingToCsFile()
-                    .AddReferenceToCsProj()
-                    .AddCsProjToSolution();
+                CsFile.AddUsingToCsFile(csFile, "Mercury.Core.JsonExtensions");
+                //CsProj.AddReferenceToCsProj(csFile, "");
+                //SlnFile.AddCsProjToSolution(csFile, "");
             }
         }
     }

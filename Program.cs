@@ -8,7 +8,7 @@ namespace ItsMagic
     {
         static void Main()
         {
-            Dumbledore.AddMissingReferencesTo(CsProj.GetCsFiles(@"C:\source\Mercury\src\Terminal\Terminal\Terminal.csproj"));
+            Dumbledore.AddMissingReferencesTo(Dumbledore.GetFiles(@"C:\source\Mercury\src\Common\Contracts.Tests\Scenarios", "cs"));
         }
 
         private void testingStuff()

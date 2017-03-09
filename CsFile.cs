@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace ItsMagic
 {
@@ -36,13 +35,21 @@ namespace ItsMagic
 
         public static bool HasEvidenceOfJExt(string csFile)
         {
-            var fileLines = CsFile.GetLines(csFile).ToArray();
-            return fileLines.Contains(".JsonCopy()")
-                   || fileLines.Contains(".ToBson()")
-                   || fileLines.Contains("SettingsFactory.Build()")
-                   || fileLines.Contains("DateSerializer")
-                   || fileLines.Contains("RequiredPropertyContractResolver")
-                   || fileLines.Contains(".FromBson()");
+            var csFileText = File.ReadAllText(csFile);
+            return (csFileText.Contains(".JsonCopy()")
+                   || csFileText.Contains(".ToBson()")
+                   || csFileText.Contains("SettingsFactory.Build()")
+                   || csFileText.Contains("DateSerializer")
+                   || csFileText.Contains("RequiredPropertyContractResolver")
+                   || csFileText.Contains(".FromBson()"))
+                   && !csFileText.Contains("using Mercury.Core.JsonExtentions");
+        }
+
+        public static void AddUsingToCsFile(string csFile, string reference)
+        {
+            var csFileText = File.ReadAllText(csFile);
+            csFileText = "using " + reference + "\n" + csFileText;
+            File.WriteAllText(csFile,csFileText);
         }
     }
 }
