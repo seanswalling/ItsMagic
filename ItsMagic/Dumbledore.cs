@@ -9,7 +9,7 @@ using System.Xml.Linq;
 
 namespace ItsMagic
 {
-    static class Dumbledore
+    public static class Dumbledore
     {
 
         public static void UpdateProjectReferenceWithNugetReference(CsProj toUpdate, ProjectReference reference,

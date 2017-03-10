@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace ItsMagic
 {
-    class CsProj
+    public class CsProj
     {
         public string Path { get; private set; }
         public string Guid { get; set; }
@@ -72,6 +72,25 @@ namespace ItsMagic
                 writer.Formatting = Formatting.Indented;
                 doc.Save(writer);
             }
+        }
+
+        public static bool ContainsJExtProjectReference(string csProj)
+        {
+            return File.ReadAllText(csProj).Contains("<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>");
+        }
+
+        public static void AddJExtProjectReference(string csProj)
+        {
+            var regex = new Regex(RegexStore.ItemGroupTag);
+            var csProjText = File.ReadAllText(csProj);
+
+            csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
+                                                   "<ProjectReference Include=\"..\\..\\Platform\\Mercury.Core.JsonExtensions\\Mercury.Core.JsonExtensions.csproj\">" +
+                                                   "<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>" +
+                                                   "<Name>Mercury.Core.JsonExtensions</Name>" +
+                                                   "</ProjectReference>", 1);
+            File.WriteAllText(csProj, csProjText);
+            ReformatXml(csProj);
         }
     }
 }

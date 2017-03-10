@@ -42,7 +42,7 @@ namespace ItsMagic
                    || csFileText.Contains("DateSerializer")
                    || csFileText.Contains("RequiredPropertyContractResolver")
                    || csFileText.Contains(".FromBson()"))
-                   && !csFileText.Contains("using Mercury.Core.JsonExtentions");
+                   && !csFileText.Contains("using Mercury.Core.JsonExtensions");
         }
 
         public static void AddUsingToCsFile(string csFile, string reference)

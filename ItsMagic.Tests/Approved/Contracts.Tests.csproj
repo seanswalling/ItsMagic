@@ -1,0 +1,437 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5782F1EA-01B5-475A-A4BD-759D4D58779C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mercury.Contracts.Tests</RootNamespace>
+    <AssemblyName>Mercury.Contracts.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>612, 618</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ApprovalTests">
+      <HintPath>..\..\packages\ApprovalTests.3.0.13\lib\net40\ApprovalTests.dll</HintPath>
+    </Reference>
+    <Reference Include="ApprovalUtilities">
+      <HintPath>..\..\packages\ApprovalUtilities.3.0.13\lib\net45\ApprovalUtilities.dll</HintPath>
+    </Reference>
+    <Reference Include="ApprovalUtilities.Net45">
+      <HintPath>..\..\packages\ApprovalUtilities.3.0.13\lib\net45\ApprovalUtilities.Net45.dll</HintPath>
+    </Reference>
+    <Reference Include="AssertExLib">
+      <HintPath>..\..\packages\AssertEx.1.0.0\lib\net45\AssertExLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac, Version=3.4.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="ExpectedObjects, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\ExpectedObjects.1.2.1\lib\net40\ExpectedObjects.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\..\packages\NSubstitute.1.9.1.0\lib\net45\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture, Version=3.30.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\AutoFixture.3.30.0\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\packages\xunit.extensions.1.9.2\lib\net20\xunit.extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ManualDeclineAssessmentReasonTests.cs" />
+    <Compile Include="AustralianStateExtensionsFixture.cs" />
+    <Compile Include="Banking\Events\BankAccountEventBaseFixture.cs" />
+    <Compile Include="Banking\FinancialInstitutionFixture.cs" />
+    <Compile Include="BankStatements\CategoryMappingTest.cs" />
+    <Compile Include="CashAdvanceRating\LoanMetricsFixture.cs" />
+    <Compile Include="Events\EventNamespaceFixture.cs" />
+    <Compile Include="Events\InStoreLoanApplications\ExpenditureDetailsSetFixture.cs" />
+    <Compile Include="ExpenditureSourceExFixture.cs" />
+    <Compile Include="Extensions\IncomeDetailsSetEx.cs" />
+    <Compile Include="ObjectMothers\AlternativeContactObjectMother.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_AddMissingBankStatementCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_RemoveMissingBankStatementCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_RequestMissingBankStatementFromApplicantCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_UpdateManualAssessmentCurrentScreenCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_DeclineAssessmentPartIXFailedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_MissingBankStatementsRequestedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_UpdateMissingReviewerDocumentsCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_MissingBankStatementAddedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_MissingBankStatementRemovedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_MissingReviewerDocumentsUpdatedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_FinancialDetailsUpdatedEvent.cs" />
+    <Compile Include="ObjectMothers\PresumptionOfHardshipObjectMother.cs" />
+    <Compile Include="ObjectMothers\CentrelinkStatementEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\BankStatements\BankStatementObjectMother_AssessableTransactionGroup.cs" />
+    <Compile Include="ObjectMothers\BankStatements\BankStatementObjectMother_KnownBankStatements.cs" />
+    <Compile Include="ObjectMothers\BankStatements\BankStatementObjectMother_IncomeAndExpenditureSummary.cs" />
+    <Compile Include="ObjectMothers\BankStatements\BankStatementObjectMother_BankStatementTransactionGroup.cs" />
+    <Compile Include="ObjectMothers\BankStatements\BankStatementObjectMother_BankStatementTransaction.cs" />
+    <Compile Include="ObjectMothers\BankStatements\BankStatementEventObjectMother_Events_BankStatementRetrievedEvent.cs" />
+    <Compile Include="ObjectMothers\BankStatements\BankStatementObjectMother_BankStatement.cs" />
+    <Compile Include="ObjectMothers\BankStatements\BankStatementObjectMother_VerifiedAnalysis.cs" />
+    <Compile Include="ObjectMothers\CommandPostprocessComposerExtensions.cs" />
+    <Compile Include="ObjectMothers\ContractsObjectMother_DocumentSummary.cs" />
+    <Compile Include="ObjectMothers\ContractsObjectMother_IdentificationDetailsSource.cs" />
+    <Compile Include="ObjectMothers\ApplicantChecks\ApplicantCheckObjectMother_Events_ApplicantIdentificationCheckFailedEvent.cs" />
+    <Compile Include="ObjectMothers\ApplicantChecks\ApplicantCheckObjectMother_Events_ApplicantIdentificationCheckCompletedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentEventBasePostprocessComposerExtensions.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_AssociateAssessmentWithExistingCustomerCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_RequestManualAssessmentCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_CreatePersonalLoanAssessmentCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_ManuallyApproveAssessmentCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_ReviseAssessmentSummaryCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Commands_UpdateNotesCommand.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_AssessmentAssociatedWithExistingCustomerEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_AssessmentDeclinedPartIXEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_AssessmentManuallyApprovedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_AssessmentManuallyDeclinedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_AssessmentManuallyDeclinedFromMissingDocumentsEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_AssessmentWithdrawnEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_ContactCustomerForDeclineRequestedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_ManualAssessmentRequestedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_DocumentsMarkedAsMissingEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_MissingDocumentsUploadedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_MissingDocumentsRequestedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_NotesUpdatedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_PersonalLoanAssessmentCreatedEvent.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_Events_AssessmentSummaryRevisedEvent.cs" />
+    <Compile Include="ObjectMothers\Common\AddressDetailsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Common\AlternativeContactsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentObjectMother_HistoryScore.cs" />
+    <Compile Include="ObjectMothers\CustomerDeclaration\CustomerDeclarationEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\CustomerNotes\CustomerNoteObjectMother_Commands_ImportCustomerNoteCommand.cs" />
+    <Compile Include="ObjectMothers\CustomerNotes\CustomerNoteObjectMother_Events_CustomerNoteReminderTaskImportedEvent.cs" />
+    <Compile Include="ObjectMothers\CustomerNotes\CustomerNoteObjectMother_Events_CustomerNoteReminderTaskCreatedEvent.cs" />
+    <Compile Include="ObjectMothers\CustomerNotes\CustomerNotesCommandsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Customer\CustomerObjectMother_Commands_VerifyMobilePhoneCommand.cs" />
+    <Compile Include="ObjectMothers\Disputes\DisputeEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\EventPostprocessComposerExtensions.cs" />
+    <Compile Include="ObjectMothers\EventTimestampExtensions.cs" />
+    <Compile Include="ObjectMothers\GpDynamics\GpDynamicsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Identification\IdentificationObjectMother.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Events_OnlineApplicationReviewSuspendedEvent.cs" />
+    <Compile Include="ObjectMothers\Hardship\HardshipObjectMother_Events_HardshipImportedEvent.cs" />
+    <Compile Include="ObjectMothers\IncomeAndExpenditureDetailsSetObjectMother.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationEventBasePostprocessComposerExtensions.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_BundleAttachedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_UploadDocumentsChangedEvent.cs" />
+    <Compile Include="ObjectMothers\Loans\ApplicantDetailsObjectMother.cs" />
+    <Compile Include="ObjectMothers\MessagePostprocessComposerExtensions.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Commands_SuspendOnlineApplicationReviewCommand.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Events_OnlineApplicationReviewWithdrawnEvent.cs" />
+    <Compile Include="ObjectMothers\OnlineLoanApplications\OnlineLoanApplicationObjectMother_Events_OnlineApplicationIgnoredEvent.cs" />
+    <Compile Include="ObjectMothers\OrphanedPayments\OrphanedPaymentsObjectMother_ReversedEvents.cs" />
+    <Compile Include="ObjectMothers\Store\StoreCommandObjectMother.cs" />
+    <Compile Include="ObjectMothers\TaskItems\TaskItemObjectMother_CustomerNoteReminderTask.cs" />
+    <Compile Include="ObjectMothers\Tasks\TaskObjectMother_Events_TaskUnlockedEvent.cs" />
+    <Compile Include="ObjectMothers\UnsignedLoanContractObjectMother.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Events_NotesUpdatedEvent.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Commands_CompleteOnlineApplicationReviewCommand.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Commands_CreateOnlineApplicationReviewCommand.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Commands_UpdateFinancialDetailsCommand.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Commands_VerifyFinancialDetailsCommand.cs" />
+    <Compile Include="ObjectMothers\ContractsObjectMother_VerifiedIncomeAndExpenditure.cs" />
+    <Compile Include="ObjectMothers\CustomerCommunication\CustomerCommunicationObjectMother_Events_OnlineApplicationReviewSmsCommunicationCreatedEvent.cs" />
+    <Compile Include="ObjectMothers\CustomerNotes\CustomerNoteObjectMother_Events_CustomerNoteImportedEvent.cs" />
+    <Compile Include="ObjectMothers\CustomerNotes\CustomerNoteObjectMother_Events_CustomerNoteCreatedEvent.cs" />
+    <Compile Include="ObjectMothers\Customer\CustomerObjectMother_Commands_CreateCustomerCommand.cs" />
+    <Compile Include="ObjectMothers\Customer\CustomerObjectMother_Commands_UpdateCustomerFromApplicationCommand.cs" />
+    <Compile Include="ObjectMothers\Customer\CustomerObjectMother_Events_MarketingPreferencesUpdatedEvent.cs" />
+    <Compile Include="ObjectMothers\ESign\ESignObjectMother_Commands_CreateESignCommand.cs" />
+    <Compile Include="ObjectMothers\ESign\ESignObjectMother_Commands_SignDocumentsElectronicallyCommand.cs" />
+    <Compile Include="ObjectMothers\ESign\ESignObjectMother_Events_DocumentsElectronicallySignedEvent.cs" />
+    <Compile Include="ObjectMothers\ESign\ESignObjectMother_Events_ESignCreatedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_IdentificationDetailsChangedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_InStorePersonalLoanApplicationSubmissionImportedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_ApplicationSubmittedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMotherEventExtensions.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_ApplicationDeclinedInStoreEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_ApplicationWithdrawnInStoreEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_AssociatedWithCustomerEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_CashAdvanceRepaymentScheduleChangedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_IncomeExpenditureVerifiedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_MobileNumberChangedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_ProductConfigurationChangedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Objects_ExpenditureDetailsSet.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Objects_AlternativeContact.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_AlternativeContactsChangedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_BankAccountDetailsChangedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_Events_AddressDetailsChangedEvent.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationObjectMother_IncompleteApplicationDetails.cs" />
+    <Compile Include="ObjectMothers\LoanContracts\LoanContractObjectMother.cs" />
+    <Compile Include="ObjectMothers\LoanContracts\LoanContractObjectMother_Commands.cs" />
+    <Compile Include="ObjectMothers\LoanContracts\LoanContractObjectMother_DocumentModels.cs" />
+    <Compile Include="ObjectMothers\LoanContracts\LoanContractObjectMother_Events.cs" />
+    <Compile Include="ObjectMothers\LoanContracts\LoanContractObjectMother_Events_LoanContractSigningRequiredEvent.cs" />
+    <Compile Include="ObjectMothers\LoanContracts\LoanContractPostprocessComposers.cs" />
+    <Compile Include="ObjectMothers\ContractsObjectMother_MarketingPreferences.cs" />
+    <Compile Include="ObjectMothers\Customer\FredFibnar.cs" />
+    <Compile Include="ObjectMothers\Customer\FredsScenarios.cs" />
+    <Compile Include="ObjectMothers\LoanEligibility\InFlightApplicationObjectMother.cs" />
+    <Compile Include="ObjectMothers\LoanEligibility\LoanExpenditureDetailsObjectMother.cs" />
+    <Compile Include="ObjectMothers\LoanEligibility\LoanDetailsObjectMother.cs" />
+    <Compile Include="ObjectMothers\LoanEligibility\LoanEligibilityParametersObjectMother.cs" />
+    <Compile Include="ObjectMothers\LoanEligibility\MultiLoanDocumentDetailsObjectMother.cs" />
+    <Compile Include="ObjectMothers\CollectionAgents\CollectionAgentEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\CustomerCommunication\CustomerCommunicationEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\ExpenditureSourceObjectMother.cs" />
+    <Compile Include="ObjectMothers\IncomeDetailsSetObjectMother.cs" />
+    <Compile Include="ObjectMothers\EmploymentIncomeSourceObjectMother.cs" />
+    <Compile Include="ObjectMothers\IncompleteApplications\IncompleteContractSummaryObjectMother.cs" />
+    <Compile Include="ObjectMothers\Invoices\InvoiceEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\LoanNotices\LoanNoticeEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Loans\LoanExpenditureSourceObjectMother.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Commands_ImportOnlineApplicationReviewCommand.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Events_DocumentsRequestedForOnlineApplicationReviewEvent.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Events_OnlineApplicationReviewDeclinedEvent.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Events_OnlineApplicationReviewImportedEvent.cs" />
+    <Compile Include="ObjectMothers\OnlineLoanApplications\OnlineLoanApplicationObjectMother_Events_OnlineApplicationSubmittedEvent.cs" />
+    <Compile Include="ObjectMothers\OnlineLoanApplications\OnlineLoanApplicationObjectMother_Events_OnlinePersonalLoanApplicationSubmissionImportedEvent.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Events_OnlineApplicationReviewCreatedEvent.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewObjectMother_Events_OnlineApplicationReviewCompletedEvent.cs" />
+    <Compile Include="ObjectMothers\OnlineLoanApplications\OnlineLoanApplicationObjectMother_PersonalDetails.cs" />
+    <Compile Include="ObjectMothers\OrphanedPayments\OrphanedPaymentsObjectMotherExtensions.cs" />
+    <Compile Include="ObjectMothers\OrphanedPayments\OrphanedPaymentsObjectMother_AllocatedEvents.cs" />
+    <Compile Include="ObjectMothers\OrphanedPayments\OrphanedPaymentsObjectMother_CreatedEvents.cs" />
+    <Compile Include="ObjectMothers\OrphanedPayments\OrphanedPaymentsObjectMother_RecordedEvents.cs" />
+    <Compile Include="ObjectMothers\PartIX\PartIXEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\PartIX\PartIXCommandsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Common\PersonalDetailsObjectMother.cs" />
+    <Compile Include="ObjectMothers\TaskItems\TaskItemObjectMother_TaskItem.cs" />
+    <Compile Include="ObjectMothers\Tasks\TaskObjectMother_Events_TaskAssignedEvent.cs" />
+    <Compile Include="ObjectMothers\Tasks\TaskObjectMother_Events_TaskCompletedEvent.cs" />
+    <Compile Include="ObjectMothers\Tasks\TaskObjectMother_Events_TaskCreatedEvent.cs" />
+    <Compile Include="ObjectMothers\Tasks\TaskObjectMother_Events_TaskLockedEvent.cs" />
+    <Compile Include="ObjectMothers\Tasks\TaskObjectMother_Events_TaskRescheduledByUserEvent.cs" />
+    <Compile Include="ObjectMothers\Tasks\TaskObjectMother_Events_TaskUnassignedEvent.cs" />
+    <Compile Include="OrphanedPayments\OrphanedPaymentExtensionsFixture.cs" />
+    <Compile Include="ScenarioProjections.cs" />
+    <Compile Include="Scenarios\ApplicantCheckScenarios.cs" />
+    <Compile Include="Scenarios\AssessmentScenarios.cs" />
+    <Compile Include="Scenarios\BankingScenarions.cs" />
+    <Compile Include="Scenarios\CentrelinkStatementScenarions.cs" />
+    <Compile Include="Scenarios\CustomerDeclarationScenarios.cs" />
+    <Compile Include="Scenarios\BankStatementScenarions.cs" />
+    <Compile Include="Scenarios\BPayBillerCodeScenarios.cs" />
+    <Compile Include="Scenarios\BPayScenarions.cs" />
+    <Compile Include="Scenarios\CashAdvanceRatingScenarions.cs" />
+    <Compile Include="Scenarios\CashAdvanceScenarions.cs" />
+    <Compile Include="Scenarios\CollectionAgentAssignmentScenarios.cs" />
+    <Compile Include="Scenarios\CollectionAgentScenarions.cs" />
+    <Compile Include="Scenarios\CustomerCommunicationScenarios.cs" />
+    <Compile Include="Scenarios\CustomerDisputeScenarios.cs" />
+    <Compile Include="Scenarios\CustomerNoteScenarios.cs" />
+    <Compile Include="Scenarios\CustomerScenarions.cs" />
+    <Compile Include="Scenarios\FranchiseScenarios.cs" />
+    <Compile Include="Scenarios\InStoreLoanApplicationScenarios.cs" />
+    <Compile Include="Scenarios\LoanHardshipScenarios.cs" />
+    <Compile Include="Scenarios\LoanImportScenarionBuilder.cs" />
+    <Compile Include="Scenarios\LoanScenarionBuilder.cs" />
+    <Compile Include="Scenarios\LoanScenarions.cs" />
+    <Compile Include="Scenarios\MaccScenarions.cs" />
+    <Compile Include="Scenarios\MissedRepaymentTaskScenarios.cs" />
+    <Compile Include="Scenarios\OnlineLoanApplicationScenarios.cs" />
+    <Compile Include="Scenarios\OnlineApplicationReviewScenarios.cs" />
+    <Compile Include="Scenarios\OrphanedPaymentReconciliationScenarios.cs" />
+    <Compile Include="Scenarios\OrphanedPaymentScenarios.cs" />
+    <Compile Include="Scenarios\PersonalLoanScenarions.cs" />
+    <Compile Include="ObjectMothers\MissedRepaymentTasks\MissedRepaymentTaskEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Hardship\HardshipOutcomeBuilder.cs" />
+    <Compile Include="ObjectMothers\SendGrid\SendGridEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\SendGrid\SendGridTypesObjectMother.cs" />
+    <Compile Include="ObjectMothers\SmsCentral\SmsCentralEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\SmsCentral\SmsCentralTypesObjectMother.cs" />
+    <Compile Include="ObjectMothers\Store\StoreContactDetailsChangedEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Store\TillBalanceResetObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\DisbursementReturnedToTillObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\InternalTransferEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\LoanRepaymentTakenEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Store\StoreEventObjectMother.cs" />
+    <Compile Include="Scenarios\ReportingScenarios.cs" />
+    <Compile Include="Scenarios\ScenarioExtensions.cs" />
+    <Compile Include="Scenarios\StoreCommissionScenarions.cs" />
+    <Compile Include="Scenarios\StoreCommissionScenarios.cs" />
+    <Compile Include="Scenarios\StoreDocumentScenarios.cs" />
+    <Compile Include="Scenarios\StoreScenarions.cs" />
+    <Compile Include="Scenarios\TaskScenarions.cs" />
+    <Compile Include="Scenarios\TillScenarios.cs" />
+    <Compile Include="Scenarios\UserScenarions.cs" />
+    <Compile Include="StoreGpDynamics\StoreGlCodesFixture.cs" />
+    <Compile Include="TaringaGpDynamics\TaringaGlCodesFixture.cs" />
+    <Compile Include="Loans\Events\LoanLedgerEventFixture.cs" />
+    <Compile Include="LedgerTransactionTypeExtensionsFixture.cs" />
+    <Compile Include="Loans\LoanPaymentMethodsFixture.cs" />
+    <Compile Include="MessageDefinitionsFixture.cs" />
+    <Compile Include="MessageTypeScanner.cs" />
+    <Compile Include="MessageTypeLocatorBuilderFixture.cs" />
+    <Compile Include="EventTypeLocatorFixture.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentCommandsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Assessments\AssessmentTypesObjectMother.cs" />
+    <Compile Include="ObjectMothers\DocumentIdentifierObjectMother.cs" />
+    <Compile Include="ObjectMothers\IncompleteApplications\IncompleteApplicationCommandsObjectMother.cs" />
+    <Compile Include="ObjectMothers\IncompleteApplications\IncompleteApplicationEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\LoanContracts\CustomerDetailsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Banking\BankAccountCommandsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Banking\BankAccountEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Banking\ReturnedItemsObjectMother.cs" />
+    <Compile Include="ObjectMothers\BankStatementEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\BPay\BPayEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\CashAdvanceRating\CashAdvanceRatingCommandObjectMother.cs" />
+    <Compile Include="ObjectMothers\CashAdvanceRating\CashAdvanceRatingEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\CustomerNotes\CustomerNoteEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Franchise\FranchiseGroupEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Hardship\HardshipCommandsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Hardship\HardshipEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Loans\LoanEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\CashAdvanceRating\LoanMetricsObjectMother.cs" />
+    <Compile Include="ObjectMothers\CommandEx.cs" />
+    <Compile Include="ObjectMothers\CustomerMatchObjectMother.cs" />
+    <Compile Include="ObjectMothers\EventEx.cs" />
+    <Compile Include="ObjectMothers\Customer\CustomerEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\DocumentSummaryObjectMother.cs" />
+    <Compile Include="ObjectMothers\Franchise\FranchiseEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\ExpenditureDetailsSetObjectMother.cs" />
+    <Compile Include="ObjectMothers\IncomeSourceObjectMother.cs" />
+    <Compile Include="ObjectMothers\InStoreLoanApplication\InStoreLoanApplicationEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Loans\LoanCommandObjectMother.cs" />
+    <Compile Include="ObjectMothers\Notification\EmailAddressObjectMother.cs" />
+    <Compile Include="ObjectMothers\Notification\NotificationCommandsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Notification\NotificationEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewCommandsObjectMother.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\OnlineApplicationReviews\OnlineApplicationReviewTypesObjectMother.cs" />
+    <Compile Include="ObjectMothers\OnlineLoanApplications\OnlineLoanApplicationTypesObjectMother.cs" />
+    <Compile Include="ObjectMothers\ProductBudget\ProductBudgetEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\RejectDocumentReasonDetailObjectMother.cs" />
+    <Compile Include="ObjectMothers\DocumentMissingObjectMother.cs" />
+    <Compile Include="ObjectMothers\Loans\RepaymentScheduleObjectMother.cs" />
+    <Compile Include="ObjectMothers\StoreCommission\StoreCommissionCommandsObjectMother.cs" />
+    <Compile Include="ObjectMothers\StoreCommission\StoreCommissionEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Store\BankAccountUpdatedEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Store\StoreCreatedEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Store\StoreRegionAlteredEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Store\StoreRenamedEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Store\StoreTimeZoneAlteredEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Store\TradingDayFinalisedEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\ArmaguardEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\ChequeEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\CustomerReferralEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\OtcLoanPaymentEventsObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\OtcCashAdvanceDisbursedEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\TillBalancedEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\TillCreatedEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\TransferredFromAnotherStoreEventObjectMother.cs" />
+    <Compile Include="ObjectMothers\Tills\TransferredToAnotherStoreEventObjectMother.cs" />
+    <Compile Include="OnlineLoanApplications\PersonalDetailsFixture.cs" />
+    <Compile Include="Permissions\MercuryPermissionNamesFixture.cs" />
+    <Compile Include="Permissions\PermissionsStructureBuilderFixture.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyInspectorHelper.cs" />
+    <Compile Include="TaskTypeFixture.cs" />
+    <Compile Include="TaskTypePermissionAssociationsFixture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Platform\Mercury.Core.JsonExtensions\Mercury.Core.JsonExtensions.csproj">
+      <Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>
+      <Name>Mercury.Core.JsonExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\Mercury.CoreTypes\Mercury.CoreTypes.csproj">
+      <Project>{A78F75AB-FEA0-4A70-9EF6-5ABD55CBF2EF}</Project>
+      <Name>Mercury.CoreTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\Mercury.Core\Mercury.Core.csproj">
+      <Project>{36800f86-879a-4fba-8d6c-fbedd385531f}</Project>
+      <Name>Mercury.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\Messages.Client\Messages.Client.csproj">
+      <Project>{251CDDD8-0100-4ACE-9D59-2E99B89374CF}</Project>
+      <Name>Messages.Client</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Contracts\Contracts.csproj">
+      <Project>{4c77bac1-0604-4433-a3ce-c92433ee9227}</Project>
+      <Name>Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReferenceData\ReferenceData.csproj">
+      <Project>{34E7A47E-A8FB-4614-9B81-D060FA87AC5B}</Project>
+      <Name>ReferenceData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReferenceData\ReferenceData.csproj">
+      <Project>{34e7a47e-a8fb-4614-9b81-d060fa87ac5b}</Project>
+      <Name>ReferenceData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\Tests.Core\Tests.Core.csproj">
+      <Project>{AF2AA63F-B129-4D88-9D1A-4BC19E443B00}</Project>
+      <Name>Tests.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tests.Shared\Tests.Shared.csproj">
+      <Project>{ca12242d-1f50-44bb-9972-d6c6609e4c37}</Project>
+      <Name>Tests.Shared</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
