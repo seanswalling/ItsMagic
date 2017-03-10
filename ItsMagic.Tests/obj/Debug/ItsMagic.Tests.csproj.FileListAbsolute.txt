@@ -1,0 +1,13 @@
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\ItsMagic.Tests.dll
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\ItsMagic.Tests.pdb
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.abstractions.dll
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.assert.dll
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.core.dll
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.execution.desktop.dll
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.abstractions.xml
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.assert.xml
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.core.xml
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.execution.desktop.xml
+C:\source\ItsMagic\ItsMagic.Tests\obj\Debug\ItsMagic.Tests.csprojResolveAssemblyReference.cache
+C:\source\ItsMagic\ItsMagic.Tests\obj\Debug\ItsMagic.Tests.dll
+C:\source\ItsMagic\ItsMagic.Tests\obj\Debug\ItsMagic.Tests.pdb
