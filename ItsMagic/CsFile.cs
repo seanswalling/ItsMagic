@@ -48,7 +48,7 @@ namespace ItsMagic
         public static void AddUsingToCsFile(string csFile, string reference)
         {
             var csFileText = File.ReadAllText(csFile);
-            csFileText = "using " + reference + "\n" + csFileText;
+            csFileText = "using " + reference + ";\n" + csFileText;
             File.WriteAllText(csFile,csFileText);
         }
     }

@@ -56,22 +56,24 @@ namespace ItsMagic
 
         private static string AddProjectText(string solutionFileText)
         {
-            solutionFileText = solutionFileText.Replace(RegexStore.EndProjectGlobal,
-                RegexStore.SolutionJExtProjectReference + RegexStore.EndProjectGlobal);
+            solutionFileText = RegexStore.ReplaceLastOccurrence(solutionFileText,
+                RegexStore.EndProject,
+                RegexStore.EndProject+ "\n" + RegexStore.SolutionJExtProjectReference);
             return solutionFileText;
         }
 
         private static string AddDebugAndReleaseInformation(string solutionFileText)
         {
-            solutionFileText = RegexStore.ReplaceLastOccurrence(solutionFileText, RegexStore.ReleaseAnyCpu,
-                RegexStore.JExtReleaseDebugInformation);
+            solutionFileText = RegexStore.ReplaceLastOccurrence(solutionFileText, 
+                RegexStore.ReleaseAnyCpu,
+                RegexStore.ReleaseAnyCpu + "\n\t\t" + RegexStore.JExtReleaseDebugInformation);
             return solutionFileText;
         }
 
         private static string AddToCommonFolder(string solutionFileText, string solutionFile)
         {
-            string jExtProjEqualsCommonFolder = "{D3DC56B0-8B95-47A5-A086-9E7A95552364} = {" + RegexStore.Get(RegexStore.CommonFolderPattern, solutionFile) + "}";
-            solutionFileText = solutionFileText.Replace(RegexStore.NestedProjects,RegexStore.NestedProjects+ jExtProjEqualsCommonFolder);
+            string jExtProjEqualsCommonFolder = "{D3DC56B0-8B95-47A5-A086-9E7A95552364} = {" + RegexStore.Get(RegexStore.CommonFolderPattern, solutionFile).First() + "}";
+            solutionFileText = solutionFileText.Replace(RegexStore.NestedProjects,RegexStore.NestedProjects + "\n\t\t" + jExtProjEqualsCommonFolder);
             return solutionFileText;
         }
     }
