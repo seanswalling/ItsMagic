@@ -10,7 +10,8 @@ namespace ItsMagic
         static void Main()
         {
             string dir = "C:\\source\\Mercury\\src";
-            Dumbledore.AddJExtAndNHibExtReferences(dir);
+            //Dumbledore.AddJExtAndNHibExtReferences(dir);
+            Dumbledore.FixXML(dir);
             Console.WriteLine("Application Complete");
             Console.ReadLine();
         }

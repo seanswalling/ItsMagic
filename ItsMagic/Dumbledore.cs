@@ -1,7 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace ItsMagic
 {
@@ -151,19 +154,19 @@ namespace ItsMagic
             var csProjText = File.ReadAllText(toUpdate.Path);
             csProjText = Regex.Replace(csProjText, replacement);
             File.WriteAllText(toUpdate.Path, csProjText);
-        } 
+        }
         #endregion
 
-        //private static void ReformatXml(string file)
-        //{
-        //    var doc = XDocument.Load(file);
-        //    using (XmlTextWriter writer = new XmlTextWriter(file, System.Text.Encoding.UTF8))
-        //    {
-        //        writer.Formatting = Formatting.Indented;
-        //        doc.Save(writer);
-        //    }
-        //}
-    
+        private static void ReformatXml(string file)
+        {
+            var doc = XDocument.Load(file);
+            using (XmlTextWriter writer = new XmlTextWriter(file, System.Text.Encoding.UTF8))
+            {
+                writer.Formatting = Formatting.Indented;
+                doc.Save(writer);
+            }
+        }
+
         //public static IEnumerable<string> GetFiles(string projectDirectory, string extension)
         //{
         //    return Directory.EnumerateFiles(projectDirectory, "*."+extension, SearchOption.AllDirectories);
@@ -180,5 +183,17 @@ namespace ItsMagic
         //        //SlnFile.AddCsProjToSolution(csFile, "");
         //    }
         //}
+        public static void FixXML(string dir)
+        {
+            var csProjs = Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories);
+            foreach (var csProj in csProjs)
+            {
+                Console.WriteLine("Checking: "+csProj);
+                var csprojText = File.ReadAllText(csProj);
+                csprojText = csprojText.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+                File.WriteAllText(csProj,csprojText);
+                ReformatXml(csProj);
+            }
+        }
     }
 }
