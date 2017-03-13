@@ -16,3 +16,9 @@ C:\source\ItsMagic\ItsMagic\bin\Debug\ItsMagic.pdb
 C:\source\ItsMagic\ItsMagic\obj\Debug\ItsMagic.exe
 C:\source\ItsMagic\ItsMagic\obj\Debug\ItsMagic.pdb
 C:\source\ItsMagic\ItsMagic\obj\Debug\ItsMagic.csprojResolveAssemblyReference.cache
+E:\github\cc\ItsMagic\ItsMagic\bin\Debug\ItsMagic.exe.config
+E:\github\cc\ItsMagic\ItsMagic\bin\Debug\ItsMagic.exe
+E:\github\cc\ItsMagic\ItsMagic\bin\Debug\ItsMagic.pdb
+E:\github\cc\ItsMagic\ItsMagic\obj\Debug\ItsMagic.csprojResolveAssemblyReference.cache
+E:\github\cc\ItsMagic\ItsMagic\obj\Debug\ItsMagic.exe
+E:\github\cc\ItsMagic\ItsMagic\obj\Debug\ItsMagic.pdb

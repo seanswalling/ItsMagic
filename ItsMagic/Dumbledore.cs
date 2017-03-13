@@ -190,8 +190,9 @@ namespace ItsMagic
             {
                 Console.WriteLine("Checking: "+csProj);
                 var csprojText = File.ReadAllText(csProj);
-                csprojText = csprojText.Replace("<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<?xml version=\"1.0\" encoding=\"utf-8\"?>", "<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-                File.WriteAllText(csProj,csprojText);
+                Regex reg = new Regex("(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
+                csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>",1);
+                File.WriteAllText(csProj, csprojText);
                 ReformatXml(csProj);
             }
         }
