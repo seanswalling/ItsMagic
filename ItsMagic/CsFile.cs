@@ -36,29 +36,30 @@ namespace ItsMagic
         public static bool HasEvidenceOfJExt(string csFile)
         {
             var csFileText = File.ReadAllText(csFile);
-            return (csFileText.Contains(".JsonCopy()")
+            return csFileText.Contains(".JsonCopy()")
                    || csFileText.Contains(".ToBson()")
                    || csFileText.Contains("SettingsFactory.Build()")
                    || csFileText.Contains("DateSerializer")
                    || csFileText.Contains("RequiredPropertyContractResolver")
-                   || csFileText.Contains(".FromBson()"))
-                   && !csFileText.Contains("using Mercury.Core.JsonExtensions");
+                   || csFileText.Contains(".FromBson()");
         }
 
         public static bool HasEvidenceOfNHibExt(string csFile)
         {
             var csFileText = File.ReadAllText(csFile);
-            return (csFileText.Contains("XmlType")
+            return csFileText.Contains("XmlType")
                    || csFileText.Contains(".Nullable()")
-                   || csFileText.Contains(".NotNullable()"))
-                   && !csFileText.Contains("using Mercury.Core.NHibernateExtensions;");
+                   || csFileText.Contains(".NotNullable()");
         }
 
         public static void AddUsingToCsFile(string csFile, string reference)
         {
-            var csFileText = File.ReadAllText(csFile);
-            csFileText = "using " + reference + ";\n" + csFileText;
-            File.WriteAllText(csFile,csFileText);
+            if (!File.ReadAllText(csFile).Contains("using " + reference))
+            {
+                var csFileText = File.ReadAllText(csFile);
+                csFileText = "using " + reference + ";\n" + csFileText;
+                File.WriteAllText(csFile, csFileText);
+            }
         }
 
         public static void RemoveUsingFromCsFile(string csFile, string reference)

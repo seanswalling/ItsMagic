@@ -11,8 +11,8 @@ namespace ItsMagic
         {
             //string dir = "C:\\source\\Mercury\\src";
             string dir = @"E:\github\cc\Mercury\src";
-            //Dumbledore.AddJExtAndNHibExtReferences(dir);
-            Dumbledore.FixXML(dir);
+            Dumbledore.AddJExtAndNHibExtReferences(dir);
+            //Dumbledore.FixXML(dir);
             Console.WriteLine("Application Complete");
             Console.ReadLine();
         }
