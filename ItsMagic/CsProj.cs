@@ -79,8 +79,16 @@ namespace ItsMagic
             return File.ReadAllText(csProj).Contains("<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>");
         }
 
+        public static bool ContainsNHibExtProjectReference(string csProj)
+        {
+            return File.ReadAllText(csProj).Contains("<Project>{f1575997-02d0-486f-ae36-69f6a3b37c39}</Project>");
+        }
+
         public static void AddJExtProjectReference(string csProj)
         {
+            if (csProj.Contains("Mercury.Core.JsonExtensions.csproj"))
+                return;
+            
             var regex = new Regex(RegexStore.ItemGroupTag);
             var csProjText = File.ReadAllText(csProj);
 
@@ -88,6 +96,23 @@ namespace ItsMagic
                                                    "<ProjectReference Include=\"..\\..\\Platform\\Mercury.Core.JsonExtensions\\Mercury.Core.JsonExtensions.csproj\">" +
                                                    "<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>" +
                                                    "<Name>Mercury.Core.JsonExtensions</Name>" +
+                                                   "</ProjectReference>", 1);
+            File.WriteAllText(csProj, csProjText);
+            ReformatXml(csProj);
+        }
+
+        public static void AddNHibExtProjectReference(string csProj)
+        {
+            if (csProj.Contains("Mercury.Core.NHibernateExtensions.csproj"))
+                return;
+
+            var regex = new Regex(RegexStore.ItemGroupTag);
+            var csProjText = File.ReadAllText(csProj);
+
+            csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
+                                                   "<ProjectReference Include=\"..\\..\\Platform\\Mercury.Core.NHibernateExtensions\\Mercury.Core.NHibernateExtensions.csproj\">" +
+                                                   "<Project>{f1575997-02d0-486f-ae36-69f6a3b37c39}</Project>" +
+                                                   "<Name>Mercury.Core.NHibernateExtensions</Name>" +
                                                    "</ProjectReference>", 1);
             File.WriteAllText(csProj, csProjText);
             ReformatXml(csProj);

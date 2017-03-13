@@ -43,18 +43,26 @@ namespace ItsMagic
             return match.Success;
         }
 
+        public static bool ContainsNHibExtProjectReference(string solutionFile)
+        {
+            var solutionFileText = File.ReadAllText(solutionFile);
+            Regex regex = new Regex(RegexStore.SolutionNHibExtProjectReferencePattern);
+            Match match = regex.Match(solutionFileText);
+            return match.Success;
+        }
+
         public static void AddJExtProjectReference(string solutionFile)
         {
             var solutionFileText = File.ReadAllText(solutionFile);
 
-            solutionFileText = AddProjectText(solutionFileText);
-            solutionFileText = AddDebugAndReleaseInformation(solutionFileText);
-            solutionFileText = AddToCommonFolder(solutionFileText, solutionFile);
+            solutionFileText = AddJExtProjectText(solutionFileText);
+            solutionFileText = AddJExtDebugAndReleaseInformation(solutionFileText);
+            solutionFileText = AddJExtToCommonFolder(solutionFileText, solutionFile);
 
             File.WriteAllText(solutionFile, solutionFileText);
         }
 
-        private static string AddProjectText(string solutionFileText)
+        private static string AddJExtProjectText(string solutionFileText)
         {
             solutionFileText = RegexStore.ReplaceLastOccurrence(solutionFileText,
                 RegexStore.EndProject,
@@ -62,7 +70,7 @@ namespace ItsMagic
             return solutionFileText;
         }
 
-        private static string AddDebugAndReleaseInformation(string solutionFileText)
+        private static string AddJExtDebugAndReleaseInformation(string solutionFileText)
         {
             solutionFileText = RegexStore.ReplaceLastOccurrence(solutionFileText, 
                 RegexStore.ReleaseAnyCpu,
@@ -70,10 +78,44 @@ namespace ItsMagic
             return solutionFileText;
         }
 
-        private static string AddToCommonFolder(string solutionFileText, string solutionFile)
+        private static string AddJExtToCommonFolder(string solutionFileText, string solutionFile)
         {
             string jExtProjEqualsCommonFolder = "{D3DC56B0-8B95-47A5-A086-9E7A95552364} = {" + RegexStore.Get(RegexStore.CommonFolderPattern, solutionFile).First() + "}";
             solutionFileText = solutionFileText.Replace(RegexStore.NestedProjects,RegexStore.NestedProjects + "\n\t\t" + jExtProjEqualsCommonFolder);
+            return solutionFileText;
+        }
+
+        public static void AddNHibExtProjectReference(string solutionFile)
+        {
+            var solutionFileText = File.ReadAllText(solutionFile);
+
+            solutionFileText = AddNHibExtProjectText(solutionFileText);
+            solutionFileText = AddNHibExtDebugAndReleaseInformation(solutionFileText);
+            solutionFileText = AddNHibExtToCommonFolder(solutionFileText, solutionFile);
+
+            File.WriteAllText(solutionFile, solutionFileText);
+        }
+
+        private static string AddNHibExtProjectText(string solutionFileText)
+        {
+            solutionFileText = RegexStore.ReplaceLastOccurrence(solutionFileText,
+                RegexStore.EndProject,
+                RegexStore.EndProject + "\n" + RegexStore.SolutionNHibExtProjectReference);
+            return solutionFileText;
+        }
+
+        private static string AddNHibExtDebugAndReleaseInformation(string solutionFileText)
+        {
+            solutionFileText = RegexStore.ReplaceLastOccurrence(solutionFileText,
+                RegexStore.ReleaseAnyCpu,
+                RegexStore.ReleaseAnyCpu + "\n\t\t" + RegexStore.NHibExtReleaseDebugInformation);
+            return solutionFileText;
+        }
+
+        private static string AddNHibExtToCommonFolder(string solutionFileText, string solutionFile)
+        {
+            string nHibExtProjEqualsCommonFolder = "{F1575997-02D0-486F-AE36-69F6A3B37C39} = {" + RegexStore.Get(RegexStore.CommonFolderPattern, solutionFile).First() + "}";
+            solutionFileText = solutionFileText.Replace(RegexStore.NestedProjects, RegexStore.NestedProjects + "\n\t\t" + nHibExtProjEqualsCommonFolder);
             return solutionFileText;
         }
     }

@@ -1,0 +1,441 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{24736F98-5594-4F78-9AF3-879978967195}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mercury.TerminalGateway.ApiDatabase</RootNamespace>
+    <AssemblyName>Mercury.TerminalGateway.ApiDatabase</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mercury.Core.1.0.10-wrvrnwvb-PR9683\lib\net45\Autofac.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DbUp">
+      <HintPath>..\..\packages\dbup.3.3.4\lib\net35\DbUp.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mercury.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=badf4041b3a55239, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mercury.Core.1.0.10-wrvrnwvb-PR9683\lib\net45\Mercury.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mercury.CoreTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Mercury.CoreTypes.1.0.6-iybluyiq-PR9499\lib\net45\Mercury.CoreTypes.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.SqlServer.Scripting.11.0.2100.61\lib\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.SqlServer.Scripting.11.0.2100.61\lib\Microsoft.SqlServer.Management.Sdk.Sfc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\packages\Microsoft.SqlServer.Scripting.11.0.2100.61\lib\Microsoft.SqlServer.Smo.dll</HintPath>
+    </Reference>
+    <Reference Include="NDesk.Options">
+      <HintPath>..\..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EastDatabaseSetupConfigurationFactory.cs" />
+    <Compile Include="WestDatabaseSetupConfigurationFactory.cs" />
+    <Compile Include="AlphaDatabaseSetupConfigurationFactory.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Authentication.Core\Authentication.Core.csproj">
+      <Project>{d913b212-66aa-4ab0-af15-dd0fd804af58}</Project>
+      <Name>Authentication.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Contracts\Contracts.csproj">
+      <Project>{4c77bac1-0604-4433-a3ce-c92433ee9227}</Project>
+      <Name>Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\Deployer.Core\Deployer.Core.csproj">
+      <Project>{8be16ff4-d4fe-4923-ac63-e7d95a7d117a}</Project>
+      <Name>Deployer.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\Server.Core\Server.Core.csproj">
+      <Project>{4b2e1f04-35b1-4d0c-914e-f5e64eddb7eb}</Project>
+      <Name>Server.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\WorkerEngine\WorkerEngine.csproj">
+      <Project>{D2A541D6-A79C-4C43-A1A1-388528F856C7}</Project>
+      <Name>WorkerEngine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\ApplicantCheckReadModel\ApplicantCheckReadModel.csproj">
+      <Project>{5aeea4e5-13de-4aca-81c0-306685c8ddff}</Project>
+      <Name>ApplicantCheckReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\ArmaguardReadModel\ArmaguardReadModel.csproj">
+      <Project>{163cc1d2-9fb3-407f-85d4-0a06565f3feb}</Project>
+      <Name>ArmaguardReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\ArrearsReadModel\ArrearsReadModel.csproj">
+      <Project>{bc62e1d5-5ede-4a34-9865-80faa6007942}</Project>
+      <Name>ArrearsReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\AuthorisationReadModel\AuthorisationReadModel.csproj">
+      <Project>{55e76b7d-f4c9-42ca-922a-efb55a4f75c2}</Project>
+      <Name>AuthorisationReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\BPayFileResultReadModel\BPayFileResultReadModel.csproj">
+      <Project>{cb3e903e-9a3a-4ed8-b294-caa321bd8928}</Project>
+      <Name>BPayFileResultReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\BPayReadModel\BPayReadModel.csproj">
+      <Project>{0272867a-bb11-43e2-8381-0007b0571000}</Project>
+      <Name>BPayReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\BulkWriteOffLoansReadModel\BulkWriteOffLoansReadModel.csproj">
+      <Project>{fafb1ffb-39c9-48c9-9146-28017abd91d9}</Project>
+      <Name>BulkWriteOffLoansReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\CCStatementReadModel\CCStatementReadModel.csproj">
+      <Project>{2d140c02-1bdf-4bfd-8d26-18d29ea08889}</Project>
+      <Name>CCStatementReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\CollectionAgentReadModel\CollectionAgentReadModel\CollectionAgentReadModel.csproj">
+      <Project>{3500b291-5411-4c3d-b4c9-c8e6a950484a}</Project>
+      <Name>CollectionAgentReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\ConfigurationReadModel\ConfigurationReadModel.csproj">
+      <Project>{89337202-4b82-4c9f-963b-1e36ee1c4635}</Project>
+      <Name>ConfigurationReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\ContactCustomerForDeclineReadModel\ContactCustomerForDeclineReadModel.csproj">
+      <Project>{8327982d-b578-4af1-a6b3-4385814d6372}</Project>
+      <Name>ContactCustomerForDeclineReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\CustomerCommunicationsReadModel\CustomerCommunicationsReadModel.csproj">
+      <Project>{4801b776-191a-4315-8922-bf9b527fd39b}</Project>
+      <Name>CustomerCommunicationsReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\CustomerDetailsReadModel\CustomerDetailsReadModel.csproj">
+      <Project>{fa9574f6-f9e5-4dce-9bc7-6501de100bcf}</Project>
+      <Name>CustomerDetailsReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\CustomerLoanHistoryReadModel\CustomerLoanHistoryReadModel.csproj">
+      <Project>{910bb4e8-b7e8-4b17-88c6-6e6470160037}</Project>
+      <Name>CustomerLoanHistoryReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\IncompleteApplicationReadModel\IncompleteApplicationReadModel.csproj">
+      <Project>{e9bf9750-8652-48f7-9dbf-b3357cd76e36}</Project>
+      <Name>IncompleteApplicationReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\InStoreApplicationReadModel\InStoreApplicationReadModel.csproj">
+      <Project>{927a3ef2-ead3-4186-965f-d5c0336bec19}</Project>
+      <Name>InStoreApplicationReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\LoanContractSigningReadModel\LoanContractSigningReadModel.csproj">
+      <Project>{5e224f2b-b165-46a4-83f1-504ab98221a2}</Project>
+      <Name>LoanContractSigningReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\HardshipReadModel\HardshipReadModel.csproj">
+      <Project>{bc10afca-0b79-4fde-b04e-e1c39aef9245}</Project>
+      <Name>HardshipReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\MissedDisbursementReadModel\MissedDisbursementTaskReadModel.csproj">
+      <Project>{9095FD2B-8206-43E7-AD22-B58F1681DEF9}</Project>
+      <Name>MissedDisbursementTaskReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\CustomerNoteReadModel\CustomerNoteReadModel.csproj">
+      <Project>{bbd4cbbe-4723-4f98-98ee-e69afeebc17c}</Project>
+      <Name>CustomerNoteReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\MissingDocumentsReadModel\MissingDocumentsReadModel.csproj">
+      <Project>{5075ad93-7039-4e09-a80f-b0ec55258ac2}</Project>
+      <Name>MissingDocumentsReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\PartIXReadModel\PartIXReadModel.csproj">
+      <Project>{810b50e3-640c-468a-8ab6-9e8d8bb2a104}</Project>
+      <Name>PartIXReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\StoreContactDetailsReadModel\StoreContactDetailsReadModel.csproj">
+      <Project>{9cd1bff9-9aad-4f7c-99f5-0e04c07cfc22}</Project>
+      <Name>StoreContactDetailsReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\StoreDocumentReadModel\StoreDocumentReadModel.csproj">
+      <Project>{ba9cd4be-a74c-468e-bba1-b52e50babb67}</Project>
+      <Name>StoreDocumentReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\OnlineApplicationReviewReadModel\OnlineApplicationReviewReadModel.csproj">
+      <Project>{4F90976B-2DB2-40E0-BFAE-643A59F40212}</Project>
+      <Name>OnlineApplicationReviewReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\StoreHierarchyReadModel\StoreHierarchyReadModel.csproj">
+      <Project>{1238d5f8-8e21-4d55-afb0-50ef356d37c1}</Project>
+      <Name>StoreHierarchyReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\StoreNameReadModel\StoreNameReadModel.csproj">
+      <Project>{b3f66e23-58e9-452b-91a9-3d060368a256}</Project>
+      <Name>StoreNameReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\OrphanedPaymentsReadModel\OrphanedPaymentsReadModel.csproj">
+      <Project>{4662f563-233b-4a6f-a9c6-debb99d6eca8}</Project>
+      <Name>OrphanedPaymentsReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\TillReadModel\TillReadModel.csproj">
+      <Project>{EB8C6F55-F4A6-4364-A1AF-BD51803D541A}</Project>
+      <Name>TillReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\UserNameReadModel\UsernameReadModel.csproj">
+      <Project>{a98587c7-c359-4cdc-81a2-d1353bc7a412}</Project>
+      <Name>UsernameReadModel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Tasks\Tasks.Common\Tasks.Common.csproj">
+      <Project>{7E8031E5-4C29-414B-AE91-A1FD3081188A}</Project>
+      <Name>Tasks.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TerminalGatewayCommon\TerminalGatewayCommon.csproj">
+      <Project>{622ecf87-cc01-421f-9073-69d3b6bf997a}</Project>
+      <Name>TerminalGatewayCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script001_initial.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script002_webrole_permissions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script003_in_progress_loan_application.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script004_drop_in_progress_loan_application.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script008_auth_cache_permissions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script009_current_loan_applications.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script010_current_loan_applications_audit.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script011_current_loan_applications_delete.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script013_current_loan_applications_dob.sql" />
+    <EmbeddedResource Include="Legacy\script012_current_loan_applications_current_screen.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script013_current_loan_applications_dob2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script016_store_readmodel.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script017_current_applications_storeid.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script018_customersearch_readmodel.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script019_drop_customersearch_readmodel.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script023_customer_bank_details_readmodel.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script027_customeralternativecontactdetails_readmodel.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script040_customerdetails_loanapplicationinprogress.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script043_franchise_details.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script046_abn_acl_not_required.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script047_usertaskpriority.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script048_drop_currentloanapplication_readmodel.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script052_customerbankaccount_readmodel.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script056_uploaded_loanapp_documents.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script054_remove_customerbankaccount.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script059_added_loan_details.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script060_store_summary_add_name.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script062_add_description_to_uploadedloanapplicationdocument.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script061_applicant_credit_check.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script064_loan_details_add_loan_creation_and_disbursement_timestamps.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script066_maintenance_permissions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script067_applicant_credit_check_command.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script070_loan_details_add_monthly_fee_and_payment_frequency.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script072_loan_application_employment_details.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script072_add_submitted_loan_income_details.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script076_rename_ApplicantCreditCheckResult_PrimaryKey.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script079_part_ix_details.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script082_simplify_document_readmodel.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script084_queue_permissions.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script085_submittedapplicationdetails_addexpenditures.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script087_drop_loan_application_employment_details.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script088_submittedapplicationdetails_addbankdetails.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script089_franchisegroups.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script091_franchisegroupspart2.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script093_loandetails_id.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script094_loandetails_bankaccount.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script097_drop_customer_bank_account_details.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script098_storesummary_id.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script103_uploadedloanapplicationdoc_adduploadedat.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script109_use_enum_doctypes.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script114_storesummary_timezone.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script117_productbudget.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script118_productbudget_no_duplicate_create.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script127_banking_bankaccount.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script129_banking_transferbatch.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script132_banking_transfer.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script147_drop_submitted_application_details.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script149_drop_uploadedloanapplicationdocument.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script151_remove_productbudgets_table.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script154_loan_headlines.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script155_drop_partix_details.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\script156_rename_checkapplicantcreditdetails_loanapplicationid.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\upgrade002_applicantcheck_origapp_indexes.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Legacy\upgrade001_applicantcheck_indexes.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\..\lib\Mercury\Mercury.Conventions.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,19 +1,33 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace ItsMagic
 {
     public static class Dumbledore
     {
-        public static void AddJExtAndNHibExtReferences()
+        public static void UpdateAllReferencesToNewgetReferences(string projectDirectory)
         {
-            string[] solutionFiles = { @"C:\source\Mercury\src\Mercury.Terminal.sln", @"C:\source\Mercury\src\Mercury.TerminalGateway.sln" };
+            string[] solutionFiles = Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories).ToArray();
+            //{ @"C:\source\Mercury\src\Mercury.ReflectiveTests.sln" };
+            foreach (var solutionFile in solutionFiles)
+            {
+                var csProjs = SlnFile.GetCsProjs(solutionFile).ToArray();
+                foreach (var csProj in csProjs)
+                {
+                    var csFiles = CsProj.GetCsFiles(csProj).ToArray();
+                    foreach (var csFile in csFiles)
+                    {
+
+                    }
+                }
+            }
+        }
+        public static void AddJExtAndNHibExtReferences(string projectDirectory)
+        {
+            string[] solutionFiles = Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories).ToArray();
+                //{ @"C:\source\Mercury\src\Mercury.ReflectiveTests.sln" };
             foreach (var solutionFile in solutionFiles)
             {
                 var csProjs = SlnFile.GetCsProjs(solutionFile).ToArray();
@@ -24,33 +38,44 @@ namespace ItsMagic
                     {
                         if (CsFile.HasEvidenceOfJExt(csFile))
                         {
-                            CsFile.AddUsingToCsFile(csFile, "Mercury.Core.JsonExtensions");
-                            if (!CsProj.ContainsJExtProjectReference(csProj))
-                            {
-                                CsProj.AddJExtProjectReference(csProj);
-                            }
-
-                            //check to see if solution has JExt project reference
-                            //if it doesn't
-                            if (!SlnFile.ContainsJExtProjectReference(solutionFile))
-                            {
-                                //Add Project Reference
-                                SlnFile.AddJExtProjectReference(solutionFile);
-                            }
+                            AddJExtReferences(csFile, csProj, solutionFile);
                         }
-                        //if Cs File contains Evidence of NHibExt
-                        //...
+                        if (CsFile.HasEvidenceOfNHibExt(csFile))
+                        {
+                            AddNHibExtReferences(csFile, csProj, solutionFile);
+                        }
                     }
                 }
             }
         }
 
+        private static void AddJExtReferences(string csFile, string csProj, string solutionFile)
+        {
+            CsFile.AddUsingToCsFile(csFile, "Mercury.Core.JsonExtensions");
+            CsFile.RemoveUsingFromCsFile(csFile, "Mercury.Core.MessageSerialisation");
+            if (!CsProj.ContainsJExtProjectReference(csProj))
+            {
+                CsProj.AddJExtProjectReference(csProj);
+            }
+            if (!SlnFile.ContainsJExtProjectReference(solutionFile))
+            {
+                SlnFile.AddJExtProjectReference(solutionFile);
+            }
+        }
 
+        private static void AddNHibExtReferences(string csFile, string csProj, string solutionFile)
+        {
+            CsFile.AddUsingToCsFile(csFile, "Mercury.Core.NHibernateExtensions");
+            if (!CsProj.ContainsNHibExtProjectReference(csProj))
+            {
+                CsProj.AddNHibExtProjectReference(csProj);
+            }
 
-
-
-
-
+            if (!SlnFile.ContainsNHibExtProjectReference(solutionFile))
+            {
+                SlnFile.AddNHibExtProjectReference(solutionFile);
+            }
+        }
 
 
         public static IEnumerable<string> ReadLines(string file)
@@ -66,6 +91,12 @@ namespace ItsMagic
                 }
             }
         }
+
+        //public static IEnumerable<SlnFile> GetFiles(string projectDirectory)
+        //{
+        //    return Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories)
+        //                .Select(slnPath => new SlnFile(slnPath));
+        //}
 
         //public static void UpdateProjectReferenceWithNugetReference(CsProj toUpdate, ProjectReference reference,
         //    NugetPackageReference referenceToAdd)
@@ -132,12 +163,7 @@ namespace ItsMagic
         //        doc.Save(writer);
         //    }
         //}
-
-        //public static IEnumerable<SlnFile> GetFiles(string projectDirectory)
-        //{
-        //    return Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories)
-        //                .Select(slnPath => new SlnFile(slnPath));
-        //}      
+    
         //public static IEnumerable<string> GetFiles(string projectDirectory, string extension)
         //{
         //    return Directory.EnumerateFiles(projectDirectory, "*."+extension, SearchOption.AllDirectories);

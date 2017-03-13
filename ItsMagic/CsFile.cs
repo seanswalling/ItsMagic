@@ -45,11 +45,30 @@ namespace ItsMagic
                    && !csFileText.Contains("using Mercury.Core.JsonExtensions");
         }
 
+        public static bool HasEvidenceOfNHibExt(string csFile)
+        {
+            var csFileText = File.ReadAllText(csFile);
+            return (csFileText.Contains("XmlType")
+                   || csFileText.Contains(".Nullable()")
+                   || csFileText.Contains(".NotNullable()"))
+                   && !csFileText.Contains("using Mercury.Core.NHibernateExtensions;");
+        }
+
         public static void AddUsingToCsFile(string csFile, string reference)
         {
             var csFileText = File.ReadAllText(csFile);
             csFileText = "using " + reference + ";\n" + csFileText;
             File.WriteAllText(csFile,csFileText);
+        }
+
+        public static void RemoveUsingFromCsFile(string csFile, string reference)
+        {
+            var csFileText = File.ReadAllText(csFile);
+            if (csFileText.Contains("using " + reference))
+            {
+                var replace = csFileText.Replace("using " + reference + ";\r", "");
+                File.WriteAllText(csFile, replace);
+            }
         }
     }
 }

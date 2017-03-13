@@ -33,7 +33,7 @@ namespace ItsMagic.Tests
         public void AuthorisationReadModelCsProjContainsNHibExt()
         {
             Assert.True(
-                CsProj.ContainsJExtProjectReference(
+                CsProj.ContainsNHibExtProjectReference(
                     @"C:\source\Mercury\src\Plugins\AuthorisationReadModel\AuthorisationReadModel.csproj"));
         }
 
@@ -49,7 +49,7 @@ namespace ItsMagic.Tests
         public void TerminalGatewaySolutionContainsNHibExtReference()
         {
             Assert.True(
-                SlnFile.ContainsJExtProjectReference(
+                SlnFile.ContainsNHibExtProjectReference(
                     @"C:\source\Mercury\src\Mercury.TerminalGateway.sln"));
         }
     }
