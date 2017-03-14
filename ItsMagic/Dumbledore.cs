@@ -55,7 +55,7 @@ namespace ItsMagic
         private static void AddJExtReferences(string csFile, string csProj, string solutionFile)
         {
             CsFile.AddUsingToCsFile(csFile, "Mercury.Core.JsonExtensions");
-            CsFile.RemoveUsingFromCsFile(csFile, "Mercury.Core.MessageSerialisation");
+            CsFile.RemoveUsing(csFile, "Mercury.Core.MessageSerialisation");
             if (!CsProj.ContainsJExtProjectReference(csProj))
             {
                 CsProj.AddJExtProjectReference(csProj);
@@ -194,6 +194,29 @@ namespace ItsMagic
                 csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>",1);
                 File.WriteAllText(csProj, csprojText);
                 ReformatXml(csProj);
+            }
+        }
+
+        public static void RemoveLogForNetReference(string[] filesToFix)
+        {
+            Regex reg = new Regex("(\\s)*<Reference Include=\\\"log4net(.*)\\\">(\\s)*(.)*(\\s)*(.)*(\\s)*<\\/Reference>");
+            foreach (var file in filesToFix)
+            {
+                var csProjText = File.ReadAllText(file);
+                csProjText = reg.Replace(csProjText, "");
+                File.WriteAllText(file,csProjText);
+            }
+        }
+
+        public static void FixNHibExtUsings(string[] files)
+        {
+            foreach (var file in files)
+            {
+                CsFile.RemoveUsing(file, "Mercury.Core.NHibernateExtensions");
+                if (CsFile.HasEvidenceOfNHibExt(file))
+                {
+                    CsFile.AddUsingToCsFile(file, "Mercury.Core.NHibernateExtensions");
+                }
             }
         }
     }

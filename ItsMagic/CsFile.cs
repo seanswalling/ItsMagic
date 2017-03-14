@@ -47,9 +47,9 @@ namespace ItsMagic
         public static bool HasEvidenceOfNHibExt(string csFile)
         {
             var csFileText = File.ReadAllText(csFile);
-            return csFileText.Contains("XmlType")
-                   || csFileText.Contains(".Nullable()")
-                   || csFileText.Contains(".NotNullable()");
+            return csFileText.Contains(".Nullable()")
+                   || csFileText.Contains(".NotNullable()")
+                   && !csFile.Contains("Mercury.Core.NHibernateExtensions.cs");
         }
 
         public static void AddUsingToCsFile(string csFile, string reference)
@@ -57,12 +57,12 @@ namespace ItsMagic
             if (!File.ReadAllText(csFile).Contains("using " + reference))
             {
                 var csFileText = File.ReadAllText(csFile);
-                csFileText = "using " + reference + ";\n" + csFileText;
+                csFileText = "using " + reference + ";\r" + csFileText;
                 File.WriteAllText(csFile, csFileText);
             }
         }
 
-        public static void RemoveUsingFromCsFile(string csFile, string reference)
+        public static void RemoveUsing(string csFile, string reference)
         {
             var csFileText = File.ReadAllText(csFile);
             if (csFileText.Contains("using " + reference))
