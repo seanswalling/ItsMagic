@@ -11,44 +11,30 @@ namespace ItsMagic
     public class CsProj
     {
         public string Path { get; private set; }
-        public string Guid { get; set; }
-        public string OutputType { get; set; }
-        public string RootNamespace { get; set; }
-        public string TargetFrameworkVersion { get; set; }
-        public string [] NugetPackageReferences { get; set; }
-        public CsProj [] ProjectReferences { get; set; }
-        //public IEnumerable<CsFile> CsFiles { get; set; }
 
         public CsProj(string path)
         {
             Path = path;
             //CsFiles = GetCsFiles(path);
         }
-
-        //private static IEnumerable<CsFile> GetCsFiles(string CsProjPath)
-        //{
-        //    var dir = System.IO.Path.GetDirectoryName(CsProjPath);
-        //    return RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, CsProjPath)
-        //            .Select(CsFileRelPath => System.IO.Path.Combine(dir, CsFileRelPath))
-        //            .Select(CsFilePath => new CsFile(CsFilePath));
-        //}
-
-        public static IEnumerable<string> GetCsFiles(string csProjPath)
+        
+        public IEnumerable<CsFile> GetCsFiles()
         {
-            Console.WriteLine("Get Cs Files for: "+csProjPath);
-            var dir = System.IO.Path.GetDirectoryName(csProjPath);
-            return RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, csProjPath)
-                    .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath));
+            Console.WriteLine("Get Cs Files for: "+Path);
+            var dir = System.IO.Path.GetDirectoryName(Path);
+            return RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Path)
+                    .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
+                    .Select(file => new CsFile(file));
         }
 
-        public static void AddProjectReference(string csProj, string reference)
+        public void AddProjectReference(string reference)
         {
             var regex = new Regex("Some Pattern Here");
-            var csProjText = File.ReadAllText(csProj);
+            var csProjText = File.ReadAllText(Path);
 
             csProjText = regex.Replace(csProjText, "Something here", 1);
-            File.WriteAllText(csProj, csProjText);
-            UpdatePackagesConfig(System.IO.Path.GetDirectoryName(csProj) + "\\packages.config", reference);
+            File.WriteAllText(Path, csProjText);
+            UpdatePackagesConfig(System.IO.Path.GetDirectoryName(Path) + "\\packages.config", reference);
         }
 
         private static void UpdatePackagesConfig(string packages, string reference)
@@ -74,48 +60,48 @@ namespace ItsMagic
             }
         }
 
-        public static bool ContainsJExtProjectReference(string csProj)
+        public bool ContainsJExtProjectReference()
         {
-            return File.ReadAllText(csProj).Contains("<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>");
+            return File.ReadAllText(Path).Contains("<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>");
         }
 
-        public static bool ContainsNHibExtProjectReference(string csProj)
+        public bool ContainsNHibExtProjectReference()
         {
-            return File.ReadAllText(csProj).Contains("<Project>{f1575997-02d0-486f-ae36-69f6a3b37c39}</Project>");
+            return File.ReadAllText(Path).Contains("<Project>{f1575997-02d0-486f-ae36-69f6a3b37c39}</Project>");
         }
 
-        public static void AddJExtProjectReference(string csProj)
+        public void AddJExtProjectReference()
         {
-            if (csProj.Contains("Mercury.Core.JsonExtensions.csproj"))
+            if (Path.Contains("Mercury.Core.JsonExtensions.csproj"))
                 return;
             
             var regex = new Regex(RegexStore.ItemGroupTag);
-            var csProjText = File.ReadAllText(csProj);
+            var csProjText = File.ReadAllText(Path);
 
             csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
                                                    "<ProjectReference Include=\"..\\..\\Platform\\Mercury.Core.JsonExtensions\\Mercury.Core.JsonExtensions.csproj\">" +
                                                    "<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>" +
                                                    "<Name>Mercury.Core.JsonExtensions</Name>" +
                                                    "</ProjectReference>", 1);
-            File.WriteAllText(csProj, csProjText);
-            ReformatXml(csProj);
+            File.WriteAllText(Path, csProjText);
+            ReformatXml(Path);
         }
 
-        public static void AddNHibExtProjectReference(string csProj)
+        public void AddNHibExtProjectReference()
         {
-            if (csProj.Contains("Mercury.Core.NHibernateExtensions.csproj"))
+            if (Path.Contains("Mercury.Core.NHibernateExtensions.csproj"))
                 return;
 
             var regex = new Regex(RegexStore.ItemGroupTag);
-            var csProjText = File.ReadAllText(csProj);
+            var csProjText = File.ReadAllText(Path);
 
             csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
                                                    "<ProjectReference Include=\"..\\..\\Platform\\Mercury.Core.NHibernateExtensions\\Mercury.Core.NHibernateExtensions.csproj\">" +
                                                    "<Project>{f1575997-02d0-486f-ae36-69f6a3b37c39}</Project>" +
                                                    "<Name>Mercury.Core.NHibernateExtensions</Name>" +
                                                    "</ProjectReference>", 1);
-            File.WriteAllText(csProj, csProjText);
-            ReformatXml(csProj);
+            File.WriteAllText(Path, csProjText);
+            ReformatXml(Path);
         }
     }
 }

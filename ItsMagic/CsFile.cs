@@ -6,25 +6,22 @@ namespace ItsMagic
 {
     public class CsFile
     {
-        public string Name { get; set; }
-        //public IEnumerable<string> Usings { get; set; }
         public string Path { get; private set; }
 
         public CsFile(string path)
         {
             Path = path;
-            //Usings = GetUsings(path);
         }
 
-        public static IEnumerable<string> Usings(string csFilePath)
+        public IEnumerable<string> Usings()
         {
-            Console.WriteLine("Get Using Statements for: " + csFilePath);
-            return RegexStore.Get(RegexStore.UsingsFromCsFilePattern, csFilePath);
+            Console.WriteLine("Get Using Statements for: " + Path);
+            return RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Path);
         }
 
-        public static IEnumerable<string> GetLines(string csFile)
+        public IEnumerable<string> GetLines()
         {
-            using (var reader = new StreamReader(csFile))
+            using (var reader = new StreamReader(Path))
             {
                 while (!reader.EndOfStream)
                 {
@@ -33,9 +30,9 @@ namespace ItsMagic
             }
         }
 
-        public static bool HasEvidenceOfJExt(string csFile)
+        public bool HasEvidenceOfJExt()
         {
-            var csFileText = File.ReadAllText(csFile);
+            var csFileText = File.ReadAllText(Path);
             return csFileText.Contains(".JsonCopy()")
                    || csFileText.Contains(".ToBson()")
                    || csFileText.Contains("SettingsFactory.Build()")
@@ -44,31 +41,31 @@ namespace ItsMagic
                    || csFileText.Contains(".FromBson()");
         }
 
-        public static bool HasEvidenceOfNHibExt(string csFile)
+        public bool HasEvidenceOfNHibExt()
         {
-            var csFileText = File.ReadAllText(csFile);
+            var csFileText = File.ReadAllText(Path);
             return csFileText.Contains(".Nullable()")
                    || csFileText.Contains(".NotNullable()")
-                   && !csFile.Contains("Mercury.Core.NHibernateExtensions.cs");
+                   && !Path.Contains("Mercury.Core.NHibernateExtensions.cs");
         }
 
-        public static void AddUsingToCsFile(string csFile, string reference)
+        public void AddUsingToCsFile(string reference)
         {
-            if (!File.ReadAllText(csFile).Contains("using " + reference))
+            if (!File.ReadAllText(Path).Contains("using " + reference))
             {
-                var csFileText = File.ReadAllText(csFile);
+                var csFileText = File.ReadAllText(Path);
                 csFileText = "using " + reference + ";\r" + csFileText;
-                File.WriteAllText(csFile, csFileText);
+                File.WriteAllText(Path, csFileText);
             }
         }
 
-        public static void RemoveUsing(string csFile, string reference)
+        public void RemoveUsing(string reference)
         {
-            var csFileText = File.ReadAllText(csFile);
+            var csFileText = File.ReadAllText(Path);
             if (csFileText.Contains("using " + reference))
             {
                 var replace = csFileText.Replace("using " + reference + ";\r", "");
-                File.WriteAllText(csFile, replace);
+                File.WriteAllText(Path, replace);
             }
         }
     }

@@ -25,32 +25,31 @@ namespace ItsMagic.Tests
         public void ContractsTestsCsProjContainsJExtReference()
         {
             Assert.True(
-                CsProj.ContainsJExtProjectReference(
-                    @"C:\source\Mercury\src\Common\Contracts.Tests\Contracts.Tests.csproj"));
+                new CsProj(@"C:\source\Mercury\src\Common\Contracts.Tests\Contracts.Tests.csproj")
+                .ContainsJExtProjectReference());
         }
 
         [Fact]
         public void AuthorisationReadModelCsProjContainsNHibExt()
         {
             Assert.True(
-                CsProj.ContainsNHibExtProjectReference(
-                    @"C:\source\Mercury\src\Plugins\AuthorisationReadModel\AuthorisationReadModel.csproj"));
+                new CsProj(@"C:\source\Mercury\src\Plugins\AuthorisationReadModel\AuthorisationReadModel.csproj")
+                .ContainsNHibExtProjectReference());
         }
 
         [Fact]
         public void TerminalSolutionContainsJExtReference()
         {
             Assert.True(
-                SlnFile.ContainsJExtProjectReference(
-                    @"C:\source\Mercury\src\Mercury.Terminal.sln"));
+                new SlnFile(@"C:\source\Mercury\src\Mercury.Terminal.sln")
+                .ContainsJExtProjectReference());
         }
 
         [Fact]
         public void TerminalGatewaySolutionContainsNHibExtReference()
         {
-            Assert.True(
-                SlnFile.ContainsNHibExtProjectReference(
-                    @"C:\source\Mercury\src\Mercury.TerminalGateway.sln"));
+            Assert.True(new SlnFile(@"C:\source\Mercury\src\Mercury.TerminalGateway.sln")
+                .ContainsNHibExtProjectReference());
         }
     }
 }

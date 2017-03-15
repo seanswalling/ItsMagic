@@ -11,12 +11,10 @@ namespace ItsMagic
     public class SlnFile
     {
         public string Path { get; private set; }
-        //public IEnumerable<CsProj> CsProjs { get; set; }
 
         public SlnFile(string path)
         {
             Path = path;
-            //CsProjs = GetCsProjs(path);
         }
 
         //public static IEnumerable<CsProj> GetCsProjs(string slnPath)
@@ -27,39 +25,40 @@ namespace ItsMagic
         //        .Select(CsProjFilePath => new CsProj(CsProjFilePath));
         //}
 
-        public static IEnumerable<string> GetCsProjs(string slnPath)
+        public IEnumerable<CsProj> GetCsProjs()
         {
-            Console.WriteLine("Get Csproj Files for: " + slnPath);
-            var dir = System.IO.Path.GetDirectoryName(slnPath);
-            return RegexStore.Get(RegexStore.CsProjFromSlnPattern, slnPath)
-                .Select(csProjRelPath => System.IO.Path.Combine(dir, csProjRelPath));
+            Console.WriteLine("Get Csproj Files for: " + Path);
+            var dir = System.IO.Path.GetDirectoryName(Path);
+            return RegexStore.Get(RegexStore.CsProjFromSlnPattern, Path)
+                .Select(csProjRelPath => System.IO.Path.Combine(dir, csProjRelPath))
+                .Select(file => new CsProj(file));
         }
 
-        public static bool ContainsJExtProjectReference(string solutionFile)
+        public bool ContainsJExtProjectReference()
         {
-            var solutionFileText = File.ReadAllText(solutionFile);
+            var solutionFileText = File.ReadAllText(Path);
             Regex regex = new Regex(RegexStore.SolutionJExtProjectReferencePattern);
             Match match = regex.Match(solutionFileText);
             return match.Success;
         }
 
-        public static bool ContainsNHibExtProjectReference(string solutionFile)
+        public bool ContainsNHibExtProjectReference()
         {
-            var solutionFileText = File.ReadAllText(solutionFile);
+            var solutionFileText = File.ReadAllText(Path);
             Regex regex = new Regex(RegexStore.SolutionNHibExtProjectReferencePattern);
             Match match = regex.Match(solutionFileText);
             return match.Success;
         }
 
-        public static void AddJExtProjectReference(string solutionFile)
+        public void AddJExtProjectReference()
         {
-            var solutionFileText = File.ReadAllText(solutionFile);
+            var solutionFileText = File.ReadAllText(Path);
 
             solutionFileText = AddJExtProjectText(solutionFileText);
             solutionFileText = AddJExtDebugAndReleaseInformation(solutionFileText);
-            solutionFileText = AddJExtToCommonFolder(solutionFileText, solutionFile);
+            solutionFileText = AddJExtToCommonFolder(solutionFileText);
 
-            File.WriteAllText(solutionFile, solutionFileText);
+            File.WriteAllText(Path, solutionFileText);
         }
 
         private static string AddJExtProjectText(string solutionFileText)
@@ -78,22 +77,22 @@ namespace ItsMagic
             return solutionFileText;
         }
 
-        private static string AddJExtToCommonFolder(string solutionFileText, string solutionFile)
+        private string AddJExtToCommonFolder(string solutionFileText)
         {
-            string jExtProjEqualsCommonFolder = "{D3DC56B0-8B95-47A5-A086-9E7A95552364} = {" + RegexStore.Get(RegexStore.CommonFolderPattern, solutionFile).First() + "}";
+            string jExtProjEqualsCommonFolder = "{D3DC56B0-8B95-47A5-A086-9E7A95552364} = {" + RegexStore.Get(RegexStore.CommonFolderPattern, Path).First() + "}";
             solutionFileText = solutionFileText.Replace(RegexStore.NestedProjects,RegexStore.NestedProjects + "\n\t\t" + jExtProjEqualsCommonFolder);
             return solutionFileText;
         }
 
-        public static void AddNHibExtProjectReference(string solutionFile)
+        public void AddNHibExtProjectReference()
         {
-            var solutionFileText = File.ReadAllText(solutionFile);
+            var solutionFileText = File.ReadAllText(Path);
 
             solutionFileText = AddNHibExtProjectText(solutionFileText);
             solutionFileText = AddNHibExtDebugAndReleaseInformation(solutionFileText);
-            solutionFileText = AddNHibExtToCommonFolder(solutionFileText, solutionFile);
+            solutionFileText = AddNHibExtToCommonFolder(solutionFileText);
 
-            File.WriteAllText(solutionFile, solutionFileText);
+            File.WriteAllText(Path, solutionFileText);
         }
 
         private static string AddNHibExtProjectText(string solutionFileText)
@@ -112,9 +111,9 @@ namespace ItsMagic
             return solutionFileText;
         }
 
-        private static string AddNHibExtToCommonFolder(string solutionFileText, string solutionFile)
+        private string AddNHibExtToCommonFolder(string solutionFileText)
         {
-            string nHibExtProjEqualsCommonFolder = "{F1575997-02D0-486F-AE36-69F6A3B37C39} = {" + RegexStore.Get(RegexStore.CommonFolderPattern, solutionFile).First() + "}";
+            string nHibExtProjEqualsCommonFolder = "{F1575997-02D0-486F-AE36-69F6A3B37C39} = {" + RegexStore.Get(RegexStore.CommonFolderPattern, Path).First() + "}";
             solutionFileText = solutionFileText.Replace(RegexStore.NestedProjects, RegexStore.NestedProjects + "\n\t\t" + nHibExtProjEqualsCommonFolder);
             return solutionFileText;
         }
