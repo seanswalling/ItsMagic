@@ -32,7 +32,7 @@ namespace ItsMagic.Tests
             SlnFile[] slnFiles = { new SlnFile(@"C:\source\Mercury\src\Mercury.Terminal.sln"), new SlnFile(@"C:\source\Mercury\src\Mercury.TerminalGateway.sln") };
             foreach (var slnFile in slnFiles)
             {
-                var csProjs = slnFile.GetCsProjs().Distinct().OrderBy(i=>i).ToArray();
+                var csProjs = slnFile.GetCsProjs().Distinct().OrderBy(i=>i.Path).ToArray();
                 Output.WriteLine(csProjs.Length.ToString());
                 foreach (var csProj in csProjs)
                 {
@@ -52,7 +52,7 @@ namespace ItsMagic.Tests
                 
                 foreach (var csProj in csProjs)
                 {
-                    var csFiles = csProj.GetCsFiles().Distinct().OrderBy(i => i).ToArray();
+                    var csFiles = csProj.GetCsFiles().Distinct().OrderBy(i => i.Path).ToArray();
                     Output.WriteLine(csFiles.Length.ToString());
                     foreach (var csFile in csFiles)
                     {
