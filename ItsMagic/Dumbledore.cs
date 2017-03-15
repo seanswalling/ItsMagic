@@ -162,16 +162,6 @@ namespace ItsMagic
         }
         #endregion
 
-        private static void ReformatXml(string file)
-        {
-            var doc = XDocument.Load(file);
-            using (XmlTextWriter writer = new XmlTextWriter(file, System.Text.Encoding.UTF8))
-            {
-                writer.Formatting = Formatting.Indented;
-                doc.Save(writer);
-            }
-        }
-
         //public static IEnumerable<string> GetFiles(string projectDirectory, string extension)
         //{
         //    return Directory.EnumerateFiles(projectDirectory, "*."+extension, SearchOption.AllDirectories);
@@ -190,15 +180,16 @@ namespace ItsMagic
         //}
         public static void FixXml(string dir)
         {
-            var csProjs = Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories);
+            var csProjs = Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
+                .Select(file => new CsProj(file));
             foreach (var csProj in csProjs)
             {
                 Console.WriteLine("Checking: "+csProj);
-                var csprojText = File.ReadAllText(csProj);
+                var csprojText = File.ReadAllText(csProj.Path);
                 Regex reg = new Regex("(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
                 csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>",1);
-                File.WriteAllText(csProj, csprojText);
-                ReformatXml(csProj);
+                File.WriteAllText(csProj.Path, csprojText);
+                CsProj.ReformatXml(csProj.Path);
             }
         }
 

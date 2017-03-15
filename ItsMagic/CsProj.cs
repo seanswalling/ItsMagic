@@ -50,7 +50,7 @@ namespace ItsMagic
             ReformatXml(packages);
         }
 
-        private static void ReformatXml(string file)
+        public static string ReformatXml(string file)
         {
             var doc = XDocument.Load(file);
             using (XmlTextWriter writer = new XmlTextWriter(file, System.Text.Encoding.UTF8))
@@ -58,6 +58,7 @@ namespace ItsMagic
                 writer.Formatting = Formatting.Indented;
                 doc.Save(writer);
             }
+            return file;
         }
 
         public bool ContainsJExtProjectReference()
