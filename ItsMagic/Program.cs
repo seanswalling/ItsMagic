@@ -13,7 +13,8 @@ namespace ItsMagic
             //string dir = @"E:\github\cc\Mercury\src";
             //Dumbledore.AddJExtAndNHibExtReferences(dir);
             //Dumbledore.RemoveLogForNetReference(FilesToFix());
-            Dumbledore.FixNHibExtUsings(Directory.EnumerateFiles(dir,"*.cs",SearchOption.AllDirectories).ToArray());
+            //Dumbledore.FixNHibExtUsings(Directory.EnumerateFiles(dir,"*.cs",SearchOption.AllDirectories).ToArray());
+            Dumbledore.AddNewRelicRefsTo(FilesThatRequireNewRelic());
             Console.WriteLine("Application Complete");
             Console.ReadLine();
         }
@@ -75,6 +76,45 @@ namespace ItsMagic
                 @"c:\source\mercury\src\MessageHub\MessageHub.Deployer\MessageHub.Deployer.csproj",
                 @"c:\source\mercury\src\MessageHub\MessageHub.MessageHubDatabase\MessageHubDatabase.csproj",
                 @"c:\source\mercury\src\MessageHub\MessageHub.MessageHubWebRole\WebRole.csproj"
+            };
+        }
+
+        public static string[] FilesThatRequireNewRelic()
+        {
+            return new[]
+            {
+                @"c:\source\mercury\src\BPayPaymentDistributionProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\BankingProcessReadModel\ReadModelPopulator\ReadModelPopulator.csproj",
+                @"c:\source\mercury\src\BankingService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\BatchPaymentProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\CashAdvanceRatingProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\CashAdvanceRatingService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\CollectionAgentBatchSubmissionProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\CollectionAgentService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\CollectionsImportExportProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\ContractSigningV2Process\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\CustomerCommunicationProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\CustomerCommunicationService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\CustomerNoteService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\CustomerService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\DisputeService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\DocumentService\ReadModelPopulator\ReadModelPopulator.csproj",
+                @"c:\source\mercury\src\ESignService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\EmailDispatcherProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\HardshipService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\InStoreLoanApplicationProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\IncompleteApplication\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\InvoiceService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\LetterDispatcherProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\LettersReadModel\ReadModelPopulator\ReadModelPopulator.csproj",
+                @"c:\source\mercury\src\LoanBankingDisbursementProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\LoanBankingRepaymentProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\LoanContractService\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\LoanHardshipProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\LoanNotice\CommandProcessor\CommandProcessor.csproj",
+                @"c:\source\mercury\src\LoanNoticeProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\LoanRatingProcess\ProcessManager\ProcessManager.csproj",
+                @"c:\source\mercury\src\LoanRepaymentSchedulerProcess\LoanPaymentSchedulerProcessManager\LoanPaymentSchedulerProcessManager.csproj"
             };
         }
     }

@@ -216,5 +216,14 @@ namespace ItsMagic
                 }
             }
         }
+
+        public static void AddNewRelicRefsTo(string[] filesThatRequireNewRelic)
+        {
+            foreach (var file in filesThatRequireNewRelic)
+            {
+                var csproj = new CsProj(file);
+                csproj.AddNewRelicProjectReference();
+            }
+        }
     }
 }

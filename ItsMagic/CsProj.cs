@@ -104,5 +104,19 @@ namespace ItsMagic
             File.WriteAllText(Path, csProjText);
             ReformatXml(Path);
         }
+
+        public void AddNewRelicProjectReference()
+        {
+            var regex = new Regex(RegexStore.ItemGroupTag);
+            var csProjText = File.ReadAllText(Path);
+
+            csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
+                                                   "<Reference Include=\"NewRelic.Api.Agent, Version=5.19.47.0, Culture=neutral, PublicKeyToken=06552fced0b33d87, processorArchitecture=MSIL\">" +
+                                                   "<HintPath>..\\..\\packages\\NewRelic.Agent.Api.5.19.47.0\\lib\\NewRelic.Api.Agent.dll</HintPath>" +
+                                                   "<Private>True</Private>" +
+                                                   "</Reference>", 1);
+            File.WriteAllText(Path, csProjText);
+            ReformatXml(Path);
+        }
     }
 }
