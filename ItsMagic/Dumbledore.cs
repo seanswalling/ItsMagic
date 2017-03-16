@@ -100,7 +100,7 @@ namespace ItsMagic
             }
         }
 
-        public static void FixXml(string dir)
+        public static void RemoveDuplicateXmlHeader(string dir)
         {
             var csProjs = Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
                 .Select(file => new CsProj(file));
