@@ -14,9 +14,18 @@ namespace ItsMagic
             //Dumbledore.AddJExtAndNHibExtReferences(dir);
             //Dumbledore.RemoveLogForNetReference(FilesToFix());
             //Dumbledore.FixNHibExtUsings(Directory.EnumerateFiles(dir,"*.cs",SearchOption.AllDirectories).ToArray());
-            Dumbledore.AddNewRelicRefsTo(FilesThatRequireNewRelic());
+            //Dumbledore.AddNewRelicRefsTo(FilesThatRequireNewRelic());
+            PrintcsProjsDependantOnlogRepoSc(dir);
             Console.WriteLine("Application Complete");
             Console.ReadLine();
+        }
+
+        private static void PrintcsProjsDependantOnlogRepoSc(string dir)
+        {
+            foreach (var csproj in Dumbledore.GetProjectsDependantOnLogRepoSc(Dumbledore.GetCsProjs(dir)).ToArray())
+            {
+                Console.WriteLine(csproj.Path);
+            }
         }
 
         public static string[] FilesToFix()

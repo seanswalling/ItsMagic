@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -224,6 +225,21 @@ namespace ItsMagic
                 var csproj = new CsProj(file);
                 csproj.AddNewRelicProjectReference();
             }
+        }
+
+        public static IEnumerable<CsProj> GetCsProjs(string dir)
+        {
+            return Directory.EnumerateFiles(dir,"*.csproj",SearchOption.AllDirectories)
+                .Select(file => new CsProj(file));
+        }
+
+        public static IEnumerable<CsProj> GetProjectsDependantOnLogRepoSc(IEnumerable<CsProj> csProjs)
+        {
+            return csProjs.ToArray()
+                .Where(csProj => csProj
+                    .GetCsFiles()
+                    .Any(csFile => csFile
+                        .HasEvidenceOfLogRepoSc()));
         }
     }
 }

@@ -49,6 +49,15 @@ namespace ItsMagic
                    && !Path.Contains("Mercury.Core.NHibernateExtensions.cs");
         }
 
+        public bool HasEvidenceOfLogRepoSc()
+        {
+            var csFileText = File.ReadAllText(Path);
+            return (csFileText.Contains("ISharedAccessKeyService")
+                   || csFileText.Contains("IPrimeService"))
+                   && !Path.Contains("ISharedAccessKeyService.cs")
+                   && !Path.Contains("IPrimeService.cs");
+        }
+
         public void AddUsingToCsFile(string reference)
         {
             if (!File.ReadAllText(Path).Contains("using " + reference))
