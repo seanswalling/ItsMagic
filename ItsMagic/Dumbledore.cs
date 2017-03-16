@@ -86,7 +86,6 @@ namespace ItsMagic
             }
         }
 
-
         public static IEnumerable<string> ReadLines(string file)
         {
             if (File.Exists(file))
@@ -101,11 +100,98 @@ namespace ItsMagic
             }
         }
 
-        //public static IEnumerable<SlnFile> GetFiles(string projectDirectory)
-        //{
-        //    return Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories)
-        //                .Select(slnPath => new SlnFile(slnPath));
-        //}
+        public static void FixXml(string dir)
+        {
+            var csProjs = Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
+                .Select(file => new CsProj(file));
+            foreach (var csProj in csProjs)
+            {
+                Console.WriteLine("Checking: " + csProj);
+                var csprojText = File.ReadAllText(csProj.Path);
+                Regex reg = new Regex("(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
+                csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>", 1);
+                File.WriteAllText(csProj.Path, csprojText);
+                CsProj.ReformatXml(csProj.Path);
+            }
+        }
+
+        public static void RemoveLogForNetReference(string[] filesToFix)
+        {
+            Regex reg = new Regex("(\\s)*<Reference Include=\\\"log4net(.*)\\\">(\\s)*(.)*(\\s)*(.)*(\\s)*<\\/Reference>");
+            foreach (var file in filesToFix)
+            {
+                var csProjText = File.ReadAllText(file);
+                csProjText = reg.Replace(csProjText, "");
+                File.WriteAllText(file, csProjText);
+            }
+        }
+
+        public static void FixNHibExtUsings(string[] files)
+        {
+            foreach (var file in files)
+            {
+                var csFile = new CsFile(file);
+                csFile.RemoveUsing("Mercury.Core.NHibernateExtensions");
+                if (csFile.HasEvidenceOfNHibExt())
+                {
+                    csFile.AddUsingToCsFile("Mercury.Core.NHibernateExtensions");
+                }
+            }
+        }
+
+        public static void AddNewRelicRefsTo(string[] filesThatRequireNewRelic)
+        {
+            foreach (var file in filesThatRequireNewRelic)
+            {
+                var csproj = new CsProj(file);
+                csproj.AddNewRelicProjectReference();
+            }
+        }
+
+        public static IEnumerable<SlnFile> GetSlnFiles(string dir)
+        {
+            return Directory.EnumerateFiles(dir, "*.sln", SearchOption.AllDirectories)
+                .Select(file => new SlnFile(file));
+        }
+
+        public static IEnumerable<CsProj> GetCsProjs(string dir)
+        {
+            return Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
+                .Select(file => new CsProj(file));
+        }
+
+        public static IEnumerable<CsFile> GetCsFiles(string dir)
+        {
+            return Directory.EnumerateFiles(dir, "*.cs", SearchOption.AllDirectories)
+                .Select(file => new CsFile(file));
+        }
+
+        public static IEnumerable<CsProj> GetProjectsDependantOnLogRepoSc(IEnumerable<CsProj> csProjs)
+        {
+            return csProjs.ToArray()
+                .Where(csProj => csProj
+                    .GetCsFiles()
+                    .Any(csFile => csFile
+                        .HasEvidenceOfLogRepoSc()));
+        }
+
+        #region Abstract Later
+        public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace, string replacement)
+        {
+            var Regex = new Regex(referenceToReplace.Pattern);
+            var csProjText = File.ReadAllText(toUpdate.Path);
+            csProjText = Regex.Replace(csProjText, replacement);
+            File.WriteAllText(toUpdate.Path, csProjText);
+        }
+
+        public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace, string replacement)
+        {
+            var Regex = new Regex(referenceToReplace.Pattern);
+            var csProjText = File.ReadAllText(toUpdate.Path);
+            csProjText = Regex.Replace(csProjText, replacement);
+            File.WriteAllText(toUpdate.Path, csProjText);
+        }
+        #endregion
 
         //public static void UpdateProjectReferenceWithNugetReference(CsProj toUpdate, ProjectReference reference,
         //    NugetPackageReference referenceToAdd)
@@ -145,24 +231,6 @@ namespace ItsMagic
         //    ReformatXml(packages);
         //}
 
-        #region Abstract Later
-        public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace, string replacement)
-        {
-            var Regex = new Regex(referenceToReplace.Pattern);
-            var csProjText = File.ReadAllText(toUpdate.Path);
-            csProjText = Regex.Replace(csProjText, replacement);
-            File.WriteAllText(toUpdate.Path, csProjText);
-        }
-
-        public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace, string replacement)
-        {
-            var Regex = new Regex(referenceToReplace.Pattern);
-            var csProjText = File.ReadAllText(toUpdate.Path);
-            csProjText = Regex.Replace(csProjText, replacement);
-            File.WriteAllText(toUpdate.Path, csProjText);
-        }
-        #endregion
-
         //public static IEnumerable<string> GetFiles(string projectDirectory, string extension)
         //{
         //    return Directory.EnumerateFiles(projectDirectory, "*."+extension, SearchOption.AllDirectories);
@@ -179,67 +247,6 @@ namespace ItsMagic
         //        //SlnFile.AddCsProjToSolution(csFile, "");
         //    }
         //}
-        public static void FixXml(string dir)
-        {
-            var csProjs = Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
-                .Select(file => new CsProj(file));
-            foreach (var csProj in csProjs)
-            {
-                Console.WriteLine("Checking: "+csProj);
-                var csprojText = File.ReadAllText(csProj.Path);
-                Regex reg = new Regex("(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
-                csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>",1);
-                File.WriteAllText(csProj.Path, csprojText);
-                CsProj.ReformatXml(csProj.Path);
-            }
-        }
 
-        public static void RemoveLogForNetReference(string[] filesToFix)
-        {
-            Regex reg = new Regex("(\\s)*<Reference Include=\\\"log4net(.*)\\\">(\\s)*(.)*(\\s)*(.)*(\\s)*<\\/Reference>");
-            foreach (var file in filesToFix)
-            {
-                var csProjText = File.ReadAllText(file);
-                csProjText = reg.Replace(csProjText, "");
-                File.WriteAllText(file,csProjText);
-            }
-        }
-
-        public static void FixNHibExtUsings(string[] files)
-        {
-            foreach (var file in files)
-            {
-                var csFile = new CsFile(file);
-                csFile.RemoveUsing("Mercury.Core.NHibernateExtensions");
-                if (csFile.HasEvidenceOfNHibExt())
-                {
-                    csFile.AddUsingToCsFile("Mercury.Core.NHibernateExtensions");
-                }
-            }
-        }
-
-        public static void AddNewRelicRefsTo(string[] filesThatRequireNewRelic)
-        {
-            foreach (var file in filesThatRequireNewRelic)
-            {
-                var csproj = new CsProj(file);
-                csproj.AddNewRelicProjectReference();
-            }
-        }
-
-        public static IEnumerable<CsProj> GetCsProjs(string dir)
-        {
-            return Directory.EnumerateFiles(dir,"*.csproj",SearchOption.AllDirectories)
-                .Select(file => new CsProj(file));
-        }
-
-        public static IEnumerable<CsProj> GetProjectsDependantOnLogRepoSc(IEnumerable<CsProj> csProjs)
-        {
-            return csProjs.ToArray()
-                .Where(csProj => csProj
-                    .GetCsFiles()
-                    .Any(csFile => csFile
-                        .HasEvidenceOfLogRepoSc()));
-        }
     }
 }
