@@ -21,4 +21,3 @@ C:\source\ItsMagic\ItsMagic\bin\Debug\ItsMagic.exe
 C:\source\ItsMagic\ItsMagic\bin\Debug\ItsMagic.pdb
 C:\source\ItsMagic\ItsMagic\obj\Debug\ItsMagic.exe
 C:\source\ItsMagic\ItsMagic\obj\Debug\ItsMagic.pdb
-C:\source\ItsMagic\ItsMagic\obj\Debug\ItsMagic.csprojResolveAssemblyReference.cache
