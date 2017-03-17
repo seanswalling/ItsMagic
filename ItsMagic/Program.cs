@@ -28,6 +28,10 @@ namespace ItsMagic
         {
             foreach (var slnFile in Dumbledore.GetSlnFiles(dir).ToArray())
             {
+                if (slnFile.Path.Contains("Mercury.LogRepository.sln"))
+                {
+                    int debug = 0;
+                }
                 foreach (var csProj in slnFile.GetCsProjs()
                     .Where(csProj => csProj.HasLogRepoReference())
                     .ToArray())

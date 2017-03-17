@@ -134,8 +134,7 @@ namespace ItsMagic
         public void UpdateLogRepoReference(string reference)
         {
             var slnFiletext = File.ReadAllText(Path);
-            Regex regex = new Regex(RegexStore.LogRepoReferencePattern);
-            slnFiletext = regex.Replace(slnFiletext, "Platform\\" + reference);
+            slnFiletext = slnFiletext.Replace(reference, "Platform\\" + reference);
             File.WriteAllText(Path, slnFiletext);
         }
     }

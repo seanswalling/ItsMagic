@@ -132,8 +132,7 @@ namespace ItsMagic
         public void UpdateLogRepoReference(string reference)
         {
             var csProjtext = File.ReadAllText(Path);
-            Regex regex = new Regex(RegexStore.LogRepoReferencePattern);
-            csProjtext = regex.Replace(csProjtext, "\\Platform"+ reference);
+            csProjtext = csProjtext.Replace(reference, "\\Platform" + reference);
             File.WriteAllText(Path, csProjtext);
         }
     }
