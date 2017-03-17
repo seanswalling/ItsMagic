@@ -1,20 +1,23 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+//using Microsoft.Build.Construction;
 
 namespace ItsMagic
 {
-    public class SlnFile
+    public class SlnFile// : SolutionFile
     {
         public string Path { get; private set; }
 
         public SlnFile(string path)
         {
             Path = path;
+            //Microsoft.Build.Construction.SolutionFile sln = new SolutionFile();
         }
 
         //public static IEnumerable<CsProj> GetCsProjs(string slnPath)
@@ -116,6 +119,24 @@ namespace ItsMagic
             string nHibExtProjEqualsCommonFolder = "{F1575997-02D0-486F-AE36-69F6A3B37C39} = {" + RegexStore.Get(RegexStore.CommonFolderPattern, Path).First() + "}";
             solutionFileText = solutionFileText.Replace(RegexStore.NestedProjects, RegexStore.NestedProjects + "\n\t\t" + nHibExtProjEqualsCommonFolder);
             return solutionFileText;
+        }
+
+        public bool HasLogRepoReference()
+        {
+            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).Any();
+        }
+
+        public string[] LogRepoReferences()
+        {
+            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).ToArray();
+        }
+
+        public void UpdateLogRepoReference(string reference)
+        {
+            var slnFiletext = File.ReadAllText(Path);
+            Regex regex = new Regex(RegexStore.LogRepoReferencePattern);
+            slnFiletext = regex.Replace(slnFiletext, "Platform\\" + reference);
+            File.WriteAllText(Path, slnFiletext);
         }
     }
 }

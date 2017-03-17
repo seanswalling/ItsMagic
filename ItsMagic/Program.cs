@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,13 +13,38 @@ namespace ItsMagic
         {
             string dir = "C:\\source\\Mercury\\src";
             //string dir = @"E:\github\cc\Mercury\src";
+
             //Dumbledore.AddJExtAndNHibExtReferences(dir);
             //Dumbledore.RemoveLogForNetReference(FilesToFix());
             //Dumbledore.FixNHibExtUsings(Directory.EnumerateFiles(dir,"*.cs",SearchOption.AllDirectories).ToArray());
             //Dumbledore.AddNewRelicRefsTo(FilesThatRequireNewRelic());
-            PrintcsProjsDependantOnlogRepoSc(dir);
+            //PrintcsProjsDependantOnlogRepoSc(dir);
+            UpdateLogRepositoryPaths(dir);
             Console.WriteLine("Application Complete");
             Console.ReadLine();
+        }
+
+        private static void UpdateLogRepositoryPaths(string dir)
+        {
+            foreach (var slnFile in Dumbledore.GetSlnFiles(dir).ToArray())
+            {
+                foreach (var csProj in slnFile.GetCsProjs()
+                    .Where(csProj => csProj.HasLogRepoReference())
+                    .ToArray())
+                {
+                    foreach (var reference in csProj.LogRepoReferences())
+                    {
+                        csProj.UpdateLogRepoReference(reference);
+                    }
+                }
+                if (slnFile.HasLogRepoReference())
+                {
+                    foreach (var reference in slnFile.LogRepoReferences())
+                    {
+                        slnFile.UpdateLogRepoReference(reference);
+                    }
+                }
+            }
         }
 
         private static void PrintcsProjsDependantOnlogRepoSc(string dir)

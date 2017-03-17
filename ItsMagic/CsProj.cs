@@ -12,6 +12,11 @@ namespace ItsMagic
     {
         public string Path { get; private set; }
 
+        public string[] LogRepoReferences()
+        {
+            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).ToArray();
+        }
+
         public CsProj(string path)
         {
             Path = path;
@@ -117,6 +122,19 @@ namespace ItsMagic
                                                    "</Reference>", 1);
             File.WriteAllText(Path, csProjText);
             ReformatXml(Path);
+        }
+
+        public bool HasLogRepoReference()
+        {
+            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).Any();
+        }
+
+        public void UpdateLogRepoReference(string reference)
+        {
+            var csProjtext = File.ReadAllText(Path);
+            Regex regex = new Regex(RegexStore.LogRepoReferencePattern);
+            csProjtext = regex.Replace(csProjtext, "\\Platform"+ reference);
+            File.WriteAllText(Path, csProjtext);
         }
     }
 }

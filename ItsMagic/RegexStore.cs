@@ -20,6 +20,7 @@ namespace ItsMagic
         public const string SolutionJExtProjectReferencePattern = "Project.*\\\"Mercury\\.Core\\.JsonExtensions\\\"";
         public const string SolutionNHibExtProjectReferencePattern = "Project.*\\\"Mercury\\.Core\\.NHibernateExtensions\\\"";
         public const string CommonFolderPattern = "Project.* = \\\"Common\\\", \\\"Common\\\", \\\"\\{(?<capturegroup>(.*))\\}\\\"";
+        public const string LogRepoReferencePattern = "(?<!\\\\*Platform\\\\*)(?<capturegroup>(\\\\*LogRepository\\\\(.)+\\\\(.)+\\.c[cs]proj))";
 
 
         public const string SolutionJExtProjectReference =

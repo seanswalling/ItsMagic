@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Xunit;
 using Xunit.Abstractions;
@@ -87,6 +88,26 @@ namespace ItsMagic.Tests
         private void CanFindJExtReferenceInSln()
         {
             Assert.Equal(true, new SlnFile(@"C:\source\ItsMagic\ItsMagic.Tests\Approved\Mercury.Terminal.sln").ContainsJExtProjectReference());
+        }
+
+        [Fact]
+        private void CanDetectLogRepoReferences()
+        {
+            Assert.Equal(true, new CsProj(@"C:\source\Mercury\src\Platform\Logging.Client\Logging.Client.csproj").HasLogRepoReference());
+        }
+
+        [Fact]
+        private void CanUpdateLogRepoReference()
+        {
+            var csProj = new CsProj(@"C:\source\Mercury\src\Platform\Logging.Client\Logging.Client.csproj");
+            foreach (var reference in csProj.LogRepoReferences())
+            {
+                csProj.UpdateLogRepoReference(reference);
+            }
+            
+            Assert.Equal(
+                File.ReadAllText(@"C:\source\ItsMagic\ItsMagic.Tests\Approved\Logging.Client.csproj"),
+                File.ReadAllText(@"C:\source\Mercury\src\Platform\Logging.Client\Logging.Client.csproj"));
         }
     }
 }
