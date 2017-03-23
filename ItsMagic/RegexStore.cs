@@ -37,6 +37,8 @@ namespace ItsMagic
                                                           "{F1575997-02D0-486F-AE36-69F6A3B37C39}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t" +
                                                           "{F1575997-02D0-486F-AE36-69F6A3B37C39}.Release|Any CPU.Build.0 = Release|Any CPU";
 
+        public static string ClassFromCsFile = "class (?<capturegroup>(\\w*\\d*))";
+
         public static IEnumerable<string> Get(string pattern, string file)
         {
             Regex regex = new Regex(pattern);

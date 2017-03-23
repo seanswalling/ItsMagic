@@ -19,7 +19,8 @@ namespace ItsMagic
             //Dumbledore.FixNHibExtUsings(Directory.EnumerateFiles(dir,"*.cs",SearchOption.AllDirectories).ToArray());
             //Dumbledore.AddNewRelicRefsTo(FilesThatRequireNewRelic());
             //PrintcsProjsDependantOnlogRepoSc(dir);
-            UpdateLogRepositoryPaths(dir);
+            //UpdateLogRepositoryPaths(dir);
+            Dumbledore.AddWorkerEngineTestCoreReferences(dir);
             Console.WriteLine("Application Complete");
             Console.ReadLine();
         }
@@ -28,10 +29,6 @@ namespace ItsMagic
         {
             foreach (var slnFile in Dumbledore.GetSlnFiles(dir).ToArray())
             {
-                if (slnFile.Path.Contains("Mercury.LogRepository.sln"))
-                {
-                    int debug = 0;
-                }
                 foreach (var csProj in slnFile.GetCsProjs()
                     .Where(csProj => csProj.HasLogRepoReference())
                     .ToArray())

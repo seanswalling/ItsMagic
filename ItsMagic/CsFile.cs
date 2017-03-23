@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ItsMagic
 {
@@ -11,6 +12,11 @@ namespace ItsMagic
         public CsFile(string path)
         {
             Path = path;
+        }
+
+        public string[] GetClasses()
+        {
+            return RegexStore.Get(RegexStore.ClassFromCsFile, Path).ToArray();
         }
 
         public IEnumerable<string> Usings()
@@ -76,6 +82,91 @@ namespace ItsMagic
                 var replace = csFileText.Replace("using " + reference + ";\r", "");
                 File.WriteAllText(Path, replace);
             }
+        }
+
+        public bool HasEvidenceOf(CsProj csProj)
+        {
+            return csProj.GetCsFiles()
+                            .SelectMany(cs => cs.GetClasses())
+                            .Select(c => File.ReadAllText(Path).Contains(c))
+                            .Any();
+        }
+
+        public bool HasEvidenceOfWeTc()
+        {
+            var csFileText = File.ReadAllText(Path);
+            return (csFileText.Contains("AggregateEx")
+                   || csFileText.Contains("AlterDepencencies")
+                   || csFileText.Contains("ResolutionInfo")
+                   || csFileText.Contains("BufferingScenarioRenderer")
+                   || csFileText.Contains("ChainedScenario")
+                   || csFileText.Contains("ChainedScenarios")
+                   || csFileText.Contains("CommandWriterTestExtensions")
+                   || csFileText.Contains("EnvironmentScenarioRenderer")
+                   || csFileText.Contains("EventAssert")
+                   || csFileText.Contains("EventWriterTestExtensions")
+                   || csFileText.Contains("HandlerTest")
+                   || csFileText.Contains("InMemoryDatabaseFixtureBase")
+                   || csFileText.Contains("IScenarioRender")
+                   || csFileText.Contains("LocalDbConfiguration")
+                   || csFileText.Contains("LocalDbDatabaseFixture")
+                   || csFileText.Contains("MessageStoreTestExtensions")
+                   || csFileText.Contains("MessageHubWriterExtensions")
+                   || csFileText.Contains("ProcessManagerStructureValidationFixtureBase")
+                   || csFileText.Contains("ProdScenario")
+                   || csFileText.Contains("RegressionScenarios")
+                   || csFileText.Contains("Scenario")
+                   || csFileText.Contains("ScenarioCollection")
+                   || csFileText.Contains("ScenarioDrivenTestEnvironment")
+                   || csFileText.Contains("ScenarioDrivenTestService")
+                   || csFileText.Contains("ScenarioEx")
+                   || csFileText.Contains("ScenarioOutputVisitor")
+                   || csFileText.Contains("ScenarioRenderer")
+                   || csFileText.Contains("SetCulture")
+                   || csFileText.Contains("SetTime")
+                   || csFileText.Contains("SharedScenarioAssertions")
+                   || csFileText.Contains("SimulatedCommand")
+                   || csFileText.Contains("SimulatedDocument")
+                   || csFileText.Contains("SimulatedEvent")
+                   || csFileText.Contains("SimulatedFastForward")
+                   || csFileText.Contains("StoppableServiceWrapper")
+                   || csFileText.Contains("TransientExceptionSideEffect"))
+                   && !Path.Contains("AggregateEx.cs")
+                   && !Path.Contains("AlterDepencencies.cs")
+                   && !Path.Contains("ResolutionInfo.cs")
+                   && !Path.Contains("BufferingScenarioRenderer.cs")
+                   && !Path.Contains("ChainedScenario.cs")
+                   && !Path.Contains("ChainedScenarios.cs")
+                   && !Path.Contains("CommandWriterTestExtensions.cs")
+                   && !Path.Contains("EnvironmentScenarioRenderer.cs")
+                   && !Path.Contains("EventAssert.cs")
+                   && !Path.Contains("EventWriterTestExtensions.cs")
+                   && !Path.Contains("HandlerTest.cs")
+                   && !Path.Contains("InMemoryDatabaseFixtureBase.cs")
+                   && !Path.Contains("IScenarioRender.cs")
+                   && !Path.Contains("LocalDbConfiguration.cs")
+                   && !Path.Contains("LocalDbDatabaseFixture.cs")
+                   && !Path.Contains("MessageStoreTestExtensions.cs")
+                   && !Path.Contains("MessageHubWriterExtensions.cs")
+                   && !Path.Contains("ProcessManagerStructureValidationFixtureBase.cs")
+                   && !Path.Contains("ProdScenario.cs")
+                   && !Path.Contains("RegressionScenarios.cs")
+                   && !Path.Contains("Scenario.cs")
+                   && !Path.Contains("ScenarioCollection.cs")
+                   && !Path.Contains("ScenarioDrivenTestEnvironment.cs")
+                   && !Path.Contains("ScenarioDrivenTestService.cs")
+                   && !Path.Contains("ScenarioEx.cs")
+                   && !Path.Contains("ScenarioOutputVisitor.cs")
+                   && !Path.Contains("ScenarioRenderer.cs")
+                   && !Path.Contains("SetCulture.cs")
+                   && !Path.Contains("SetTime.cs")
+                   && !Path.Contains("SharedScenarioAssertions.cs")
+                   && !Path.Contains("SimulatedCommand.cs")
+                   && !Path.Contains("SimulatedDocument.cs")
+                   && !Path.Contains("SimulatedEvent.cs")
+                   && !Path.Contains("SimulatedFastForward.cs")
+                   && !Path.Contains("StoppableServiceWrapper.cs")
+                   && !Path.Contains("TransientExceptionSideEffect.cs");
         }
     }
 }

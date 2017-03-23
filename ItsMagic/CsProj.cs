@@ -5,22 +5,27 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.Build.Evaluation;
 
 namespace ItsMagic
 {
-    public class CsProj
+    public class CsProj : Project
     {
         public string Path { get; private set; }
-
-        public string[] LogRepoReferences()
-        {
-            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).ToArray();
-        }
 
         public CsProj(string path)
         {
             Path = path;
-            //CsFiles = GetCsFiles(path);
+        }
+
+        public string GetName()
+        {
+            return System.IO.Path.GetFileNameWithoutExtension(Path);
+        }
+
+        public string[] LogRepoReferences()
+        {
+            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).ToArray();
         }
         
         public IEnumerable<CsFile> GetCsFiles()

@@ -1,32 +1,20 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-//using Microsoft.Build.Construction;
+using Microsoft.Build.Construction;
 
 namespace ItsMagic
 {
-    public class SlnFile// : SolutionFile
+    public class SlnFile
     {
         public string Path { get; private set; }
 
         public SlnFile(string path)
         {
             Path = path;
-            //Microsoft.Build.Construction.SolutionFile sln = new SolutionFile();
         }
-
-        //public static IEnumerable<CsProj> GetCsProjs(string slnPath)
-        //{
-        //    var dir = System.IO.Path.GetDirectoryName(slnPath);
-        //    return RegexStore.Get(RegexStore.CsProjFromSlnPattern,slnPath)
-        //        .Select(CsProjRelPath => System.IO.Path.Combine(dir, CsProjRelPath))
-        //        .Select(CsProjFilePath => new CsProj(CsProjFilePath));
-        //}
 
         public IEnumerable<CsProj> GetCsProjs()
         {
