@@ -17,10 +17,13 @@ E:\github\cc\itsmagic\ItsMagic.Tests\obj\Debug\ItsMagic.Tests.pdb
 C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\ItsMagic.Tests.dll
 C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\ItsMagic.Tests.pdb
 C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\ItsMagic.exe
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\Microsoft.Build.dll
 C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.abstractions.dll
 C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.assert.dll
 C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.core.dll
 C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.execution.desktop.dll
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\Microsoft.Build.Framework.dll
+C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\Microsoft.Build.Engine.dll
 C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\ItsMagic.pdb
 C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.abstractions.xml
 C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.assert.xml
@@ -29,6 +32,3 @@ C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.execution.desktop.xml
 C:\source\ItsMagic\ItsMagic.Tests\obj\Debug\ItsMagic.Tests.csprojResolveAssemblyReference.cache
 C:\source\ItsMagic\ItsMagic.Tests\obj\Debug\ItsMagic.Tests.dll
 C:\source\ItsMagic\ItsMagic.Tests\obj\Debug\ItsMagic.Tests.pdb
-C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\Microsoft.Build.dll
-C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\Microsoft.Build.Framework.dll
-C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\Microsoft.Build.Engine.dll

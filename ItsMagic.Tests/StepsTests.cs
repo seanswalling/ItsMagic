@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -53,7 +54,7 @@ namespace ItsMagic.Tests
                 
                 foreach (var csProj in csProjs)
                 {
-                    var csFiles = csProj.GetCsFiles().Distinct().OrderBy(i => i.Path).ToArray();
+                    var csFiles = csProj.CsFiles.Distinct().OrderBy(i => i.Path).ToArray();
                     Output.WriteLine(csFiles.Length.ToString());
                     foreach (var csFile in csFiles)
                     {
@@ -72,6 +73,20 @@ namespace ItsMagic.Tests
         }
 
         [Fact]
+        private void CanFindEvidenceOfWeTc()
+        {
+            var csFile = @"C:\source\itsmagic\ItsMagic.Tests\Approved\AuthorisationReadModelPopulator.cs";
+            Assert.Equal(true, new CsFile(csFile).HasEvidenceOf(new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj")));
+        }
+
+        [Fact]
+        private void WontFalselyFindEvidenceOfWeTc()
+        {
+            var csFile = @"C:\source\ItsMagic\ItsMagic.Tests\Approved\CurrentUserProviderTests.cs";
+            Assert.Equal(false, new CsFile(csFile).HasEvidenceOf(new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj")));
+        }
+
+        [Fact]
         private void WillNotFalselyFindEvidenceOfJExt()
         {
             var csFile = @"C:\source\Mercury\src\Plugins\AuthorisationReadModel\AuthFranchise.cs";
@@ -82,6 +97,13 @@ namespace ItsMagic.Tests
         private void CanFindJExtReferenceInCsProj()
         {
             Assert.Equal(true, new CsProj(@"C:\source\ItsMagic\ItsMagic.Tests\Approved\Contracts.Tests.csproj").ContainsJExtProjectReference());
+        }
+
+        [Fact]
+        private void CanFindWeTcReferenceInCsProj()
+        {
+            CsProj csProj = new CsProj(@"C:\source\ItsMagic\ItsMagic.Tests\Approved\AuthorisationReadModel.Tests.csproj");
+            Assert.Equal(true, csProj.ContainsProjectReferenceOf(new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj")));
         }
 
         [Fact]
@@ -108,6 +130,23 @@ namespace ItsMagic.Tests
             Assert.Equal(
                 File.ReadAllText(@"C:\source\ItsMagic\ItsMagic.Tests\Approved\Logging.Client.csproj"),
                 File.ReadAllText(@"C:\source\Mercury\src\Platform\Logging.Client\Logging.Client.csproj"));
+        }
+
+        [Fact]
+        private void CanGetProjectGuid()
+        {
+            var csProj = new CsProj(@"C:\source\ItsMagic\ItsMagic.Tests\Approved\Logging.Client.csproj");
+            Assert.Equal("42A388A2-B797-4335-8A7D-8D748F58E7A3",csProj.Guid());
+        }
+
+        [Fact]
+        private void GetTypes()
+        {
+            var ItsMagicTypes = new CsProj(@"C:\source\ItsMagic\ItsMagic\ItsMagic.csproj").GetTypes();
+            foreach (var type in ItsMagicTypes)
+            {
+                Output.WriteLine(type.ToString());
+            }
         }
     }
 }

@@ -2,19 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace ItsMagic
 {
     public class CsFile
     {
         public string Path { get; private set; }
+        public string[] Classes { get; private set; }
 
         public CsFile(string path)
         {
             Path = path;
+            Classes = GetClasses();
         }
 
-        public string[] GetClasses()
+        private string[] GetClasses()
         {
             return RegexStore.Get(RegexStore.ClassFromCsFile, Path).ToArray();
         }
@@ -86,10 +89,17 @@ namespace ItsMagic
 
         public bool HasEvidenceOf(CsProj csProj)
         {
-            return csProj.GetCsFiles()
-                            .SelectMany(cs => cs.GetClasses())
-                            .Select(c => File.ReadAllText(Path).Contains(c))
-                            .Any();
+            var csFiles = csProj.CsFiles;
+            var allClassesInCsProj = csFiles.SelectMany(csFile => csFile.Classes).Distinct();
+            var csFileText = File.ReadAllText(Path);
+            foreach (var csProjClass in allClassesInCsProj)
+            {
+                if(RegexStore.Contains("[\\s:]"+csProjClass+ "[\\s\\.(]", csFileText))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public bool HasEvidenceOfWeTc()

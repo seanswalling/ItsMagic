@@ -41,6 +41,14 @@ namespace ItsMagic
             return match.Success;
         }
 
+        public bool ContainsWeTcProjectReference()
+        {
+            var solutionFileText = File.ReadAllText(Path);
+            Regex regex = new Regex(RegexStore.SolutionWeTcProjectReferencePattern);
+            Match match = regex.Match(solutionFileText);
+            return match.Success;
+        }
+
         public void AddJExtProjectReference()
         {
             var solutionFileText = File.ReadAllText(Path);
@@ -109,6 +117,40 @@ namespace ItsMagic
             return solutionFileText;
         }
 
+        public void AddWeTcProjectReference()
+        {
+            var solutionFileText = File.ReadAllText(Path);
+
+            solutionFileText = AddWeTcProjectText(solutionFileText);
+            solutionFileText = AddWeTcDebugAndReleaseInformation(solutionFileText);
+            solutionFileText = AddWeTcToCommonFolder(solutionFileText);
+
+            File.WriteAllText(Path, solutionFileText);
+        }
+
+        public static string AddWeTcProjectText(string solutionFileText)
+        {
+            solutionFileText = RegexStore.ReplaceLastOccurrence(solutionFileText,
+                RegexStore.EndProject,
+                RegexStore.EndProject + "\n" + RegexStore.SolutionWeTcProjectReference);
+            return solutionFileText;
+        }
+
+        public static string AddWeTcDebugAndReleaseInformation(string solutionFileText)
+        {
+            solutionFileText = RegexStore.ReplaceLastOccurrence(solutionFileText,
+                RegexStore.ReleaseAnyCpu,
+                RegexStore.ReleaseAnyCpu + "\n\t\t" + RegexStore.WeTcReleaseDebugInformation);
+            return solutionFileText;
+        }
+
+        public string AddWeTcToCommonFolder(string solutionFileText)
+        {
+            string nHibExtProjEqualsCommonFolder = "{499EBA0D-DA7E-431B-AF62-74C492FD6E2A} = {" + RegexStore.Get(RegexStore.CommonFolderPattern, Path).First() + "}";
+            solutionFileText = solutionFileText.Replace(RegexStore.NestedProjects, RegexStore.NestedProjects + "\n\t\t" + nHibExtProjEqualsCommonFolder);
+            return solutionFileText;
+        }
+
         public bool HasLogRepoReference()
         {
             return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).Any();
@@ -125,5 +167,6 @@ namespace ItsMagic
             slnFiletext = slnFiletext.Replace(reference, "Platform\\" + reference);
             File.WriteAllText(Path, slnFiletext);
         }
+
     }
 }

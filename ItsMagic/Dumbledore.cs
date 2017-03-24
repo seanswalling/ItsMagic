@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
@@ -22,7 +23,7 @@ namespace ItsMagic
                 var csProjs = solutionFile.GetCsProjs().ToArray();
                 foreach (var csProj in csProjs)
                 {
-                    var csFiles = csProj.GetCsFiles().ToArray();
+                    var csFiles = csProj.CsFiles;
                     foreach (var csFile in csFiles)
                     {
 
@@ -43,7 +44,7 @@ namespace ItsMagic
                 var csProjs = solutionFile.GetCsProjs().ToArray();
                 foreach (var csProj in csProjs)
                 {
-                    var csFiles = csProj.GetCsFiles().ToArray();
+                    var csFiles = csProj.CsFiles;
                     foreach (var csFile in csFiles)
                     {
                         if (csFile.HasEvidenceOfJExt())
@@ -87,35 +88,29 @@ namespace ItsMagic
             }
         }
 
-        public static void AddWorkerEngineTestCoreReferences(string projectDirectory)
+        public static void AddWorkerEngineTestCoreReferences(string projectDirectory, CsProj workerEngineTestsCommon)
         {
-            SlnFile[] solutionFiles = Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories)
-                .Select(file => new SlnFile(file))
-                .ToArray();
-
-            foreach (var solutionFile in solutionFiles)
+            foreach (var solutionFile in GetSlnFiles(projectDirectory).ToArray())
             {
-                var csProjs = solutionFile.GetCsProjs().ToArray();
-                foreach (var csProj in csProjs)
+                foreach (var csProj in solutionFile.GetCsProjs().ToArray())
                 {
-                    var csFiles = csProj.GetCsFiles().ToArray();
-                    foreach (var csFile in csFiles)
+                    foreach (var csFile in csProj.CsFiles)
                     {
-                        if (csFile.HasEvidenceOf(new CsProj()))
+                        if (csFile.HasEvidenceOf(workerEngineTestsCommon))
                         {
-                            AddWeTcReferences(csFile, csProj, solutionFile);
+                            AddReferences(csFile, csProj, solutionFile, workerEngineTestsCommon);
                         }
                     }
                 }
             }
         }
 
-        private static void AddWeTcReferences(CsFile csFile, CsProj csProj, SlnFile slnFile)
+        private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj referencedProject)
         {
-            csFile.AddUsingToCsFile("WorkerEngine.TestCommon");
-            if (!csProj.ContainsWeTcProjectReference())
+            csFile.AddUsingToCsFile(referencedProject.Name());
+            if (!csProj.ContainsProjectReferenceOf(referencedProject))
             {
-                csProj.AddWeTcProjectReference();
+                csProj.AddProjectReference(referencedProject);
             }
             if (!slnFile.ContainsWeTcProjectReference())
             {
@@ -210,7 +205,7 @@ namespace ItsMagic
         {
             return csProjs.ToArray()
                 .Where(csProj => csProj
-                    .GetCsFiles()
+                    .CsFiles
                     .Any(csFile => csFile
                         .HasEvidenceOfLogRepoSc()));
         }

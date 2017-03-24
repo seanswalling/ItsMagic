@@ -20,7 +20,7 @@ namespace ItsMagic
             //Dumbledore.AddNewRelicRefsTo(FilesThatRequireNewRelic());
             //PrintcsProjsDependantOnlogRepoSc(dir);
             //UpdateLogRepositoryPaths(dir);
-            Dumbledore.AddWorkerEngineTestCoreReferences(dir);
+            Dumbledore.AddWorkerEngineTestCoreReferences(dir, new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj"));
             Console.WriteLine("Application Complete");
             Console.ReadLine();
         }
