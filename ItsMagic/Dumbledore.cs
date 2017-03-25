@@ -20,11 +20,9 @@ namespace ItsMagic
             //{ @"C:\source\Mercury\src\Mercury.ReflectiveTests.sln" };
             foreach (var solutionFile in solutionFiles)
             {
-                var csProjs = solutionFile.GetCsProjs().ToArray();
-                foreach (var csProj in csProjs)
+                foreach (var csProj in solutionFile.CsProjs)
                 {
-                    var csFiles = csProj.CsFiles;
-                    foreach (var csFile in csFiles)
+                    foreach (var csFile in csProj.CsFiles)
                     {
 
                     }
@@ -41,7 +39,7 @@ namespace ItsMagic
             //{ @"C:\source\Mercury\src\Mercury.ReflectiveTests.sln" };
             foreach (var solutionFile in solutionFiles)
             {
-                var csProjs = solutionFile.GetCsProjs().ToArray();
+                var csProjs = solutionFile.CsProjs;
                 foreach (var csProj in csProjs)
                 {
                     var csFiles = csProj.CsFiles;
@@ -62,7 +60,7 @@ namespace ItsMagic
 
         private static void AddJExtReferences(CsFile csFile, CsProj csProj, SlnFile slnFile)
         {
-            csFile.AddUsingToCsFile("Mercury.Core.JsonExtensions");
+            csFile.AddUsing("Mercury.Core.JsonExtensions");
             csFile.RemoveUsing("Mercury.Core.MessageSerialisation");
             if (!csProj.ContainsJExtProjectReference())
             {
@@ -76,7 +74,7 @@ namespace ItsMagic
 
         private static void AddNHibExtReferences(CsFile csFile, CsProj csProj, SlnFile slnFile)
         {
-            csFile.AddUsingToCsFile("Mercury.Core.NHibernateExtensions");
+            csFile.AddUsing("Mercury.Core.NHibernateExtensions");
             if (!csProj.ContainsNHibExtProjectReference())
             {
                 csProj.AddNHibExtProjectReference();
@@ -90,9 +88,9 @@ namespace ItsMagic
 
         public static void AddWorkerEngineTestCoreReferences(string projectDirectory, CsProj workerEngineTestsCommon)
         {
-            foreach (var solutionFile in GetSlnFiles(projectDirectory).ToArray())
+            foreach (var solutionFile in GetSolutionFiles(projectDirectory).ToArray())
             {
-                foreach (var csProj in solutionFile.GetCsProjs().ToArray())
+                foreach (var csProj in solutionFile.CsProjs.ToArray())
                 {
                     foreach (var csFile in csProj.CsFiles)
                     {
@@ -107,7 +105,7 @@ namespace ItsMagic
 
         private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj referencedProject)
         {
-            csFile.AddUsingToCsFile(referencedProject.Name());
+            csFile.AddUsing(referencedProject.Name);
             if (!csProj.ContainsProjectReferenceOf(referencedProject))
             {
                 csProj.AddProjectReference(referencedProject);
@@ -169,7 +167,7 @@ namespace ItsMagic
                 csFile.RemoveUsing("Mercury.Core.NHibernateExtensions");
                 if (csFile.HasEvidenceOfNHibExt())
                 {
-                    csFile.AddUsingToCsFile("Mercury.Core.NHibernateExtensions");
+                    csFile.AddUsing("Mercury.Core.NHibernateExtensions");
                 }
             }
         }
@@ -183,13 +181,13 @@ namespace ItsMagic
             }
         }
 
-        public static IEnumerable<SlnFile> GetSlnFiles(string dir)
+        public static IEnumerable<SlnFile> GetSolutionFiles(string dir)
         {
             return Directory.EnumerateFiles(dir, "*.sln", SearchOption.AllDirectories)
                 .Select(file => new SlnFile(file));
         }
 
-        public static IEnumerable<CsProj> GetCsProjs(string dir)
+        public static IEnumerable<CsProj> GetCsProjFiles(string dir)
         {
             return Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
                 .Select(file => new CsProj(file));

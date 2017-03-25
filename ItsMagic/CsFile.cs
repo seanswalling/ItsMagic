@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace ItsMagic
 {
@@ -10,25 +9,55 @@ namespace ItsMagic
     {
         public string Path { get; private set; }
         public string[] Classes { get; private set; }
+        public string[] Usings { get; private set; }
+        private string _textCache { get; set; }
 
         public CsFile(string path)
         {
             Path = path;
-            Classes = GetClasses();
+            Classes = RegexStore.Get(RegexStore.ClassFromCsFile, Path).ToArray();
+            Usings = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Path).ToArray();
         }
 
-        private string[] GetClasses()
+        public string Text()
         {
-            return RegexStore.Get(RegexStore.ClassFromCsFile, Path).ToArray();
+            if (_textCache != null)
+                return _textCache;
+            var text = File.ReadAllText(Path);
+            return text;
         }
-
-        public IEnumerable<string> Usings()
+        
+        public void AddUsing(string reference)
         {
-            Console.WriteLine("Get Using Statements for: " + Path);
-            return RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Path);
+            if (!Text().Contains("using " + reference + ";"))
+            {
+                string newText = "using " + reference + ";"+ Environment.NewLine + Text();
+                File.WriteAllText(Path, newText);
+            }
         }
 
-        public IEnumerable<string> GetLines()
+        public void RemoveUsing(string reference)
+        {
+            if (Text().Contains("using " + reference + ";"))
+            {
+                var replace = Text().Replace("using " + reference + ";"+Environment.NewLine, "");
+                File.WriteAllText(Path, replace);
+            }
+        }
+
+        public void AlphabatiseUsings()
+        {
+            foreach(var @using in Usings)
+            {
+                RemoveUsing(@using);
+            }
+            foreach(var @using in Usings.OrderByDescending(u => u))
+            {
+                AddUsing(@using);
+            }
+        }
+
+        public IEnumerable<string> Lines()
         {
             using (var reader = new StreamReader(Path))
             {
@@ -39,108 +68,84 @@ namespace ItsMagic
             }
         }
 
+        public bool HasEvidenceOf(CsProj csProj)
+        {
+            foreach (var csProjClass in csProj.Classes)
+            {
+                if (RegexStore.Contains("[\\s:]" + csProjClass + "[\\s\\.(]", Text()))
+                {
+                    return true;
+                }
+            }
+            //Foreach(Extension Method in CsProj.ExtensionMethods)
+            return false;
+        }
+
+        //Functions to be Deprecated
+
         public bool HasEvidenceOfJExt()
         {
-            var csFileText = File.ReadAllText(Path);
-            return csFileText.Contains(".JsonCopy()")
-                   || csFileText.Contains(".ToBson()")
-                   || csFileText.Contains("SettingsFactory.Build()")
-                   || csFileText.Contains("DateSerializer")
-                   || csFileText.Contains("RequiredPropertyContractResolver")
-                   || csFileText.Contains(".FromBson()");
+            return Text().Contains(".JsonCopy()")
+                   || Text().Contains(".ToBson()")
+                   || Text().Contains("SettingsFactory.Build()")
+                   || Text().Contains("DateSerializer")
+                   || Text().Contains("RequiredPropertyContractResolver")
+                   || Text().Contains(".FromBson()");
         }
 
         public bool HasEvidenceOfNHibExt()
         {
-            var csFileText = File.ReadAllText(Path);
-            return csFileText.Contains(".Nullable()")
-                   || csFileText.Contains(".NotNullable()")
+            return Text().Contains(".Nullable()")
+                   || Text().Contains(".NotNullable()")
                    && !Path.Contains("Mercury.Core.NHibernateExtensions.cs");
         }
 
         public bool HasEvidenceOfLogRepoSc()
         {
-            var csFileText = File.ReadAllText(Path);
-            return (csFileText.Contains("ISharedAccessKeyService")
-                   || csFileText.Contains("IPrimeService"))
+            return (Text().Contains("ISharedAccessKeyService")
+                   || Text().Contains("IPrimeService"))
                    && !Path.Contains("ISharedAccessKeyService.cs")
                    && !Path.Contains("IPrimeService.cs");
-        }
-
-        public void AddUsingToCsFile(string reference)
-        {
-            if (!File.ReadAllText(Path).Contains("using " + reference))
-            {
-                var csFileText = File.ReadAllText(Path);
-                csFileText = "using " + reference + ";\r" + csFileText;
-                File.WriteAllText(Path, csFileText);
-            }
-        }
-
-        public void RemoveUsing(string reference)
-        {
-            var csFileText = File.ReadAllText(Path);
-            if (csFileText.Contains("using " + reference))
-            {
-                var replace = csFileText.Replace("using " + reference + ";\r", "");
-                File.WriteAllText(Path, replace);
-            }
-        }
-
-        public bool HasEvidenceOf(CsProj csProj)
-        {
-            var csFiles = csProj.CsFiles;
-            var allClassesInCsProj = csFiles.SelectMany(csFile => csFile.Classes).Distinct();
-            var csFileText = File.ReadAllText(Path);
-            foreach (var csProjClass in allClassesInCsProj)
-            {
-                if(RegexStore.Contains("[\\s:]"+csProjClass+ "[\\s\\.(]", csFileText))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        }                
 
         public bool HasEvidenceOfWeTc()
         {
-            var csFileText = File.ReadAllText(Path);
-            return (csFileText.Contains("AggregateEx")
-                   || csFileText.Contains("AlterDepencencies")
-                   || csFileText.Contains("ResolutionInfo")
-                   || csFileText.Contains("BufferingScenarioRenderer")
-                   || csFileText.Contains("ChainedScenario")
-                   || csFileText.Contains("ChainedScenarios")
-                   || csFileText.Contains("CommandWriterTestExtensions")
-                   || csFileText.Contains("EnvironmentScenarioRenderer")
-                   || csFileText.Contains("EventAssert")
-                   || csFileText.Contains("EventWriterTestExtensions")
-                   || csFileText.Contains("HandlerTest")
-                   || csFileText.Contains("InMemoryDatabaseFixtureBase")
-                   || csFileText.Contains("IScenarioRender")
-                   || csFileText.Contains("LocalDbConfiguration")
-                   || csFileText.Contains("LocalDbDatabaseFixture")
-                   || csFileText.Contains("MessageStoreTestExtensions")
-                   || csFileText.Contains("MessageHubWriterExtensions")
-                   || csFileText.Contains("ProcessManagerStructureValidationFixtureBase")
-                   || csFileText.Contains("ProdScenario")
-                   || csFileText.Contains("RegressionScenarios")
-                   || csFileText.Contains("Scenario")
-                   || csFileText.Contains("ScenarioCollection")
-                   || csFileText.Contains("ScenarioDrivenTestEnvironment")
-                   || csFileText.Contains("ScenarioDrivenTestService")
-                   || csFileText.Contains("ScenarioEx")
-                   || csFileText.Contains("ScenarioOutputVisitor")
-                   || csFileText.Contains("ScenarioRenderer")
-                   || csFileText.Contains("SetCulture")
-                   || csFileText.Contains("SetTime")
-                   || csFileText.Contains("SharedScenarioAssertions")
-                   || csFileText.Contains("SimulatedCommand")
-                   || csFileText.Contains("SimulatedDocument")
-                   || csFileText.Contains("SimulatedEvent")
-                   || csFileText.Contains("SimulatedFastForward")
-                   || csFileText.Contains("StoppableServiceWrapper")
-                   || csFileText.Contains("TransientExceptionSideEffect"))
+            return (Text().Contains("AggregateEx")
+                   || Text().Contains("AlterDepencencies")
+                   || Text().Contains("ResolutionInfo")
+                   || Text().Contains("BufferingScenarioRenderer")
+                   || Text().Contains("ChainedScenario")
+                   || Text().Contains("ChainedScenarios")
+                   || Text().Contains("CommandWriterTestExtensions")
+                   || Text().Contains("EnvironmentScenarioRenderer")
+                   || Text().Contains("EventAssert")
+                   || Text().Contains("EventWriterTestExtensions")
+                   || Text().Contains("HandlerTest")
+                   || Text().Contains("InMemoryDatabaseFixtureBase")
+                   || Text().Contains("IScenarioRender")
+                   || Text().Contains("LocalDbConfiguration")
+                   || Text().Contains("LocalDbDatabaseFixture")
+                   || Text().Contains("MessageStoreTestExtensions")
+                   || Text().Contains("MessageHubWriterExtensions")
+                   || Text().Contains("ProcessManagerStructureValidationFixtureBase")
+                   || Text().Contains("ProdScenario")
+                   || Text().Contains("RegressionScenarios")
+                   || Text().Contains("Scenario")
+                   || Text().Contains("ScenarioCollection")
+                   || Text().Contains("ScenarioDrivenTestEnvironment")
+                   || Text().Contains("ScenarioDrivenTestService")
+                   || Text().Contains("ScenarioEx")
+                   || Text().Contains("ScenarioOutputVisitor")
+                   || Text().Contains("ScenarioRenderer")
+                   || Text().Contains("SetCulture")
+                   || Text().Contains("SetTime")
+                   || Text().Contains("SharedScenarioAssertions")
+                   || Text().Contains("SimulatedCommand")
+                   || Text().Contains("SimulatedDocument")
+                   || Text().Contains("SimulatedEvent")
+                   || Text().Contains("SimulatedFastForward")
+                   || Text().Contains("StoppableServiceWrapper")
+                   || Text().Contains("TransientExceptionSideEffect"))
                    && !Path.Contains("AggregateEx.cs")
                    && !Path.Contains("AlterDepencencies.cs")
                    && !Path.Contains("ResolutionInfo.cs")

@@ -34,7 +34,7 @@ namespace ItsMagic.Tests
             SlnFile[] slnFiles = { new SlnFile(@"C:\source\Mercury\src\Mercury.Terminal.sln"), new SlnFile(@"C:\source\Mercury\src\Mercury.TerminalGateway.sln") };
             foreach (var slnFile in slnFiles)
             {
-                var csProjs = slnFile.GetCsProjs().Distinct().OrderBy(i=>i.Path).ToArray();
+                var csProjs = slnFile.CsProjs.Distinct().OrderBy(i=>i.Path).ToArray();
                 Output.WriteLine(csProjs.Length.ToString());
                 foreach (var csProj in csProjs)
                 {
@@ -50,7 +50,7 @@ namespace ItsMagic.Tests
             SlnFile[] slnFiles = { new SlnFile(@"C:\source\Mercury\src\Mercury.Terminal.sln"), new SlnFile(@"C:\source\Mercury\src\Mercury.TerminalGateway.sln")};
             foreach (var slnFile in slnFiles)
             {
-                var csProjs = slnFile.GetCsProjs();
+                var csProjs = slnFile.CsProjs;
                 
                 foreach (var csProj in csProjs)
                 {
@@ -136,17 +136,14 @@ namespace ItsMagic.Tests
         private void CanGetProjectGuid()
         {
             var csProj = new CsProj(@"C:\source\ItsMagic\ItsMagic.Tests\Approved\Logging.Client.csproj");
-            Assert.Equal("42A388A2-B797-4335-8A7D-8D748F58E7A3",csProj.Guid());
+            Assert.Equal("42A388A2-B797-4335-8A7D-8D748F58E7A3",csProj.Guid);
         }
 
         [Fact]
-        private void GetTypes()
+        private void CanGetUsingStatementsFromCsFile()
         {
-            var ItsMagicTypes = new CsProj(@"C:\source\ItsMagic\ItsMagic\ItsMagic.csproj").GetTypes();
-            foreach (var type in ItsMagicTypes)
-            {
-                Output.WriteLine(type.ToString());
-            }
+            string[] expected = { "System", "Mercury.Core", "Mercury.Core.NHibernateExtensions", "NHibernate.Mapping.ByCode", "NHibernate.Mapping.ByCode.Conformist"};
+            Assert.Equal(expected, new CsFile(@"E:\github\cc\ItsMagic\ItsMagic.Tests\Approved\AuthFranchise.cs").Usings);
         }
     }
 }

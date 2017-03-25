@@ -11,8 +11,8 @@ namespace ItsMagic
     {
         static void Main()
         {
-            string dir = "C:\\source\\Mercury\\src";
-            //string dir = @"E:\github\cc\Mercury\src";
+            //string dir = "C:\\source\\Mercury\\src";
+            string dir = @"E:\github\cc\Mercury\src";
 
             //Dumbledore.AddJExtAndNHibExtReferences(dir);
             //Dumbledore.RemoveLogForNetReference(FilesToFix());
@@ -20,16 +20,25 @@ namespace ItsMagic
             //Dumbledore.AddNewRelicRefsTo(FilesThatRequireNewRelic());
             //PrintcsProjsDependantOnlogRepoSc(dir);
             //UpdateLogRepositoryPaths(dir);
-            Dumbledore.AddWorkerEngineTestCoreReferences(dir, new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj"));
+
+            //Dumbledore.AddWorkerEngineTestCoreReferences(dir, new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj"));
+            foreach( var @using in Dumbledore.GetCsFiles(dir)
+                .SelectMany(csFile => csFile.Usings)
+                //.Distinct()
+                )
+            {
+                Console.WriteLine(@using);
+            }
+            
             Console.WriteLine("Application Complete");
             Console.ReadLine();
         }
 
         private static void UpdateLogRepositoryPaths(string dir)
         {
-            foreach (var slnFile in Dumbledore.GetSlnFiles(dir).ToArray())
+            foreach (var slnFile in Dumbledore.GetSolutionFiles(dir).ToArray())
             {
-                foreach (var csProj in slnFile.GetCsProjs()
+                foreach (var csProj in slnFile.CsProjs
                     .Where(csProj => csProj.HasLogRepoReference())
                     .ToArray())
                 {
@@ -50,7 +59,7 @@ namespace ItsMagic
 
         private static void PrintcsProjsDependantOnlogRepoSc(string dir)
         {
-            foreach (var csproj in Dumbledore.GetProjectsDependantOnLogRepoSc(Dumbledore.GetCsProjs(dir)).ToArray())
+            foreach (var csproj in Dumbledore.GetProjectsDependantOnLogRepoSc(Dumbledore.GetCsProjFiles(dir)).ToArray())
             {
                 Console.WriteLine(csproj.Path);
             }

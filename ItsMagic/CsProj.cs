@@ -14,31 +14,30 @@ namespace ItsMagic
     {
         public string Path { get; private set; }
         public CsFile[] CsFiles { get; private set; }
+        public string Name { get; private set; }
+        public string Guid { get; private set; }
+        private string TextCache { get; set; }
+        public string[] Classes
+        {
+            get
+            {
+                return CsFiles.SelectMany(csFile => csFile.Classes)
+                    .Distinct()
+                    .ToArray();
+            }
+        }
 
         public CsProj(string path)
         {
             Path = path;
             CsFiles = GetCsFiles();
-        }
+            Name = System.IO.Path.GetFileNameWithoutExtension(Path);
+            Guid = RegexStore.Get(RegexStore.CsProjGuidPattern, Path).First();
+        }              
 
-        public string Name()
-        {
-            return System.IO.Path.GetFileNameWithoutExtension(Path);
-        }
-
-        public Type[] GetTypes()
-        {
-            return Assembly.GetAssembly(typeof(CsProj)).GetTypes().Where(i => i.IsPublic).ToArray();
-        }
-
-        public string[] LogRepoReferences()
-        {
-            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).ToArray();
-        }
-        
         private CsFile[] GetCsFiles()
         {
-            Console.WriteLine("Get Cs Files for: "+Path);
+            Console.WriteLine("Get Cs Files for: " + Path);
             var dir = System.IO.Path.GetDirectoryName(Path);
             return RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Path)
                     .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
@@ -46,15 +45,13 @@ namespace ItsMagic
                     .ToArray();
         }
 
-        //public void AddProjectReference(string reference)
-        //{
-        //    var regex = new Regex("Some Pattern Here");
-        //    var csProjText = File.ReadAllText(Path);
-
-        //    csProjText = regex.Replace(csProjText, "Something here", 1);
-        //    File.WriteAllText(Path, csProjText);
-        //    UpdatePackagesConfig(System.IO.Path.GetDirectoryName(Path) + "\\packages.config", reference);
-        //}
+        public string Text()
+        {
+            if (TextCache != null)
+                return TextCache;
+            var text = File.ReadAllText(Path);
+            return text;
+        }
 
         private static void UpdatePackagesConfig(string packages, string reference)
         {
@@ -79,7 +76,7 @@ namespace ItsMagic
             }
             return file;
         }
-
+                
         public bool ContainsJExtProjectReference()
         {
             return File.ReadAllText(Path).Contains("<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>");
@@ -97,7 +94,7 @@ namespace ItsMagic
 
         public bool ContainsProjectReferenceOf(CsProj project)
         {
-            var guid = project.Guid();
+            var guid = project.Guid;
             var upperGuidRegex = guid.ToUpper().Replace("-", "\\-");
             var lowerGuidRegex = guid.ToLower().Replace("-", "\\-");
             if (RegexStore.Contains("<Project>{" + upperGuidRegex + "}<\\/Project>", File.ReadAllText(Path)) ||
@@ -105,12 +102,7 @@ namespace ItsMagic
                 return true;
             return false;
         }
-
-        public string Guid()
-        {
-            return RegexStore.Get(RegexStore.CsProjGuidPattern, Path).First();
-        }
-
+        
         public void AddJExtProjectReference()
         {
             if (Path.Contains("Mercury.Core.JsonExtensions.csproj"))
@@ -130,7 +122,7 @@ namespace ItsMagic
 
         internal void AddProjectReference(CsProj referencedProject)
         {
-            if (Path.Contains(referencedProject.Name() + ".csproj"))
+            if (Path.Contains(referencedProject.Name + ".csproj"))
                 return;
 
             var regex = new Regex(RegexStore.ItemGroupTag);
@@ -142,8 +134,8 @@ namespace ItsMagic
             
             csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
                                                    "<ProjectReference Include=\""+ relPath + "\">" +
-                                                   "<Project>{"+referencedProject.Guid()+"}</Project>" +
-                                                   "<Name>"+referencedProject.Name()+"</Name>" +
+                                                   "<Project>{"+referencedProject.Guid+"}</Project>" +
+                                                   "<Name>"+referencedProject.Name+"</Name>" +
                                                    "</ProjectReference>", 1);
             File.WriteAllText(Path, csProjText);
             ReformatXml(Path);
@@ -191,6 +183,21 @@ namespace ItsMagic
             csProjtext = csProjtext.Replace(reference, "\\Platform" + reference);
             File.WriteAllText(Path, csProjtext);
         }
-        
+
+        //Functions to be deprecated
+        public string[] LogRepoReferences()
+        {
+            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).ToArray();
+        }
+
+        //public void AddProjectReference(string reference) //Nuget Version?
+        //{
+        //    var regex = new Regex("Some Pattern Here");
+        //    var csProjText = File.ReadAllText(Path);
+
+        //    csProjText = regex.Replace(csProjText, "Something here", 1);
+        //    File.WriteAllText(Path, csProjText);
+        //    UpdatePackagesConfig(System.IO.Path.GetDirectoryName(Path) + "\\packages.config", reference);
+        //}
     }
 }

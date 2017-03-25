@@ -7,7 +7,6 @@ E:\github\cc\itsmagic\ItsMagic.Tests\bin\Debug\xunit.core.dll
 E:\github\cc\itsmagic\ItsMagic.Tests\bin\Debug\xunit.execution.desktop.dll
 E:\github\cc\itsmagic\ItsMagic.Tests\bin\Debug\ItsMagic.pdb
 E:\github\cc\itsmagic\ItsMagic.Tests\bin\Debug\ItsMagic.exe.config
-E:\github\cc\itsmagic\ItsMagic.Tests\bin\Debug\xunit.abstractions.xml
 E:\github\cc\itsmagic\ItsMagic.Tests\bin\Debug\xunit.assert.xml
 E:\github\cc\itsmagic\ItsMagic.Tests\bin\Debug\xunit.core.xml
 E:\github\cc\itsmagic\ItsMagic.Tests\bin\Debug\xunit.execution.desktop.xml
@@ -32,3 +31,6 @@ C:\source\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.execution.desktop.xml
 C:\source\ItsMagic\ItsMagic.Tests\obj\Debug\ItsMagic.Tests.csprojResolveAssemblyReference.cache
 C:\source\ItsMagic\ItsMagic.Tests\obj\Debug\ItsMagic.Tests.dll
 C:\source\ItsMagic\ItsMagic.Tests\obj\Debug\ItsMagic.Tests.pdb
+E:\github\cc\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.runner.visualstudio.testadapter.dll
+E:\github\cc\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.runner.utility.net35.dll
+E:\github\cc\ItsMagic\ItsMagic.Tests\bin\Debug\xunit.runner.reporters.net452.dll
