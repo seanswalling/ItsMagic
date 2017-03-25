@@ -1,9 +1,9 @@
-﻿using System;
-
 using Mercury.Core;
 using Mercury.Core.NHibernateExtensions;
 using NHibernate.Mapping.ByCode;
 using NHibernate.Mapping.ByCode.Conformist;
+using System;
+
 
 namespace Mercury.Plugins.AuthorisationReadModel
 {

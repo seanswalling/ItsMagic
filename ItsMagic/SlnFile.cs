@@ -10,19 +10,31 @@ namespace ItsMagic
     public class SlnFile
     {
         public string Path { get; private set; }
+        public CsProj[] CsProjs { get; private set; }
+        private string TextCache { get; set; }
 
         public SlnFile(string path)
         {
             Path = path;
+            CsProjs = GetCsProjs();
         }
 
-        public IEnumerable<CsProj> GetCsProjs()
+        private CsProj[] GetCsProjs()
         {
             Console.WriteLine("Get Csproj Files for: " + Path);
             var dir = System.IO.Path.GetDirectoryName(Path);
             return RegexStore.Get(RegexStore.CsProjFromSlnPattern, Path)
                 .Select(csProjRelPath => System.IO.Path.Combine(dir, csProjRelPath))
-                .Select(file => new CsProj(file));
+                .Select(file => new CsProj(file))
+                .ToArray();
+        }
+
+        public string Text()
+        {
+            if (TextCache != null)
+                return TextCache;
+            var text = File.ReadAllText(Path);
+            return text;
         }
 
         public bool ContainsJExtProjectReference()
@@ -167,6 +179,9 @@ namespace ItsMagic
             slnFiletext = slnFiletext.Replace(reference, "Platform\\" + reference);
             File.WriteAllText(Path, slnFiletext);
         }
+
+        //Functions to deprecate
+
 
     }
 }
