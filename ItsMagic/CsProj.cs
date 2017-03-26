@@ -145,7 +145,7 @@ namespace ItsMagic
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
             var newText = regex.Replace(Text(), RegexStore.ItemGroupTag +
-                                                   "<ProjectReference Include=\"" + relPath + "\">" +
+                                                   "<ProjectReference Include=\"" + relPath.ToString().Replace("/","\\") + "\">" +
                                                    "<Project>{" + referencedProject.Guid() + "}</Project>" +
                                                    "<Name>" + referencedProject.Name() + "</Name>" +
                                                    "</ProjectReference>", 1);
