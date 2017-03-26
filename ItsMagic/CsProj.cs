@@ -24,6 +24,15 @@ namespace ItsMagic
                     .ToArray();
             }
         }
+        public string[] ExtensionMethods
+        {
+            get
+            {
+                return CsFiles().SelectMany(csFile => csFile.ExtensionMethods())                    
+                    .Distinct()
+                    .ToArray();
+            }
+        }
         public string[] Usings
         {
             get
@@ -133,14 +142,14 @@ namespace ItsMagic
             ReformatXml(Path);
         }
 
-        internal void AddProjectReference(CsProj referencedProject)
+        internal void AddProjectReference(CsProj referencedProject, string projectDirectory)
         {
             if (Path.Contains(referencedProject.Name() + ".csproj"))
                 return;
 
             var regex = new Regex(RegexStore.ItemGroupTag);
 
-            Uri mercurySourcePath = new Uri("C:\\source\\Mercury\\src");
+            Uri mercurySourcePath = new Uri(projectDirectory);
             Uri referencedProjectPath = new Uri(referencedProject.Path);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 

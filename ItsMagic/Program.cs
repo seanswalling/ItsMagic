@@ -23,7 +23,7 @@ namespace ItsMagic
             //PrintcsProjsDependantOnlogRepoSc(dir);
             //UpdateLogRepositoryPaths(dir);
 
-            Dumbledore.AddProjectReferences(dir, new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj"));
+            Dumbledore.AddProjectReferences(dir, new CsProj(dir + @"\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj"));
 
             Console.WriteLine(sw.Elapsed.TotalSeconds);
             Console.WriteLine("Application Complete");

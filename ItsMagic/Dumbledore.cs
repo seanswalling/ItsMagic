@@ -96,19 +96,19 @@ namespace ItsMagic
                     {
                         if (csFile.HasEvidenceOf(projectToAdd))
                         {
-                            AddReferences(csFile, csProj, solutionFile, projectToAdd);
+                            AddReferences(csFile, csProj, solutionFile, projectToAdd, projectDirectory);
                         }
                     }
                 }
             }
         }
 
-        private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj projectToAdd)
+        private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj projectToAdd, string projectDirectory)
         {
             csFile.AddUsing(projectToAdd.Name());
             if (!csProj.ContainsProjectReferenceOf(projectToAdd))
             {
-                csProj.AddProjectReference(projectToAdd);
+                csProj.AddProjectReference(projectToAdd, projectDirectory);
             }
             if (!slnFile.ContainsProjectReference(RegexStore.SolutionWeTcProjectReferencePattern))
             {

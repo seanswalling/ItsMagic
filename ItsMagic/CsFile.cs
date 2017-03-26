@@ -9,6 +9,7 @@ namespace ItsMagic
     {
         private string[] _classesCache { get; set; }
         private string[] _usingsCache { get; set; }
+        private string[] _extensionMethodsCache { get; set; }
 
         public CsFile(string path)
         {
@@ -20,6 +21,13 @@ namespace ItsMagic
             if (_classesCache == null)
                 _classesCache = RegexStore.Get(RegexStore.ClassFromCsFilePattern, Text()).ToArray();
             return _classesCache;
+        }
+
+        public string[] ExtensionMethods()
+        {
+            if (_extensionMethodsCache == null)
+                _extensionMethodsCache = RegexStore.Get(RegexStore.ExtensionMethodsFromCsFilePattern, Text()).ToArray();
+            return _extensionMethodsCache;
         }
 
         public string[] Usings()
@@ -66,14 +74,20 @@ namespace ItsMagic
 
         public bool HasEvidenceOf(CsProj csProj)
         {
-            foreach (var csProjClass in csProj.Classes)
+            foreach (var @class in csProj.Classes)
             {
-                if (RegexStore.Contains("[\\s:]" + csProjClass + "[\\s\\.(]", Text()))
+                if (RegexStore.Contains("[\\s:]" + @class + "[\\s\\.(]", Text()))
                 {
                     return true;
                 }
             }
-            //Foreach(Extension Method in CsProj.ExtensionMethods)
+            //foreach(var extensionMethod in csProj.ExtensionMethods)
+            //{
+            //    if (RegexStore.Contains("\\." + extensionMethod + "\\(", Text()))
+            //    {
+            //        return true;
+            //    }
+            //}
             return false;
         }
 

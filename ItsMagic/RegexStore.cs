@@ -20,6 +20,7 @@ namespace ItsMagic
         public const string UsingsFromCsFilePattern = "using (?<capturegroup>(\\w+\\.*)*);";
         public const string SolutionJExtProjectReferencePattern = "Project.*\\\"Mercury\\.Core\\.JsonExtensions\\\"";
         public const string SolutionNHibExtProjectReferencePattern = "Project.*\\\"Mercury\\.Core\\.NHibernateExtensions\\\"";
+        public const string ExtensionMethodsFromCsFilePattern = " (?<capturegroup>(\\w|\\d)*)\\(this";
 
         public const string SolutionWeTcProjectReferencePattern = "Project.*\\\"WorkerEngine\\.TestCommon\\\"";
         public const string CommonFolderPattern = "Project.* = \\\"Common\\\", \\\"Common\\\", \\\"\\{(?<capturegroup>(.*))\\}\\\"";
