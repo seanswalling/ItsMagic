@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -23,7 +24,7 @@ namespace ItsMagic
         public const string SolutionWeTcProjectReferencePattern = "Project.*\\\"WorkerEngine\\.TestCommon\\\"";
         public const string CommonFolderPattern = "Project.* = \\\"Common\\\", \\\"Common\\\", \\\"\\{(?<capturegroup>(.*))\\}\\\"";
         public const string LogRepoReferencePattern = "(?<!\\\\*Platform\\\\*)(?<capturegroup>(\\\\*LogRepository\\\\(.)+\\\\(.)+\\.c[cs]proj))";
-        public static string ClassFromCsFile = "class (?<capturegroup>(\\w*\\d*))";
+        public static string ClassFromCsFilePattern = "class (?<capturegroup>(\\w*\\d*))";
         public static string CsProjGuidPattern = "<ProjectGuid>{(?<capturegroup>([\\d\\w-]*))}<\\/ProjectGuid>";
 
         public static object SolutionWeTcProjectReference =
@@ -48,7 +49,7 @@ namespace ItsMagic
                                                            "{499EBA0D-DA7E-431B-AF62-74C492FD6E2A}.Release|Any CPU.Build.0 = Release|Any CPU";
 
 
-        public static IEnumerable<string> Get(string pattern, string file)
+        public static IEnumerable<string> Get2(string pattern, string file)
         {
             Regex regex = new Regex(pattern);
             foreach (var match in Dumbledore.ReadLines(file)
@@ -58,6 +59,18 @@ namespace ItsMagic
             {
                 yield return match;
             }
+        }
+
+        public static IEnumerable<string> Get(string pattern, string text)
+        {
+            Regex regex = new Regex(pattern);
+            var matchCollection = regex.Matches(text);
+            return matchCollection.Cast<Match>().Select(m => m.Groups["capturegroup"].Value);
+        }
+
+        public static string Either(string pattern1, string pattern2)
+        {
+            return pattern1 + "|" + pattern2;
         }
 
         public static bool Contains(string pattern, string inputText)

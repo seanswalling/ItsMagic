@@ -5,53 +5,49 @@ using System.Linq;
 
 namespace ItsMagic
 {
-    public class CsFile
+    public class CsFile : MagicFile
     {
-        public string Path { get; private set; }
-        public string[] Classes { get; private set; }
-        public string[] Usings { get; private set; }
-        private string _textCache { get; set; }
+        private string[] _classesCache { get; set; }
+        private string[] _usingsCache { get; set; }
 
         public CsFile(string path)
         {
             Path = path;
-            Classes = RegexStore.Get(RegexStore.ClassFromCsFile, Path).ToArray();
-            Usings = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Path).ToArray();
         }
 
-        public string Text()
+        public string[] Classes()
         {
-            if (_textCache != null)
-                return _textCache;
-            var text = File.ReadAllText(Path);
-            return text;
+            if (_classesCache == null)
+                _classesCache = RegexStore.Get(RegexStore.ClassFromCsFilePattern, Text()).ToArray();
+            return _classesCache;
         }
-        
+
+        public string[] Usings()
+        {
+            if (_usingsCache == null)
+                _usingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text()).ToArray();
+            return _usingsCache;
+        }
+
         public void AddUsing(string reference)
         {
             if (!Text().Contains("using " + reference + ";"))
-            {
-                string newText = "using " + reference + ";"+ Environment.NewLine + Text();
-                File.WriteAllText(Path, newText);
-            }
+                WriteText("using " + reference + ";" + Environment.NewLine + Text());
         }
 
         public void RemoveUsing(string reference)
         {
             if (Text().Contains("using " + reference + ";"))
-            {
-                var replace = Text().Replace("using " + reference + ";"+Environment.NewLine, "");
-                File.WriteAllText(Path, replace);
-            }
+                WriteText(Text().Replace("using " + reference + ";" + Environment.NewLine, ""));
         }
 
         public void AlphabatiseUsings()
         {
-            foreach(var @using in Usings)
+            foreach(var @using in Usings())
             {
                 RemoveUsing(@using);
             }
-            foreach(var @using in Usings.OrderByDescending(u => u))
+            foreach(var @using in Usings().OrderByDescending(u => u))
             {
                 AddUsing(@using);
             }

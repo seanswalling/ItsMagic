@@ -10,18 +10,25 @@ using Microsoft.Build.Evaluation;
 
 namespace ItsMagic
 {
-    public class CsProj : Project
+    public class CsProj : MagicFile
     {
-        public string Path { get; private set; }
-        public CsFile[] CsFiles { get; private set; }
-        public string Name { get; private set; }
-        public string Guid { get; private set; }
-        private string TextCache { get; set; }
+        public CsFile[] _csFilesCache { get; private set; }
+        public string _nameCache { get; private set; }
+        public string _guidCache { get; private set; }
         public string[] Classes
         {
             get
             {
-                return CsFiles.SelectMany(csFile => csFile.Classes)
+                return CsFiles().SelectMany(csFile => csFile.Classes())
+                    .Distinct()
+                    .ToArray();
+            }
+        }
+        public string[] Usings
+        {
+            get
+            {
+                return CsFiles().SelectMany(csFile => csFile.Usings())
                     .Distinct()
                     .ToArray();
             }
@@ -30,27 +37,33 @@ namespace ItsMagic
         public CsProj(string path)
         {
             Path = path;
-            CsFiles = GetCsFiles();
-            Name = System.IO.Path.GetFileNameWithoutExtension(Path);
-            Guid = RegexStore.Get(RegexStore.CsProjGuidPattern, Path).First();
         }              
 
-        private CsFile[] GetCsFiles()
+        public string Name()
         {
-            Console.WriteLine("Get Cs Files for: " + Path);
-            var dir = System.IO.Path.GetDirectoryName(Path);
-            return RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Path)
-                    .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
-                    .Select(file => new CsFile(file))
-                    .ToArray();
+            if (_nameCache == null)
+                _nameCache = System.IO.Path.GetFileNameWithoutExtension(Path);
+            return _nameCache;
         }
 
-        public string Text()
+        public string Guid()
         {
-            if (TextCache != null)
-                return TextCache;
-            var text = File.ReadAllText(Path);
-            return text;
+            if (_guidCache == null)
+                _guidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text()).First();
+            return _guidCache;
+        }
+
+        public CsFile[] CsFiles()
+        {
+            if (_csFilesCache == null)
+            {
+                var dir = System.IO.Path.GetDirectoryName(Path);
+                _csFilesCache = RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Text())
+                        .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
+                        .Select(file => new CsFile(file))
+                        .ToArray();
+            }
+            return _csFilesCache;
         }
 
         private static void UpdatePackagesConfig(string packages, string reference)
@@ -94,11 +107,11 @@ namespace ItsMagic
 
         public bool ContainsProjectReferenceOf(CsProj project)
         {
-            var guid = project.Guid;
+            var guid = project.Guid();
             var upperGuidRegex = guid.ToUpper().Replace("-", "\\-");
             var lowerGuidRegex = guid.ToLower().Replace("-", "\\-");
-            if (RegexStore.Contains("<Project>{" + upperGuidRegex + "}<\\/Project>", File.ReadAllText(Path)) ||
-                RegexStore.Contains("<Project>{" + lowerGuidRegex + "}<\\/Project>", File.ReadAllText(Path)))
+            if (RegexStore.Contains("<Project>{" + upperGuidRegex + "}<\\/Project>", Text()) ||
+                RegexStore.Contains("<Project>{" + lowerGuidRegex + "}<\\/Project>", Text()))
                 return true;
             return false;
         }
@@ -116,28 +129,27 @@ namespace ItsMagic
                                                    "<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>" +
                                                    "<Name>Mercury.Core.JsonExtensions</Name>" +
                                                    "</ProjectReference>", 1);
-            File.WriteAllText(Path, csProjText);
+            WriteText(csProjText);
             ReformatXml(Path);
         }
 
         internal void AddProjectReference(CsProj referencedProject)
         {
-            if (Path.Contains(referencedProject.Name + ".csproj"))
+            if (Path.Contains(referencedProject.Name() + ".csproj"))
                 return;
 
             var regex = new Regex(RegexStore.ItemGroupTag);
-            var csProjText = File.ReadAllText(Path);
 
             Uri mercurySourcePath = new Uri("C:\\source\\Mercury\\src");
             Uri referencedProjectPath = new Uri(referencedProject.Path);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
-            
-            csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
-                                                   "<ProjectReference Include=\""+ relPath + "\">" +
-                                                   "<Project>{"+referencedProject.Guid+"}</Project>" +
-                                                   "<Name>"+referencedProject.Name+"</Name>" +
+
+            var newText = regex.Replace(Text(), RegexStore.ItemGroupTag +
+                                                   "<ProjectReference Include=\"" + relPath + "\">" +
+                                                   "<Project>{" + referencedProject.Guid() + "}</Project>" +
+                                                   "<Name>" + referencedProject.Name() + "</Name>" +
                                                    "</ProjectReference>", 1);
-            File.WriteAllText(Path, csProjText);
+            WriteText(newText);
             ReformatXml(Path);
         }
 
@@ -154,7 +166,7 @@ namespace ItsMagic
                                                    "<Project>{f1575997-02d0-486f-ae36-69f6a3b37c39}</Project>" +
                                                    "<Name>Mercury.Core.NHibernateExtensions</Name>" +
                                                    "</ProjectReference>", 1);
-            File.WriteAllText(Path, csProjText);
+            WriteText(csProjText);
             ReformatXml(Path);
         }
 
@@ -168,26 +180,26 @@ namespace ItsMagic
                                                    "<HintPath>..\\..\\packages\\NewRelic.Agent.Api.5.19.47.0\\lib\\NewRelic.Api.Agent.dll</HintPath>" +
                                                    "<Private>True</Private>" +
                                                    "</Reference>", 1);
-            File.WriteAllText(Path, csProjText);
+            WriteText(csProjText);
             ReformatXml(Path);
         }
 
         public bool HasLogRepoReference()
         {
-            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).Any();
+            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Text()).Any();
         }
 
         public void UpdateLogRepoReference(string reference)
         {
             var csProjtext = File.ReadAllText(Path);
             csProjtext = csProjtext.Replace(reference, "\\Platform" + reference);
-            File.WriteAllText(Path, csProjtext);
+            WriteText(csProjtext);
         }
 
         //Functions to be deprecated
         public string[] LogRepoReferences()
         {
-            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Path).ToArray();
+            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Text()).ToArray();
         }
 
         //public void AddProjectReference(string reference) //Nuget Version?
@@ -196,7 +208,7 @@ namespace ItsMagic
         //    var csProjText = File.ReadAllText(Path);
 
         //    csProjText = regex.Replace(csProjText, "Something here", 1);
-        //    File.WriteAllText(Path, csProjText);
+        //    WriteText(csProjText);
         //    UpdatePackagesConfig(System.IO.Path.GetDirectoryName(Path) + "\\packages.config", reference);
         //}
     }

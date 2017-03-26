@@ -20,9 +20,9 @@ namespace ItsMagic
             //{ @"C:\source\Mercury\src\Mercury.ReflectiveTests.sln" };
             foreach (var solutionFile in solutionFiles)
             {
-                foreach (var csProj in solutionFile.CsProjs)
+                foreach (var csProj in solutionFile.CsProjs())
                 {
-                    foreach (var csFile in csProj.CsFiles)
+                    foreach (var csFile in csProj.CsFiles())
                     {
 
                     }
@@ -39,10 +39,10 @@ namespace ItsMagic
             //{ @"C:\source\Mercury\src\Mercury.ReflectiveTests.sln" };
             foreach (var solutionFile in solutionFiles)
             {
-                var csProjs = solutionFile.CsProjs;
+                var csProjs = solutionFile.CsProjs();
                 foreach (var csProj in csProjs)
                 {
-                    var csFiles = csProj.CsFiles;
+                    var csFiles = csProj.CsFiles();
                     foreach (var csFile in csFiles)
                     {
                         if (csFile.HasEvidenceOfJExt())
@@ -86,31 +86,31 @@ namespace ItsMagic
             }
         }
 
-        public static void AddWorkerEngineTestCoreReferences(string projectDirectory, CsProj workerEngineTestsCommon)
+        public static void AddProjectReferences(string projectDirectory, CsProj projectToAdd)
         {
             foreach (var solutionFile in GetSolutionFiles(projectDirectory).ToArray())
             {
-                foreach (var csProj in solutionFile.CsProjs.ToArray())
+                foreach (var csProj in solutionFile.CsProjs().ToArray())
                 {
-                    foreach (var csFile in csProj.CsFiles)
+                    foreach (var csFile in csProj.CsFiles())
                     {
-                        if (csFile.HasEvidenceOf(workerEngineTestsCommon))
+                        if (csFile.HasEvidenceOf(projectToAdd))
                         {
-                            AddReferences(csFile, csProj, solutionFile, workerEngineTestsCommon);
+                            AddReferences(csFile, csProj, solutionFile, projectToAdd);
                         }
                     }
                 }
             }
         }
 
-        private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj referencedProject)
+        private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj projectToAdd)
         {
-            csFile.AddUsing(referencedProject.Name);
-            if (!csProj.ContainsProjectReferenceOf(referencedProject))
+            csFile.AddUsing(projectToAdd.Name());
+            if (!csProj.ContainsProjectReferenceOf(projectToAdd))
             {
-                csProj.AddProjectReference(referencedProject);
+                csProj.AddProjectReference(projectToAdd);
             }
-            if (!slnFile.ContainsWeTcProjectReference())
+            if (!slnFile.ContainsProjectReference(RegexStore.SolutionWeTcProjectReferencePattern))
             {
                 slnFile.AddWeTcProjectReference();
             }
@@ -142,7 +142,7 @@ namespace ItsMagic
                     new Regex(
                         "(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
                 csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>", 1);
-                File.WriteAllText(csProj.Path, csprojText);
+                csProj.WriteText(csprojText);
                 CsProj.ReformatXml(csProj.Path);
             }
         }
@@ -203,7 +203,7 @@ namespace ItsMagic
         {
             return csProjs.ToArray()
                 .Where(csProj => csProj
-                    .CsFiles
+                    .CsFiles()
                     .Any(csFile => csFile
                         .HasEvidenceOfLogRepoSc()));
         }
@@ -216,7 +216,7 @@ namespace ItsMagic
             var Regex = new Regex(referenceToReplace.Pattern);
             var csProjText = File.ReadAllText(toUpdate.Path);
             csProjText = Regex.Replace(csProjText, replacement);
-            File.WriteAllText(toUpdate.Path, csProjText);
+            toUpdate.WriteText(csProjText);
         }
 
         public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace,
@@ -225,7 +225,7 @@ namespace ItsMagic
             var Regex = new Regex(referenceToReplace.Pattern);
             var csProjText = File.ReadAllText(toUpdate.Path);
             csProjText = Regex.Replace(csProjText, replacement);
-            File.WriteAllText(toUpdate.Path, csProjText);
+            toUpdate.WriteText(csProjText);
         }
 
         #endregion

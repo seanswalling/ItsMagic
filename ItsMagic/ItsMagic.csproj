@@ -49,6 +49,7 @@
     <Compile Include="CsFile.cs" />
     <Compile Include="CsProj.cs" />
     <Compile Include="Dumbledore.cs" />
+    <Compile Include="MagicFile.cs" />
     <Compile Include="NugetPackageReference.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

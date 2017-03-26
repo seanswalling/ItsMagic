@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace ItsMagic
     {
         static void Main()
         {
+            Stopwatch sw = Stopwatch.StartNew();
             //string dir = "C:\\source\\Mercury\\src";
             string dir = @"E:\github\cc\Mercury\src";
 
@@ -21,15 +23,9 @@ namespace ItsMagic
             //PrintcsProjsDependantOnlogRepoSc(dir);
             //UpdateLogRepositoryPaths(dir);
 
-            //Dumbledore.AddWorkerEngineTestCoreReferences(dir, new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj"));
-            foreach( var @using in Dumbledore.GetCsFiles(dir)
-                .SelectMany(csFile => csFile.Usings)
-                //.Distinct()
-                )
-            {
-                Console.WriteLine(@using);
-            }
-            
+            Dumbledore.AddProjectReferences(dir, new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj"));
+
+            Console.WriteLine(sw.Elapsed.TotalSeconds);
             Console.WriteLine("Application Complete");
             Console.ReadLine();
         }
@@ -38,7 +34,7 @@ namespace ItsMagic
         {
             foreach (var slnFile in Dumbledore.GetSolutionFiles(dir).ToArray())
             {
-                foreach (var csProj in slnFile.CsProjs
+                foreach (var csProj in slnFile.CsProjs()
                     .Where(csProj => csProj.HasLogRepoReference())
                     .ToArray())
                 {

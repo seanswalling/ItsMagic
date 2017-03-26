@@ -34,7 +34,7 @@ namespace ItsMagic.Tests
             SlnFile[] slnFiles = { new SlnFile(@"C:\source\Mercury\src\Mercury.Terminal.sln"), new SlnFile(@"C:\source\Mercury\src\Mercury.TerminalGateway.sln") };
             foreach (var slnFile in slnFiles)
             {
-                var csProjs = slnFile.CsProjs.Distinct().OrderBy(i=>i.Path).ToArray();
+                var csProjs = slnFile.CsProjs().Distinct().OrderBy(i=>i.Path).ToArray();
                 Output.WriteLine(csProjs.Length.ToString());
                 foreach (var csProj in csProjs)
                 {
@@ -50,11 +50,11 @@ namespace ItsMagic.Tests
             SlnFile[] slnFiles = { new SlnFile(@"C:\source\Mercury\src\Mercury.Terminal.sln"), new SlnFile(@"C:\source\Mercury\src\Mercury.TerminalGateway.sln")};
             foreach (var slnFile in slnFiles)
             {
-                var csProjs = slnFile.CsProjs;
+                var csProjs = slnFile.CsProjs();
                 
                 foreach (var csProj in csProjs)
                 {
-                    var csFiles = csProj.CsFiles.Distinct().OrderBy(i => i.Path).ToArray();
+                    var csFiles = csProj.CsFiles().Distinct().OrderBy(i => i.Path).ToArray();
                     Output.WriteLine(csFiles.Length.ToString());
                     foreach (var csFile in csFiles)
                     {
@@ -136,14 +136,14 @@ namespace ItsMagic.Tests
         private void CanGetProjectGuid()
         {
             var csProj = new CsProj(@"C:\source\ItsMagic\ItsMagic.Tests\Approved\Logging.Client.csproj");
-            Assert.Equal("42A388A2-B797-4335-8A7D-8D748F58E7A3",csProj.Guid);
+            Assert.Equal("42A388A2-B797-4335-8A7D-8D748F58E7A3",csProj.Guid());
         }
 
         [Fact]
         private void CanGetUsingStatementsFromCsFile()
         {
             string[] expected = { "System", "Mercury.Core", "Mercury.Core.NHibernateExtensions", "NHibernate.Mapping.ByCode", "NHibernate.Mapping.ByCode.Conformist"};
-            Assert.Equal(expected, new CsFile(@"E:\github\cc\ItsMagic\ItsMagic.Tests\Approved\AuthFranchise.cs").Usings);
+            Assert.Equal(expected, new CsFile(@"E:\github\cc\ItsMagic\ItsMagic.Tests\Approved\AuthFranchise.cs").Usings());
         }
     }
 }
