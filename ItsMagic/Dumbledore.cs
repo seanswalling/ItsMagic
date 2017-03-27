@@ -30,62 +30,6 @@ namespace ItsMagic
             }
         }
 
-        public static void AddJExtAndNHibExtReferences(string projectDirectory)
-        {
-            SlnFile[] solutionFiles = Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories)
-                .Select(file => new SlnFile(file))
-                .ToArray();
-
-            //{ @"C:\source\Mercury\src\Mercury.ReflectiveTests.sln" };
-            foreach (var solutionFile in solutionFiles)
-            {
-                var csProjs = solutionFile.CsProjs();
-                foreach (var csProj in csProjs)
-                {
-                    var csFiles = csProj.CsFiles();
-                    foreach (var csFile in csFiles)
-                    {
-                        if (csFile.HasEvidenceOfJExt())
-                        {
-                            AddJExtReferences(csFile, csProj, solutionFile);
-                        }
-                        if (csFile.HasEvidenceOfNHibExt())
-                        {
-                            AddNHibExtReferences(csFile, csProj, solutionFile);
-                        }
-                    }
-                }
-            }
-        }
-
-        private static void AddJExtReferences(CsFile csFile, CsProj csProj, SlnFile slnFile)
-        {
-            csFile.AddUsing("Mercury.Core.JsonExtensions");
-            csFile.RemoveUsing("Mercury.Core.MessageSerialisation");
-            if (!csProj.ContainsJExtProjectReference())
-            {
-                csProj.AddJExtProjectReference();
-            }
-            if (!slnFile.ContainsJExtProjectReference())
-            {
-                slnFile.AddJExtProjectReference();
-            }
-        }
-
-        private static void AddNHibExtReferences(CsFile csFile, CsProj csProj, SlnFile slnFile)
-        {
-            csFile.AddUsing("Mercury.Core.NHibernateExtensions");
-            if (!csProj.ContainsNHibExtProjectReference())
-            {
-                csProj.AddNHibExtProjectReference();
-            }
-
-            if (!slnFile.ContainsNHibExtProjectReference())
-            {
-                slnFile.AddNHibExtProjectReference();
-            }
-        }
-
         public static void AddProjectReferences(string projectDirectory, CsProj projectToAdd)
         {
             foreach (var solutionFile in GetSolutionFiles(projectDirectory).ToArray())
@@ -108,13 +52,13 @@ namespace ItsMagic
         private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj projectToAdd, string projectDirectory)
         {
             csFile.AddUsing(projectToAdd.Name);
-            if (!csProj.ContainsProjectReferenceOf(projectToAdd))
+            if (!csProj.ContainsProjectReference(projectToAdd))
             {
                 csProj.AddProjectReference(projectToAdd, projectDirectory);
             }
             if (!slnFile.ContainsProjectReference(projectToAdd))
             {
-                slnFile.AddWeTcProjectReference();
+                slnFile.AddProjectReference(projectToAdd, "Common");
             }
         }
 
@@ -126,7 +70,7 @@ namespace ItsMagic
                 {
                     foreach (var csFile in csProj.CsFiles())
                     {
-                        if (csFile.Usings().Contains("Mercury.Tests.Core") || csFile.Usings().Contains("Mercury.Tests.Shared"))
+                        if (csFile.Usings.Contains("Mercury.Tests.Core") || csFile.Usings.Contains("Mercury.Tests.Shared"))
                         {
                             var str = $"Updating Using statements for {csFile.Name}";
                             File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
@@ -140,7 +84,7 @@ namespace ItsMagic
                     }
                     foreach (var testCoreReplacement in testCoreReplacements)
                     {
-                        if (!csProj.ContainsProjectReferenceOf(testCoreReplacement))
+                        if (!csProj.ContainsProjectReference(testCoreReplacement))
                         {
                             var str = $"Adding Project {testCoreReplacement.Name} Reference to {csProj.Name}";
                             File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
@@ -187,6 +131,50 @@ namespace ItsMagic
             }
         }
 
+        public static IEnumerable<SlnFile> GetSolutionFiles(string dir)
+        {
+            return Directory.EnumerateFiles(dir, "*.sln", SearchOption.AllDirectories)
+                .Where(File.Exists)
+                .Select(file => new SlnFile(file));
+        }
+
+        public static IEnumerable<CsProj> GetCsProjFiles(string dir)
+        {
+            return Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
+                .Select(file => new CsProj(file));
+        }
+
+        public static IEnumerable<CsFile> GetCsFiles(string dir)
+        {
+            return Directory.EnumerateFiles(dir, "*.cs", SearchOption.AllDirectories)
+                .Select(file => new CsFile(file));
+        }
+
+
+
+
+        #region Abstract Later
+
+        public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace, string replacement)
+        {
+            var Regex = new Regex(referenceToReplace.Pattern);
+            var csProjText = File.ReadAllText(toUpdate.Path);
+            csProjText = Regex.Replace(csProjText, replacement);
+            toUpdate.WriteText(csProjText);
+        }
+
+        public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace, string replacement)
+        {
+            var Regex = new Regex(referenceToReplace.Pattern);
+            var csProjText = File.ReadAllText(toUpdate.Path);
+            csProjText = Regex.Replace(csProjText, replacement);
+            toUpdate.WriteText(csProjText);
+        }
+
+        #endregion
+
+        //Deprecated Functions
+
         public static void RemoveDuplicateXmlHeader(string dir)
         {
             var csProjs = Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
@@ -216,19 +204,6 @@ namespace ItsMagic
             }
         }
 
-        public static void FixNHibExtUsings(string[] files)
-        {
-            foreach (var file in files)
-            {
-                var csFile = new CsFile(file);
-                csFile.RemoveUsing("Mercury.Core.NHibernateExtensions");
-                if (csFile.HasEvidenceOfNHibExt())
-                {
-                    csFile.AddUsing("Mercury.Core.NHibernateExtensions");
-                }
-            }
-        }
-
         public static void AddNewRelicRefsTo(string[] filesThatRequireNewRelic)
         {
             foreach (var file in filesThatRequireNewRelic)
@@ -237,56 +212,6 @@ namespace ItsMagic
                 csproj.AddNewRelicProjectReference();
             }
         }
-
-        public static IEnumerable<SlnFile> GetSolutionFiles(string dir)
-        {
-            return Directory.EnumerateFiles(dir, "*.sln", SearchOption.AllDirectories)
-                .Where(File.Exists)
-                .Select(file => new SlnFile(file));
-        }
-
-        public static IEnumerable<CsProj> GetCsProjFiles(string dir)
-        {
-            return Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
-                .Select(file => new CsProj(file));
-        }
-
-        public static IEnumerable<CsFile> GetCsFiles(string dir)
-        {
-            return Directory.EnumerateFiles(dir, "*.cs", SearchOption.AllDirectories)
-                .Select(file => new CsFile(file));
-        }
-
-        public static IEnumerable<CsProj> GetProjectsDependantOnLogRepoSc(IEnumerable<CsProj> csProjs)
-        {
-            return csProjs.ToArray()
-                .Where(csProj => csProj
-                    .CsFiles()
-                    .Any(csFile => csFile
-                        .HasEvidenceOfLogRepoSc()));
-        }
-
-        #region Abstract Later
-
-        public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace,
-            string replacement)
-        {
-            var Regex = new Regex(referenceToReplace.Pattern);
-            var csProjText = File.ReadAllText(toUpdate.Path);
-            csProjText = Regex.Replace(csProjText, replacement);
-            toUpdate.WriteText(csProjText);
-        }
-
-        public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace,
-            string replacement)
-        {
-            var Regex = new Regex(referenceToReplace.Pattern);
-            var csProjText = File.ReadAllText(toUpdate.Path);
-            csProjText = Regex.Replace(csProjText, replacement);
-            toUpdate.WriteText(csProjText);
-        }
-
-        #endregion
 
         //public static void UpdateProjectReferenceWithNugetReference(CsProj toUpdate, ProjectReference reference,
         //    NugetPackageReference referenceToAdd)
@@ -330,19 +255,6 @@ namespace ItsMagic
         //{
         //    return Directory.EnumerateFiles(projectDirectory, "*."+extension, SearchOption.AllDirectories);
         //}
-
-        //public static void AddMissingReferencesTo(IEnumerable<string> csFiles)
-        //{
-        //    var collection = csFiles;
-        //    var filteredCollection = collection.Where(CsFile.HasEvidenceOfJExt);
-        //    foreach (string csFile in filteredCollection)
-        //    {
-        //        CsFile.AddUsingToCsFile(csFile, "Mercury.Core.JsonExtensions");
-        //        CsProj.AddProjectReference(csFile, "");
-        //        //SlnFile.AddCsProjToSolution(csFile, "");
-        //    }
-        //}
-
 
     }
 }

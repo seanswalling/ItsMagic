@@ -1,29 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
-using Microsoft.Build.Evaluation;
 
 namespace ItsMagic
 {
     public class CsProj : MagicFile
     {
         public CsFile[] CsFilesCache { get; private set; }
-
         private string GuidCache { get; set; }
-
-        public string Guid => GuidCache ?? (GuidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text()).First());
-
+        public string Guid => GuidCache ?? (GuidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text()).First().ToLower());
         public string[] Classes
         {
             get
             {
-                return CsFiles().SelectMany(csFile => csFile.Classes())
+                return CsFiles().SelectMany(csFile => csFile.Classes)
                     .Distinct()
                     .ToArray();
             }
@@ -32,7 +25,7 @@ namespace ItsMagic
         {
             get
             {
-                return CsFiles().SelectMany(csFile => csFile.ExtensionMethods())                    
+                return CsFiles().SelectMany(csFile => csFile.ExtensionMethods)                    
                     .Distinct()
                     .ToArray();
             }
@@ -41,7 +34,7 @@ namespace ItsMagic
         {
             get
             {
-                return CsFiles().SelectMany(csFile => csFile.Usings())
+                return CsFiles().SelectMany(csFile => csFile.Usings)
                     .Distinct()
                     .ToArray();
             }
@@ -63,20 +56,7 @@ namespace ItsMagic
                 .ToArray();
             return CsFilesCache;
         }
-
-        private static void UpdatePackagesConfig(string packages, string reference)
-        {
-            var regex = new Regex(RegexStore.PackagesTag);
-            if (!File.Exists(packages))
-            {
-                File.WriteAllText(packages, RegexStore.PackagesConfigDefault);
-            }
-            var packagesText = File.ReadAllText(packages);
-            packagesText = regex.Replace(packagesText, RegexStore.PackagesTag + reference, 1);
-            File.WriteAllText(packages, packagesText);
-            ReformatXml(packages);
-        }
-
+        
         public static string ReformatXml(string file)
         {
             var doc = XDocument.Load(file);
@@ -87,28 +67,13 @@ namespace ItsMagic
             }
             return file;
         }
-
-        public bool ContainsJExtProjectReference()
-        {
-            return File.ReadAllText(Path).Contains("<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>");
-        }
-
-        public bool ContainsNHibExtProjectReference()
-        {
-            return File.ReadAllText(Path).Contains("<Project>{f1575997-02d0-486f-ae36-69f6a3b37c39}</Project>");
-        }
-
+        
         public bool ContainsProjectReference(string projectGuid)
         {
             return Text().Contains($"<Project>{{{projectGuid}}}</Project>");
         }
-
-        public bool ContainsWeTcProjectReference()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ContainsProjectReferenceOf(CsProj project)
+        
+        public bool ContainsProjectReference(CsProj project)
         {
             var guid = project.Guid;
             var upperGuidRegex = guid.ToUpper().Replace("-", "\\-");
@@ -119,7 +84,7 @@ namespace ItsMagic
             return false;
         }
 
-        internal void AddProjectReference(CsProj referencedProject, string projectDirectory)
+        public void AddProjectReference(CsProj referencedProject, string projectDirectory)
         {
             if (Path.Contains(referencedProject.Name+ ".csproj"))
                 return;
@@ -137,6 +102,29 @@ namespace ItsMagic
             WriteText(newText);
             ReformatXml(Path);
         }
+        
+        public void RemoveProjectReference(string projectGuid)
+        {
+            var pattern = $".*(?:<ProjectReference.+\\n)(?:.*{projectGuid}.*\\n)(?:.+\\n)+?(?:.*<\\/ProjectReference>\\n)";
+            Regex regex = new Regex(pattern);
+            var replacementText = regex.Replace(Text(), "");
+            WriteText(replacementText);
+        }
+
+        private static void UpdatePackagesConfig(string packages, string reference)
+        {
+            var regex = new Regex(RegexStore.PackagesTag);
+            if (!File.Exists(packages))
+            {
+                File.WriteAllText(packages, RegexStore.PackagesConfigDefault);
+            }
+            var packagesText = File.ReadAllText(packages);
+            packagesText = regex.Replace(packagesText, RegexStore.PackagesTag + reference, 1);
+            File.WriteAllText(packages, packagesText);
+            ReformatXml(packages);
+        }
+
+        //Functions to be deprecated
 
         public void AddNewRelicProjectReference()
         {
@@ -152,24 +140,6 @@ namespace ItsMagic
             ReformatXml(Path);
         }
 
-        public bool HasLogRepoReference()
-        {
-            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Text()).Any();
-        }
-
-        public void UpdateLogRepoReference(string reference)
-        {
-            var csProjtext = File.ReadAllText(Path);
-            csProjtext = csProjtext.Replace(reference, "\\Platform" + reference);
-            WriteText(csProjtext);
-        }
-
-        //Functions to be deprecated
-        public string[] LogRepoReferences()
-        {
-            return RegexStore.Get(RegexStore.LogRepoReferencePattern, Text()).ToArray();
-        }
-
         //public void AddProjectReference(string reference) //Nuget Version?
         //{
         //    var regex = new Regex("Some Pattern Here");
@@ -178,48 +148,6 @@ namespace ItsMagic
         //    csProjText = regex.Replace(csProjText, "Something here", 1);
         //    WriteText(csProjText);
         //    UpdatePackagesConfig(System.IO.Path.GetDirectoryName(Path) + "\\packages.config", reference);
-        //}
-
-        public void AddNHibExtProjectReference()
-        {
-            if (Path.Contains("Mercury.Core.NHibernateExtensions.csproj"))
-                return;
-
-            var regex = new Regex(RegexStore.ItemGroupTag);
-            var csProjText = File.ReadAllText(Path);
-
-            csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
-                                                   "<ProjectReference Include=\"..\\..\\Platform\\Mercury.Core.NHibernateExtensions\\Mercury.Core.NHibernateExtensions.csproj\">" +
-                                                   "<Project>{f1575997-02d0-486f-ae36-69f6a3b37c39}</Project>" +
-                                                   "<Name>Mercury.Core.NHibernateExtensions</Name>" +
-                                                   "</ProjectReference>", 1);
-            WriteText(csProjText);
-            ReformatXml(Path);
-        }
-
-        public void AddJExtProjectReference()
-        {
-            if (Path.Contains("Mercury.Core.JsonExtensions.csproj"))
-                return;
-
-            var regex = new Regex(RegexStore.ItemGroupTag);
-            var csProjText = File.ReadAllText(Path);
-
-            csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
-                                                   "<ProjectReference Include=\"..\\..\\Platform\\Mercury.Core.JsonExtensions\\Mercury.Core.JsonExtensions.csproj\">" +
-                                                   "<Project>{d3dc56b0-8b95-47a5-a086-9e7a95552364}</Project>" +
-                                                   "<Name>Mercury.Core.JsonExtensions</Name>" +
-                                                   "</ProjectReference>", 1);
-            WriteText(csProjText);
-            ReformatXml(Path);
-        }
-
-        public void RemoveProjectReference(string projectGuid)
-        {
-            var pattern = $".*(?:<ProjectReference.+\\n)(?:.*{projectGuid}.*\\n)(?:.+\\n)+?(?:.*<\\/ProjectReference>\\n)";
-            Regex regex = new Regex(pattern);
-            var replacementText = regex.Replace(Text(),"");
-            WriteText(replacementText);
-        }
+        //} 
     }
 }
