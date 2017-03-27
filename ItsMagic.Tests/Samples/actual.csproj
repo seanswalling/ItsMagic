@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{55E76B7D-F4C9-42CA-922A-EFB55A4F75C2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Mercury.Plugins.AuthorisationReadModel</RootNamespace>
+    <AssemblyName>Mercury.Plugins.AuthorisationReadModel</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\packages\NHibernate.4.0.2.4000\lib\net40\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccessibleFranchise.cs" />
+    <Compile Include="AccessibleFranchiseGroup.cs" />
+    <Compile Include="AccessibleStore.cs" />
+    <Compile Include="AuthFranchise.cs" />
+    <Compile Include="AuthFranchiseGroup.cs" />
+    <Compile Include="AuthorisationReadModelPluginModule.cs" />
+    <Compile Include="TerminalAuthorities\AuthorisedTerminal.cs" />
+    <Compile Include="AuthStore.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="HierarchyAccessEventHandler.cs" />
+    <Compile Include="HierarchyEventHandler.cs" />
+    <Compile Include="HierarchyService.cs" />
+    <Compile Include="IHierarchyWriteService.cs" />
+    <Compile Include="IHierarchyReadService.cs" />
+    <Compile Include="IUserAccessibleStoreHierarchy.cs" />
+    <Compile Include="IUserAssociationReadService.cs" />
+    <Compile Include="IUserStoresReadService.cs" />
+    <Compile Include="IUserWriteService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\CurrentUserProvider.cs" />
+    <Compile Include="Providers\ICurrentUserProvider.cs" />
+    <Compile Include="TerminalAuthorities\TerminalAuthorityApprovedEventHandler.cs" />
+    <Compile Include="TerminalAuthorities\TerminalAuthorityRequestedEventHandler.cs" />
+    <Compile Include="TerminalAuthorities\TerminalAuthorityRevokedEventHandler.cs" />
+    <Compile Include="TerminalAuthorities\TerminalGroupCreatedEventHandler.cs" />
+    <Compile Include="TerminalAuthorities\TerminalGroupVersionChangedEventTerminalAuthoritiesHandler.cs" />
+    <Compile Include="TerminalAuthorities\TerminalGroupVersionChangedEventSummaryHandler.cs" />
+    <Compile Include="TerminalAuthorities\TerminalGroupStoreChangedEventSummaryHandler.cs" />
+    <Compile Include="TerminalAuthorities\TerminalGroupStoreChangedEventTerminalAuthoritiesHandler.cs" />
+    <Compile Include="TerminalAuthorities\TerminalGroupSummary.cs" />
+    <Compile Include="UserAccessibleHierarchy.cs" />
+    <Compile Include="UserAddedToRoleEventHandler.cs" />
+    <Compile Include="UserCreatedEventHandler.cs" />
+    <Compile Include="UserDisabledEventHandler.cs" />
+    <Compile Include="UserEnabledEventHandler.cs" />
+    <Compile Include="UserFranchise.cs" />
+    <Compile Include="UserFranchiseGroup.cs" />
+    <Compile Include="UserGrantedPermissionEventHandler.cs" />
+    <Compile Include="UserPasswordChangedEventHandler.cs" />
+    <Compile Include="UserPasswordResetEventHandler.cs" />
+    <Compile Include="UserPermissionRevokedEventHandler.cs" />
+    <Compile Include="UserRemovedFromRoleEventHandler.cs" />
+    <Compile Include="UserService.cs" />
+    <Compile Include="UserStore.cs" />
+    <Compile Include="UserSummary.cs" />
+	<Compile Include="StepsTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Contracts\Contracts.csproj">
+      <Project>{4C77BAC1-0604-4433-A3CE-C92433EE9227}</Project>
+      <Name>Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\Mercury.Core.NHibernateExtensions\Mercury.Core.NHibernateExtensions.csproj">
+      <Project>{f1575997-02d0-486f-ae36-69f6a3b37c39}</Project>
+      <Name>Mercury.Core.NHibernateExtensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\Mercury.CoreTypes\Mercury.CoreTypes.csproj">
+      <Project>{A78F75AB-FEA0-4A70-9EF6-5ABD55CBF2EF}</Project>
+      <Name>Mercury.CoreTypes</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\Mercury.Core\Mercury.Core.csproj">
+      <Project>{36800f86-879a-4fba-8d6c-fbedd385531f}</Project>
+      <Name>Mercury.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\Server.Core\Server.Core.csproj">
+      <Project>{4b2e1f04-35b1-4d0c-914e-f5e64eddb7eb}</Project>
+      <Name>Server.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Platform\WorkerEngine\WorkerEngine.csproj">
+      <Project>{D2A541D6-A79C-4C43-A1A1-388528F856C7}</Project>
+      <Name>WorkerEngine</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\seed002_schema_roles.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\seed003_tables.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\Scripts\seed001_plugin_roles.sql">
+      <Link>Scripts\seed001_plugin_roles.sql</Link>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\seed004_UserEffectiveStoreSet.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\seed006_terminal_group_summary.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\seed005_authorised_terminals.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\AlwaysRun\1. Functions\tvfStoreHierarchy.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Scripts\AlwaysRun\0. Types\" />
+    <Folder Include="Scripts\AlwaysRun\2. Views\" />
+    <Folder Include="Scripts\AlwaysRun\3. Procs\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\..\lib\Mercury\Mercury.Conventions.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
