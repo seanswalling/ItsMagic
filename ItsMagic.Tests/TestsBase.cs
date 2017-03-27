@@ -12,6 +12,8 @@ namespace ItsMagic.Tests
         public static string actualCsFile = Dumbledore.MagicDir + @"\Samples\actual.cs";
         public static string sampleCsProjFile = Dumbledore.MagicDir + @"\Samples\AuthorisationReadModel.csproj";
         public static string actualCsProjFile = Dumbledore.MagicDir + @"\Samples\actual.csproj";
+        public static string sampleSlnFile = Dumbledore.MagicDir + @"\Samples\Mercury.Terminal.sln";
+        public static string actualSlnFile = Dumbledore.MagicDir + @"\Samples\actual.sln";
 
         public CsFile getActualCsFile()
         {
@@ -27,6 +29,14 @@ namespace ItsMagic.Tests
                 File.Delete(actualCsProjFile);
             File.Copy(sampleCsProjFile, actualCsProjFile);
             return new CsProj(actualCsProjFile);
+        }
+
+        public CsProj getActualSlnFile()
+        {
+            if (File.Exists(actualSlnFile))
+                File.Delete(actualSlnFile);
+            File.Copy(sampleSlnFile, actualSlnFile);
+            return new CsProj(actualSlnFile);
         }
     }
 }
