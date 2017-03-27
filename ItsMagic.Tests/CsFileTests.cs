@@ -5,14 +5,8 @@ using System.IO;
 
 namespace ItsMagic.Tests
 {
-    public class CsFileTests
+    public class CsFileTests : TestsBase
     {
-        private ITestOutputHelper Output { get; }
-        private static string sampleCsFile = Dumbledore.MagicDir + @"\Samples\StepsTests.cs";
-        private static string actualCsFile = Dumbledore.MagicDir + @"\Samples\actual.cs";
-        private static string sampleCsProjFile = Dumbledore.MagicDir + @"\Samples\AuthorisationReadModel.csproj";
-        private static string actualCsProjFile = Dumbledore.MagicDir + @"\Samples\actual.csproj";
-
         public CsFileTests(ITestOutputHelper output)
         {
             Output = output;
@@ -44,22 +38,6 @@ namespace ItsMagic.Tests
             string[] expected = { "System.Linq", "a", "b", "c", "Xunit", "Xunit.Abstractions" };
 
             Assert.Equal(expected, file.Usings);
-        }
-
-        private CsFile getActualCsFile()
-        {
-            if (File.Exists(actualCsFile))
-                File.Delete(actualCsFile);
-            File.Copy(sampleCsFile, actualCsFile);
-            return new CsFile(actualCsFile);
-        }
-
-        private CsProj getActualCsProjFile()
-        {
-            if(File.Exists(actualCsProjFile))
-                File.Delete(actualCsProjFile);
-            File.Copy(sampleCsProjFile, actualCsProjFile);
-            return new CsProj(actualCsProjFile);
         }
     }
 }
