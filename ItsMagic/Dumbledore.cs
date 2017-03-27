@@ -96,6 +96,8 @@ namespace ItsMagic
                     {
                         if (csFile.HasEvidenceOf(projectToAdd))
                         {
+                            var str = $"Adding References too {csFile.Name}, {csProj.Name} and {solutionFile.Name}";
+                            File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> {str});
                             AddReferences(csFile, csProj, solutionFile, projectToAdd, projectDirectory);
                         }
                     }
@@ -105,14 +107,69 @@ namespace ItsMagic
 
         private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj projectToAdd, string projectDirectory)
         {
-            csFile.AddUsing(projectToAdd.Name());
+            csFile.AddUsing(projectToAdd.Name);
             if (!csProj.ContainsProjectReferenceOf(projectToAdd))
             {
                 csProj.AddProjectReference(projectToAdd, projectDirectory);
             }
-            if (!slnFile.ContainsProjectReference(RegexStore.SolutionWeTcProjectReferencePattern))
+            if (!slnFile.ContainsProjectReference(projectToAdd))
             {
                 slnFile.AddWeTcProjectReference();
+            }
+        }
+
+        public static void AddTestCoreReplacementsProjectReferences(string projectDirectory, CsProj[] testCoreReplacements)
+        {
+            foreach (var solutionFile in GetSolutionFiles(projectDirectory).ToArray())
+            {
+                foreach (var csProj in solutionFile.CsProjs().ToArray())
+                {
+                    foreach (var csFile in csProj.CsFiles())
+                    {
+                        if (csFile.Usings().Contains("Mercury.Tests.Core") || csFile.Usings().Contains("Mercury.Tests.Shared"))
+                        {
+                            var str = $"Updating Using statements for {csFile.Name}";
+                            File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                            csFile.RemoveUsing("Mercury.Tests.Core");
+                            csFile.RemoveUsing("Mercury.Tests.Shared");
+                            csFile.AddUsing("Mercury.Testing");
+                            csFile.AddUsing("Mercury.Testing.Factories");
+                            csFile.AddUsing("Mercury.Testing.Integrated");
+                            csFile.AlphabatiseUsings();
+                        }
+                    }
+                    foreach (var testCoreReplacement in testCoreReplacements)
+                    {
+                        if (!csProj.ContainsProjectReferenceOf(testCoreReplacement))
+                        {
+                            var str = $"Adding Project {testCoreReplacement.Name} Reference to {csProj.Name}";
+                            File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                            csProj.AddProjectReference(testCoreReplacement, projectDirectory);
+                        }
+                        if (!solutionFile.ContainsProjectReference(testCoreReplacement))
+                        {
+                            var str = $"Adding Project {testCoreReplacement.Name} Reference to {solutionFile.Name}";
+                            File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                            solutionFile.AddProjectReference(testCoreReplacement, "Tests");
+                        }
+                    }
+                    if (csProj.ContainsProjectReference(RegexStore.TestsSharedGuid) ||
+                        csProj.ContainsProjectReference(RegexStore.TestsCoreGuid))
+                    {
+                        var str = $"Removing references from {csProj.Name}";
+                        File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                        csProj.RemoveProjectReference(RegexStore.TestsSharedGuid);
+                        csProj.RemoveProjectReference(RegexStore.TestsCoreGuid);
+                    }
+                    if (solutionFile.ContainsProjectReference(RegexStore.TestsSharedGuid) ||
+                        solutionFile.ContainsProjectReference(RegexStore.TestsCoreGuid))
+                    {
+                        var str = $"Removing references from {solutionFile.Name}";
+                        File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                        solutionFile.RemoveProjectReference(RegexStore.TestsSharedGuid);
+                        solutionFile.RemoveProjectReference(RegexStore.TestsCoreGuid);
+                    }
+                }
             }
         }
 
@@ -184,6 +241,7 @@ namespace ItsMagic
         public static IEnumerable<SlnFile> GetSolutionFiles(string dir)
         {
             return Directory.EnumerateFiles(dir, "*.sln", SearchOption.AllDirectories)
+                .Where(File.Exists)
                 .Select(file => new SlnFile(file));
         }
 
@@ -284,6 +342,7 @@ namespace ItsMagic
         //        //SlnFile.AddCsProjToSolution(csFile, "");
         //    }
         //}
+
 
     }
 }

@@ -5,18 +5,19 @@ namespace ItsMagic
     public class MagicFile
     {
         public string Path { get; set; }
-        private string _textCache { get; set; }
+        public string TextCache { get; set; }
+        public string Name => System.IO.Path.GetFileNameWithoutExtension(Path);
 
         public string Text()
         {
-            if (_textCache == null)
-                _textCache = File.ReadAllText(Path);
-            return _textCache;
+            if (TextCache == null)
+                TextCache = File.ReadAllText(Path);
+            return TextCache;
         }
         
         public void WriteText(string newText)
         {
-            _textCache = newText;
+            TextCache = newText;
             File.WriteAllText(Path, newText);
         }
     }

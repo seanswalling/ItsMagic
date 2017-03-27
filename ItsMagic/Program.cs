@@ -13,8 +13,8 @@ namespace ItsMagic
         static void Main()
         {
             Stopwatch sw = Stopwatch.StartNew();
-            //string dir = "C:\\source\\Mercury\\src";
-            string dir = @"E:\github\cc\Mercury\src";
+            string dir = "C:\\source\\Mercury\\src";
+            //string dir = @"E:\github\cc\Mercury\src";
 
             //Dumbledore.AddJExtAndNHibExtReferences(dir);
             //Dumbledore.RemoveLogForNetReference(FilesToFix());
@@ -23,7 +23,15 @@ namespace ItsMagic
             //PrintcsProjsDependantOnlogRepoSc(dir);
             //UpdateLogRepositoryPaths(dir);
 
-            Dumbledore.AddProjectReferences(dir, new CsProj(dir + @"\Platform\WorkerEngine.TestCommon\WorkerEngine.TestCommon.csproj"));
+            //Dumbledore.AddProjectReferences(dir, new CsProj(@"C:\source\Mercury\src\Platform\Mercury.Testing\Mercury.Testing.csproj"));
+
+            CsProj[] testCoreReplacements =
+            {
+                new CsProj(@"C:\source\Mercury\src\Platform\Mercury.Testing\Mercury.Testing.csproj"),
+                new CsProj(@"C:\source\Mercury\src\Platform\Mercury.Testing.Factories\Mercury.Testing.Factories.csproj"),
+                new CsProj(@"C:\source\Mercury\src\Platform\Mercury.Testing.Integrated\Mercury.Testing.Integrated.csproj")
+            };
+            Dumbledore.AddTestCoreReplacementsProjectReferences(dir, testCoreReplacements);
 
             Console.WriteLine(sw.Elapsed.TotalSeconds);
             Console.WriteLine("Application Complete");

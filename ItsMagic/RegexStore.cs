@@ -14,6 +14,9 @@ namespace ItsMagic
         public const string PackagesConfigDefault = "<? xml version =\"1.0\" encoding=\"utf-8\"?><packages></packages>";
         public const string ReleaseAnyCpu = "Release|Any CPU";
         public const string NestedProjects = "GlobalSection(NestedProjects) = preSolution";
+        public const string TestsCoreGuid = "AF2AA63F-B129-4D88-9D1A-4BC19E443B00";
+        public const string TestsSharedGuid = "CA12242D-1F50-44BB-9972-D6C6609E4C37";
+        public static string ItemGroupProjectReference = "<ItemGroup>" + Environment.NewLine + "<ProjectReference ";
 
         public const string CsFilesFromCsProjPattern = "<Compile Include=\\\"(?<capturegroup>(.*.cs))\\\"( \\/)*>";
         public const string CsProjFromSlnPattern = "Project(.*) = .*, \\\"(?<capturegroup>.*\\.csproj)\\\", \\\".*\\\"";
@@ -23,10 +26,13 @@ namespace ItsMagic
         public const string ExtensionMethodsFromCsFilePattern = " (?<capturegroup>(\\w|\\d)*)\\(this";
 
         public const string SolutionWeTcProjectReferencePattern = "Project.*\\\"WorkerEngine\\.TestCommon\\\"";
+        public const string SolutionMercuryTestingProjectReferencePattern = "Project.*\\\"Mercury\\.Testing\\\"";
         public const string CommonFolderPattern = "Project.* = \\\"Common\\\", \\\"Common\\\", \\\"\\{(?<capturegroup>(.*))\\}\\\"";
+        public static string TestsFolderPattern = "Project.* = \\\"Tests\\\", \\\"Tests\\\", \\\"\\{(?<capturegroup>(.*))\\}\\\"";
         public const string LogRepoReferencePattern = "(?<!\\\\*Platform\\\\*)(?<capturegroup>(\\\\*LogRepository\\\\(.)+\\\\(.)+\\.c[cs]proj))";
         public static string ClassFromCsFilePattern = "class (?<capturegroup>(\\w*\\d*))";
         public static string CsProjGuidPattern = "<ProjectGuid>{(?<capturegroup>([\\d\\w-]*))}<\\/ProjectGuid>";
+        public static string ItemGroupProjectReferencepattern = "<ItemGroup>\\s+<ProjectReference ";
 
         public static object SolutionWeTcProjectReference =
             "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"WorkerEngine.TestCommon\", \"Platform\\WorkerEngine.TestCommon\\WorkerEngine.TestCommon.csproj\", \"{499EBA0D-DA7E-431B-AF62-74C492FD6E2A}\"\nEndProject";
@@ -49,7 +55,13 @@ namespace ItsMagic
                                                            "{499EBA0D-DA7E-431B-AF62-74C492FD6E2A}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t" +
                                                            "{499EBA0D-DA7E-431B-AF62-74C492FD6E2A}.Release|Any CPU.Build.0 = Release|Any CPU";
 
+        public static object MercTestingReleaseDebugInformation = "{5C9BAB9F-1136-4760-9771-A8E543574BE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU\r\n\t\t" +
+                                                                  "{5C9BAB9F-1136-4760-9771-A8E543574BE4}.Debug|Any CPU.Build.0 = Debug|Any CPU\r\n\t\t" +
+                                                                  "{5C9BAB9F-1136-4760-9771-A8E543574BE4}.Release|Any CPU.ActiveCfg = Release|Any CPU\r\n\t\t" +
+                                                                  "{5C9BAB9F-1136-4760-9771-A8E543574BE4}.Release|Any CPU.Build.0 = Release|Any CPU";
 
+        public static object SolutionMercTestingProjectReference = "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = \"Mercury.Testing\", \"Platform\\Mercury.Testing\\Mercury.Testing.csproj\", \"{5C9BAB9F-1136-4760-9771-A8E543574BE4}\"\r\nEndProject";
+        
         public static IEnumerable<string> Get2(string pattern, string file)
         {
             Regex regex = new Regex(pattern);
