@@ -5,9 +5,9 @@ using System.IO;
 
 namespace ItsMagic.Tests
 {
-    class CsProjTests : TestsBase
+    class SlnFileTests : TestsBase
     {
-        public CsProjTests(ITestOutputHelper output)
+        public SlnFileTests(ITestOutputHelper output)
         {
             Output = output;
         }
