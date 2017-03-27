@@ -16,8 +16,8 @@ namespace ItsMagic
         {
             get
             {
-                string dir1 = @"C:\source\Mercury\src\";
-                string dir2 = @"E:\github\cc\Mercury\src\";
+                string dir1 = @"C:\source\Mercury\src";
+                string dir2 = @"E:\github\cc\Mercury\src";
                 if (Directory.Exists(dir1))
                     return dir1;
                 if (Directory.Exists(dir2))
@@ -25,6 +25,7 @@ namespace ItsMagic
                 throw new DirectoryNotFoundException();
             }
         }
+        public static string MagicDir => new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.FullName.ToString();
 
         public static void UpdateAllReferencesToNugetReferences()
         {
@@ -54,8 +55,7 @@ namespace ItsMagic
                     {
                         if (csFile.HasEvidenceOf(projectToAdd))
                         {
-                            var str = $"Adding References too {csFile.Name}, {csProj.Name} and {solutionFile.Name}";
-                            File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> {str});
+                            Cauldron.Add($"Adding References too {csFile.Name}, {csProj.Name} and {solutionFile.Name}");
                             AddReferences(csFile, csProj, solutionFile, projectToAdd);
                         }
                     }
@@ -86,8 +86,7 @@ namespace ItsMagic
                     {
                         if (csFile.Usings.Contains("Mercury.Tests.Core") || csFile.Usings.Contains("Mercury.Tests.Shared"))
                         {
-                            var str = $"Updating Using statements for {csFile.Name}";
-                            File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                            Cauldron.Add($"Updating Using statements for {csFile.Name}");
                             csFile.RemoveUsing("Mercury.Tests.Core");
                             csFile.RemoveUsing("Mercury.Tests.Shared");
                             csFile.AddUsing("Mercury.Testing");
@@ -100,30 +99,26 @@ namespace ItsMagic
                     {
                         if (!csProj.ContainsProjectReference(testCoreReplacement))
                         {
-                            var str = $"Adding Project {testCoreReplacement.Name} Reference to {csProj.Name}";
-                            File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                            Cauldron.Add($"Adding Project {testCoreReplacement.Name} Reference to {csProj.Name}");
                             csProj.AddProjectReference(testCoreReplacement);
                         }
                         if (!solutionFile.ContainsProjectReference(testCoreReplacement))
                         {
-                            var str = $"Adding Project {testCoreReplacement.Name} Reference to {solutionFile.Name}";
-                            File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                            Cauldron.Add($"Adding Project {testCoreReplacement.Name} Reference to {solutionFile.Name}");
                             solutionFile.AddProjectReference(testCoreReplacement, "Tests");
                         }
                     }
                     if (csProj.ContainsProjectReference(RegexStore.TestsSharedGuid) ||
                         csProj.ContainsProjectReference(RegexStore.TestsCoreGuid))
                     {
-                        var str = $"Removing references from {csProj.Name}";
-                        File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                        Cauldron.Add($"Removing references from {csProj.Name}");
                         csProj.RemoveProjectReference(RegexStore.TestsSharedGuid);
                         csProj.RemoveProjectReference(RegexStore.TestsCoreGuid);
                     }
                     if (solutionFile.ContainsProjectReference(RegexStore.TestsSharedGuid) ||
                         solutionFile.ContainsProjectReference(RegexStore.TestsCoreGuid))
                     {
-                        var str = $"Removing references from {solutionFile.Name}";
-                        File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                        Cauldron.Add($"Removing references from {solutionFile.Name}");
                         solutionFile.RemoveProjectReference(RegexStore.TestsSharedGuid);
                         solutionFile.RemoveProjectReference(RegexStore.TestsCoreGuid);
                     }

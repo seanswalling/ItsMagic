@@ -46,13 +46,14 @@ namespace ItsMagic
             WriteText(replacementText);
         }
 
-        public void AddProjectReference(CsProj projectToAdd, string solutionFolder)
+        public void AddProjectReference(CsProj projectToAdd, string solutionFolder = null)
         {
             var replacementText = Text;
 
             replacementText = AddProjectText(replacementText, projectToAdd);
             replacementText = AddDebugAndReleaseInformation(replacementText, projectToAdd);
-            replacementText = AddToFolder(replacementText, projectToAdd, solutionFolder);
+            if(solutionFolder != null)
+                replacementText = AddToFolder(replacementText, projectToAdd, solutionFolder);
 
             WriteText(replacementText);
         }
@@ -92,7 +93,6 @@ namespace ItsMagic
                                                                         "\\{(?<capturegroup>(.*))\\}\\\"", Text).First() + "}";
             textToReplace = textToReplace.Replace(RegexStore.NestedProjects, RegexStore.NestedProjects + "\n\t\t" + projectToAddEqualsFolderToAdd);
             return textToReplace;
-        }
-                
+        }                
     }
 }

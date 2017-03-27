@@ -95,8 +95,7 @@ namespace ItsMagic
             {
                 if (RegexStore.Contains("[\\s:]" + @class + "[\\s\\.(]", Text))
                 {
-                    var str = $"Found Evidence of {csProj.Name}.{@class} in {Name}";
-                    File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
+                    Cauldron.Add($"Found Evidence of {csProj.Name}.{@class} in {Name}");
                     return true;
                 }
             }

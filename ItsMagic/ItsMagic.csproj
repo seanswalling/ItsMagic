@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cauldron.cs" />
     <Compile Include="CsFile.cs" />
     <Compile Include="CsProj.cs" />
     <Compile Include="Dumbledore.cs" />
