@@ -6,14 +6,16 @@ namespace ItsMagic
     {
         public string Path { get; set; }
         public string TextCache { get; set; }
+        public string Text
+        {
+            get
+            {
+                return TextCache ?? (TextCache = File.ReadAllText(Path));
+            }
+        }
         public string Name => System.IO.Path.GetFileNameWithoutExtension(Path);
 
-        public string Text()
-        {
-            if (TextCache == null)
-                TextCache = File.ReadAllText(Path);
-            return TextCache;
-        }
+
         
         public void WriteText(string newText)
         {

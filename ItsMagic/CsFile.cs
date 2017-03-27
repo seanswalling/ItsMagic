@@ -12,7 +12,7 @@ namespace ItsMagic
         {
             get
             {
-                return ClassesCache ?? (ClassesCache = RegexStore.Get(RegexStore.ClassFromCsFilePattern, Text()).ToArray());
+                return ClassesCache ?? (ClassesCache = RegexStore.Get(RegexStore.ClassFromCsFilePattern, Text).ToArray());
             }
         }
         private string[] UsingsCache { get; set; }
@@ -20,7 +20,7 @@ namespace ItsMagic
         {
             get
             {
-                return UsingsCache ?? (UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text()).ToArray());
+                return UsingsCache ?? (UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray());
             }
         }
         private string[] ExtensionMethodsCache { get; set; }
@@ -30,7 +30,7 @@ namespace ItsMagic
             {
                 return ExtensionMethodsCache ??
                        (ExtensionMethodsCache =
-                           RegexStore.Get(RegexStore.ExtensionMethodsFromCsFilePattern, Text()).ToArray());
+                           RegexStore.Get(RegexStore.ExtensionMethodsFromCsFilePattern, Text).ToArray());
             }
         }
 
@@ -41,21 +41,21 @@ namespace ItsMagic
 
         public void AddUsing(string reference)
         {
-            if (!Text().Contains("using " + reference + ";"))
+            if (!Text.Contains("using " + reference + ";"))
             {
-                TextCache = "using " + reference + ";" + Environment.NewLine + Text();
-                WriteText(Text());
-                UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text()).ToArray();
+                TextCache = "using " + reference + ";" + Environment.NewLine + Text;
+                WriteText(Text);
+                UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray();
             }
         }
 
         public void RemoveUsing(string reference)
         {
-            if (Text().Contains("using " + reference + ";"))
+            if (Text.Contains("using " + reference + ";"))
             {
-                TextCache = Text().Replace("using " + reference + ";" + Environment.NewLine, "");
-                WriteText(Text());
-                UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text()).ToArray();
+                TextCache = Text.Replace("using " + reference + ";" + Environment.NewLine, "");
+                WriteText(Text);
+                UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray();
             }
 
         }
@@ -93,7 +93,7 @@ namespace ItsMagic
         {
             foreach (var @class in csProj.Classes)
             {
-                if (RegexStore.Contains("[\\s:]" + @class + "[\\s\\.(]", Text()))
+                if (RegexStore.Contains("[\\s:]" + @class + "[\\s\\.(]", Text))
                 {
                     var str = $"Found Evidence of {csProj.Name}.{@class} in {Name}";
                     File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });

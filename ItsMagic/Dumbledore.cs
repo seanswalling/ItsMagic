@@ -12,6 +12,8 @@ namespace ItsMagic
 {
     public static class Dumbledore
     {
+        public const string MercurySourceDir = "";
+
         public static void UpdateAllReferencesToNewgetReferences(string projectDirectory)
         {
             SlnFile[] solutionFiles = Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories)

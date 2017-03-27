@@ -11,7 +11,7 @@ namespace ItsMagic
     {
         public CsFile[] CsFilesCache { get; private set; }
         private string GuidCache { get; set; }
-        public string Guid => GuidCache ?? (GuidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text()).First().ToLower());
+        public string Guid => GuidCache ?? (GuidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text).First().ToLower());
         public string[] Classes
         {
             get
@@ -49,7 +49,7 @@ namespace ItsMagic
         {
             if (CsFilesCache != null) return CsFilesCache;
             var dir = System.IO.Path.GetDirectoryName(Path);
-            CsFilesCache = RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Text())
+            CsFilesCache = RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Text)
                 .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
                 .Where(File.Exists)
                 .Select(file => new CsFile(file))
@@ -70,7 +70,7 @@ namespace ItsMagic
         
         public bool ContainsProjectReference(string projectGuid)
         {
-            return Text().Contains($"<Project>{{{projectGuid}}}</Project>");
+            return Text.Contains($"<Project>{{{projectGuid}}}</Project>");
         }
         
         public bool ContainsProjectReference(CsProj project)
@@ -78,8 +78,8 @@ namespace ItsMagic
             var guid = project.Guid;
             var upperGuidRegex = guid.ToUpper().Replace("-", "\\-");
             var lowerGuidRegex = guid.ToLower().Replace("-", "\\-");
-            if (RegexStore.Contains("<Project>{" + upperGuidRegex + "}<\\/Project>", Text()) ||
-                RegexStore.Contains("<Project>{" + lowerGuidRegex + "}<\\/Project>", Text()))
+            if (RegexStore.Contains("<Project>{" + upperGuidRegex + "}<\\/Project>", Text) ||
+                RegexStore.Contains("<Project>{" + lowerGuidRegex + "}<\\/Project>", Text))
                 return true;
             return false;
         }
@@ -93,7 +93,7 @@ namespace ItsMagic
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
             var regex = new Regex(RegexStore.ItemGroupProjectReferencepattern);
-            var newText = regex.Replace(Text(), RegexStore.ItemGroupProjectReference +
+            var newText = regex.Replace(Text, RegexStore.ItemGroupProjectReference +
                                                 "Include=\"" + relPath.ToString().Replace("src", "..\\..").Replace("/", "\\") + "\">" + Environment.NewLine +
                                                 "<Project>{" + referencedProject.Guid + "}</Project>" + Environment.NewLine +
                                                 "<Name>" + referencedProject.Name + "</Name>" + Environment.NewLine +
@@ -107,7 +107,7 @@ namespace ItsMagic
         {
             var pattern = $".*(?:<ProjectReference.+\\n)(?:.*{projectGuid}.*\\n)(?:.+\\n)+?(?:.*<\\/ProjectReference>\\n)";
             Regex regex = new Regex(pattern);
-            var replacementText = regex.Replace(Text(), "");
+            var replacementText = regex.Replace(Text, "");
             WriteText(replacementText);
         }
 

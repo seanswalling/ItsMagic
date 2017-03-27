@@ -19,7 +19,7 @@ namespace ItsMagic
             if (_csProjsCache == null)
             {
                 var dir = System.IO.Path.GetDirectoryName(Path);
-                _csProjsCache = RegexStore.Get(RegexStore.CsProjFromSlnPattern, Text())
+                _csProjsCache = RegexStore.Get(RegexStore.CsProjFromSlnPattern, Text)
                     .Select(csProjRelPath => System.IO.Path.Combine(dir, csProjRelPath))
                     .Where(File.Exists)
                     .Select(file => new CsProj(file))
@@ -30,25 +30,25 @@ namespace ItsMagic
 
         public bool ContainsProjectReference(string projectGuid)
         {
-            return Text().Contains(projectGuid);
+            return Text.Contains(projectGuid);
         }
 
         public bool ContainsProjectReference(CsProj referencedProject)
         {
-            return Text().Contains(referencedProject.Guid);
+            return Text.Contains(referencedProject.Guid);
         }
 
         public void RemoveProjectReference(string projectGuid)
         {
             var pattern = $"(?:Project.+{projectGuid}.*\n)(?:EndProject\n)";
             Regex regex = new Regex(pattern);
-            var replacementText = regex.Replace(Text(), "");
+            var replacementText = regex.Replace(Text, "");
             WriteText(replacementText);
         }
 
         public void AddProjectReference(CsProj projectToAdd, string solutionFolder)
         {
-            var replacementText = Text();
+            var replacementText = Text;
 
             replacementText = AddProjectText(replacementText, projectToAdd);
             replacementText = AddDebugAndReleaseInformation(replacementText, projectToAdd);
@@ -92,7 +92,7 @@ namespace ItsMagic
         {
             string projectToAddEqualsFolderToAdd = $"{{{projectToAdd.Guid}}} = " +
                                                    "{" + RegexStore.Get($"Project.* = \\\"{solutionFolder}\\\", \\\"{solutionFolder}\\\", \\\"" +
-                                                                        "\\{(?<capturegroup>(.*))\\}\\\"", Text()).First() + "}";
+                                                                        "\\{(?<capturegroup>(.*))\\}\\\"", Text).First() + "}";
             textToReplace = textToReplace.Replace(RegexStore.NestedProjects, RegexStore.NestedProjects + "\n\t\t" + projectToAddEqualsFolderToAdd);
             return textToReplace;
         }
