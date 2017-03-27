@@ -12,11 +12,23 @@ namespace ItsMagic
 {
     public static class Dumbledore
     {
-        public const string MercurySourceDir = "";
-
-        public static void UpdateAllReferencesToNewgetReferences(string projectDirectory)
+        public static string MercurySourceDir
         {
-            SlnFile[] solutionFiles = Directory.EnumerateFiles(projectDirectory, "*.sln", SearchOption.AllDirectories)
+            get
+            {
+                string dir1 = @"C:\source\Mercury\src\";
+                string dir2 = @"E:\github\cc\Mercury\src\";
+                if (Directory.Exists(dir1))
+                    return dir1;
+                if (Directory.Exists(dir2))
+                    return dir1;
+                throw new DirectoryNotFoundException();
+            }
+        }
+
+        public static void UpdateAllReferencesToNugetReferences()
+        {
+            SlnFile[] solutionFiles = Directory.EnumerateFiles(MercurySourceDir, "*.sln", SearchOption.AllDirectories)
                 .Select(file => new SlnFile(file))
                 .ToArray();
             //{ @"C:\source\Mercury\src\Mercury.ReflectiveTests.sln" };
@@ -32,9 +44,9 @@ namespace ItsMagic
             }
         }
 
-        public static void AddProjectReferences(string projectDirectory, CsProj projectToAdd)
+        public static void AddProjectReferences(CsProj projectToAdd)
         {
-            foreach (var solutionFile in GetSolutionFiles(projectDirectory).ToArray())
+            foreach (var solutionFile in GetSolutionFiles(MercurySourceDir).ToArray())
             {
                 foreach (var csProj in solutionFile.CsProjs().ToArray())
                 {
@@ -44,19 +56,19 @@ namespace ItsMagic
                         {
                             var str = $"Adding References too {csFile.Name}, {csProj.Name} and {solutionFile.Name}";
                             File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> {str});
-                            AddReferences(csFile, csProj, solutionFile, projectToAdd, projectDirectory);
+                            AddReferences(csFile, csProj, solutionFile, projectToAdd);
                         }
                     }
                 }
             }
         }
 
-        private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj projectToAdd, string projectDirectory)
+        private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj projectToAdd)
         {
             csFile.AddUsing(projectToAdd.Name);
             if (!csProj.ContainsProjectReference(projectToAdd))
             {
-                csProj.AddProjectReference(projectToAdd, projectDirectory);
+                csProj.AddProjectReference(projectToAdd);
             }
             if (!slnFile.ContainsProjectReference(projectToAdd))
             {
@@ -64,9 +76,9 @@ namespace ItsMagic
             }
         }
 
-        public static void AddTestCoreReplacementsProjectReferences(string projectDirectory, CsProj[] testCoreReplacements)
+        public static void AddTestCoreReplacementsProjectReferences(CsProj[] testCoreReplacements)
         {
-            foreach (var solutionFile in GetSolutionFiles(projectDirectory).ToArray())
+            foreach (var solutionFile in GetSolutionFiles(MercurySourceDir).ToArray())
             {
                 foreach (var csProj in solutionFile.CsProjs().ToArray())
                 {
@@ -90,7 +102,7 @@ namespace ItsMagic
                         {
                             var str = $"Adding Project {testCoreReplacement.Name} Reference to {csProj.Name}";
                             File.AppendAllLines(@"C:\Users\jordan.warren\Desktop\Log.txt", new List<string> { str });
-                            csProj.AddProjectReference(testCoreReplacement, projectDirectory);
+                            csProj.AddProjectReference(testCoreReplacement);
                         }
                         if (!solutionFile.ContainsProjectReference(testCoreReplacement))
                         {
@@ -152,9 +164,6 @@ namespace ItsMagic
                 .Select(file => new CsFile(file));
         }
 
-
-
-
         #region Abstract Later
 
         public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace, string replacement)
@@ -177,9 +186,9 @@ namespace ItsMagic
 
         //Deprecated Functions
 
-        public static void RemoveDuplicateXmlHeader(string dir)
+        public static void RemoveDuplicateXmlHeader()
         {
-            var csProjs = Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
+            var csProjs = Directory.EnumerateFiles(MercurySourceDir, "*.csproj", SearchOption.AllDirectories)
                 .Select(file => new CsProj(file));
             foreach (var csProj in csProjs)
             {

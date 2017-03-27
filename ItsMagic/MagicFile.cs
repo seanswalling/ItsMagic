@@ -15,8 +15,6 @@ namespace ItsMagic
         }
         public string Name => System.IO.Path.GetFileNameWithoutExtension(Path);
 
-
-        
         public void WriteText(string newText)
         {
             TextCache = newText;

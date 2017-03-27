@@ -84,11 +84,11 @@ namespace ItsMagic
             return false;
         }
 
-        public void AddProjectReference(CsProj referencedProject, string projectDirectory)
+        public void AddProjectReference(CsProj referencedProject)
         {
             if (Path.Contains(referencedProject.Name+ ".csproj"))
                 return;
-            Uri mercurySourcePath = new Uri(projectDirectory);
+            Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
             Uri referencedProjectPath = new Uri(referencedProject.Path);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 

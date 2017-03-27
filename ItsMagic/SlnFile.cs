@@ -59,12 +59,9 @@ namespace ItsMagic
 
         private string AddProjectText(string textToReplace, CsProj projectToAdd)
         {
-            //fix this later
-            string dir = "C:\\source\\Mercury\\src";
-            Uri mercurySourcePath = new Uri(dir);
+            Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
             Uri referencedProjectPath = new Uri(projectToAdd.Path);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
-
 
             textToReplace = RegexStore.ReplaceLastOccurrence(textToReplace,
                 RegexStore.EndProject,

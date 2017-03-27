@@ -8,16 +8,14 @@ namespace ItsMagic
         static void Main()
         {
             Stopwatch sw = Stopwatch.StartNew();
-            string dir = "C:\\source\\Mercury\\src";
-            //string dir = @"E:\github\cc\Mercury\src";
             
             CsProj[] testCoreReplacements =
             {
-                new CsProj(@"C:\source\Mercury\src\Platform\Mercury.Testing\Mercury.Testing.csproj"),
-                new CsProj(@"C:\source\Mercury\src\Platform\Mercury.Testing.Factories\Mercury.Testing.Factories.csproj"),
-                new CsProj(@"C:\source\Mercury\src\Platform\Mercury.Testing.Integrated\Mercury.Testing.Integrated.csproj")
+                new CsProj(Dumbledore.MercurySourceDir + @"Platform\Mercury.Testing\Mercury.Testing.csproj"),
+                new CsProj(Dumbledore.MercurySourceDir + @"Platform\Mercury.Testing.Factories\Mercury.Testing.Factories.csproj"),
+                new CsProj(Dumbledore.MercurySourceDir + @"Platform\Mercury.Testing.Integrated\Mercury.Testing.Integrated.csproj")
             };
-            Dumbledore.AddTestCoreReplacementsProjectReferences(dir, testCoreReplacements);
+            Dumbledore.AddTestCoreReplacementsProjectReferences(testCoreReplacements);
 
             Console.WriteLine(sw.Elapsed.TotalSeconds);
             Console.WriteLine("Application Complete");
