@@ -7,25 +7,25 @@ namespace ItsMagic
 {
     public class SlnFile : MagicFile
     {
-        public CsProj[] _csProjsCache { get; private set; }
+        private CsProj[] CsProjsCache { get; set; }
 
         public SlnFile(string path)
         {
-            Path = path;
+            Filepath = path;
         }
 
         public CsProj[] CsProjs()
         {
-            if (_csProjsCache == null)
+            if (CsProjsCache == null)
             {
-                var dir = System.IO.Path.GetDirectoryName(Path);
-                _csProjsCache = RegexStore.Get(RegexStore.CsProjFromSlnPattern, Text)
-                    .Select(csProjRelPath => System.IO.Path.Combine(dir, csProjRelPath))
+                var dir = Path.GetDirectoryName(Filepath);
+                CsProjsCache = RegexStore.Get(RegexStore.CsProjFromSlnPattern, Text)
+                    .Select(csProjRelPath => Path.Combine(dir, csProjRelPath))
                     .Where(File.Exists)
                     .Select(file => new CsProj(file))
                     .ToArray();
             }
-            return _csProjsCache;
+            return CsProjsCache;
         }
 
         public bool ContainsProjectReference(string projectGuid)
@@ -41,8 +41,7 @@ namespace ItsMagic
         public void RemoveProjectReference(string projectGuid)
         {
             var pattern = $"(?:Project.+{projectGuid}.*(\\n*\\r*))(?:EndProject(\\n*\\r*))";
-            //var pattern = "Project.+CA12242D-1F50-44BB-9972-D6C6609E4C37.*(\\n*\\r*)EndProject(\\n*\\r*)";
-            Regex regex = new Regex(pattern);
+            var regex = new Regex(pattern);
             var replacementText = regex.Replace(Text, "");
             WriteText(replacementText);
 
@@ -67,10 +66,10 @@ namespace ItsMagic
         private string AddProjectText(string textToReplace, CsProj projectToAdd)
         {
             Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
-            Uri referencedProjectPath = new Uri(projectToAdd.Path);
+            Uri referencedProjectPath = new Uri(projectToAdd.Filepath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
-            textToReplace = RegexStore.ReplaceLastOccurrence(textToReplace,
+            Text = RegexStore.ReplaceLastOccurrence(textToReplace,
                 RegexStore.EndProject,
                 RegexStore.EndProject + "\n" + "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = " +
                 $"\"{projectToAdd.Name}\"," +

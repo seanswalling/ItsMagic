@@ -180,7 +180,7 @@ namespace ItsMagic
         public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace, string replacement)
         {
             var Regex = new Regex(referenceToReplace.Pattern);
-            var csProjText = File.ReadAllText(toUpdate.Path);
+            var csProjText = File.ReadAllText(toUpdate.Filepath);
             csProjText = Regex.Replace(csProjText, replacement);
             toUpdate.WriteText(csProjText);
         }
@@ -188,7 +188,7 @@ namespace ItsMagic
         public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace, string replacement)
         {
             var Regex = new Regex(referenceToReplace.Pattern);
-            var csProjText = File.ReadAllText(toUpdate.Path);
+            var csProjText = File.ReadAllText(toUpdate.Filepath);
             csProjText = Regex.Replace(csProjText, replacement);
             toUpdate.WriteText(csProjText);
         }
@@ -204,13 +204,13 @@ namespace ItsMagic
             foreach (var csProj in csProjs)
             {
                 Console.WriteLine("Checking: " + csProj);
-                var csprojText = File.ReadAllText(csProj.Path);
+                var csprojText = File.ReadAllText(csProj.Filepath);
                 Regex reg =
                     new Regex(
                         "(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
                 csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>", 1);
                 csProj.WriteText(csprojText);
-                CsProj.ReformatXml(csProj.Path);
+                CsProj.ReformatXml(csProj.Filepath);
             }
         }
 
