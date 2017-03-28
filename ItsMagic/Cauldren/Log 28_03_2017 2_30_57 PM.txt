@@ -1,0 +1,3 @@
+Removing references from Mercury.Admin.sln
+Adding Project Mercury.Testing Reference to Mercury.Admin.sln
+Adding Project Mercury.Testing.Factories Reference to Mercury.Admin.sln

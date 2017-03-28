@@ -30,19 +30,25 @@ namespace ItsMagic
 
         public bool ContainsProjectReference(string projectGuid)
         {
-            return Text.Contains(projectGuid);
+            return Text.Contains(projectGuid.ToUpper());
         }
 
         public bool ContainsProjectReference(CsProj referencedProject)
         {
-            return Text.Contains(referencedProject.Guid);
+            return Text.Contains(referencedProject.Guid.ToUpper());
         }
 
         public void RemoveProjectReference(string projectGuid)
         {
-            var pattern = $"(?:Project.+{projectGuid}.*\n)(?:EndProject\n)";
+            var pattern = $"(?:Project.+{projectGuid}.*(\\n*\\r*))(?:EndProject(\\n*\\r*))";
+            //var pattern = "Project.+CA12242D-1F50-44BB-9972-D6C6609E4C37.*(\\n*\\r*)EndProject(\\n*\\r*)";
             Regex regex = new Regex(pattern);
             var replacementText = regex.Replace(Text, "");
+            WriteText(replacementText);
+
+            pattern = "\\s*\\{CA12242D-1F50-44BB-9972-D6C6609E4C37.*";
+            regex = new Regex(pattern);
+            replacementText = regex.Replace(Text, "");
             WriteText(replacementText);
         }
 
@@ -68,8 +74,8 @@ namespace ItsMagic
                 RegexStore.EndProject,
                 RegexStore.EndProject + "\n" + "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = " +
                 $"\"{projectToAdd.Name}\"," +
-                $" \"{relPath.ToString().Replace("src", "").Replace("/", "\\")}\", " +
-                $"\"{projectToAdd.Guid}\"\r\n" +
+                $" \"{relPath.ToString().Replace("src", "").Replace("/", "\\").TrimStart('\\')}\", " +
+                $"\"{{{projectToAdd.Guid.ToUpper()}}}\"\r\n" +
                 "EndProject");
             return textToReplace;
         }
@@ -79,19 +85,27 @@ namespace ItsMagic
             textToReplace = RegexStore.ReplaceLastOccurrence(textToReplace,
                 RegexStore.ReleaseAnyCpu,
                 RegexStore.ReleaseAnyCpu +
-                Environment.NewLine + $"\t\t{{{projectToAdd.Guid}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU" +
-                Environment.NewLine + $"\t\t{{{projectToAdd.Guid}}}.Debug|Any CPU.Build.0 = Debug|Any CPU" +
-                Environment.NewLine + $"\t\t{{{projectToAdd.Guid}}}.Release|Any CPU.ActiveCfg = Release|Any CPU" +
-                Environment.NewLine + $"\t\t{{{projectToAdd.Guid}}}.Release|Any CPU.Build.0 = Release|Any CPU");
+                Environment.NewLine + $"\t\t{{{projectToAdd.Guid.ToUpper()}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU" +
+                Environment.NewLine + $"\t\t{{{projectToAdd.Guid.ToUpper()}}}.Debug|Any CPU.Build.0 = Debug|Any CPU" +
+                Environment.NewLine + $"\t\t{{{projectToAdd.Guid.ToUpper()}}}.Release|Any CPU.ActiveCfg = Release|Any CPU" +
+                Environment.NewLine + $"\t\t{{{projectToAdd.Guid.ToUpper()}}}.Release|Any CPU.Build.0 = Release|Any CPU");
             return textToReplace;
         }
 
         private string AddToFolder(string textToReplace, CsProj projectToAdd, string solutionFolder)
         {
-            string projectToAddEqualsFolderToAdd = $"{{{projectToAdd.Guid}}} = " +
-                                                   "{" + RegexStore.Get($"Project.* = \\\"{solutionFolder}\\\", \\\"{solutionFolder}\\\", \\\"" +
-                                                                        "\\{(?<capturegroup>(.*))\\}\\\"", Text).First() + "}";
-            textToReplace = textToReplace.Replace(RegexStore.NestedProjects, RegexStore.NestedProjects + "\n\t\t" + projectToAddEqualsFolderToAdd);
+            var solutionFolderGuid =
+                RegexStore.Get($"Project.* = \\\"{solutionFolder}\\\", \\\"{solutionFolder}\\\", \\\"" +
+                               "\\{(?<capturegroup>(.*))\\}\\\"", Text).ToArray();
+            if (solutionFolderGuid.Length == 0)
+                return textToReplace;
+
+            string projectToAddEqualsFolderToAdd = $"{{{projectToAdd.Guid.ToUpper()}}} = " +
+                                                   "{" + solutionFolderGuid.First() + "}";
+
+            Regex reg = new Regex(RegexStore.EndGlobalSection);
+            textToReplace = reg.Replace(textToReplace,
+                "}" + Environment.NewLine + "\t\t" + projectToAddEqualsFolderToAdd + Environment.NewLine + "\tEndGlobalSection", 1);
             return textToReplace;
         }                
     }

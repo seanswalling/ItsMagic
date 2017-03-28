@@ -19,11 +19,12 @@ namespace ItsMagic
 
         public const string CsFilesFromCsProjPattern = "<Compile Include=\\\"(?<capturegroup>(.*.cs))\\\"( \\/)*>"; 
         public const string CsProjFromSlnPattern = "Project(.*) = .*, \\\"(?<capturegroup>.*\\.csproj)\\\", \\\".*\\\"";
-        public const string UsingsFromCsFilePattern = "using (?<capturegroup>(\\w+\\.*)*);";
+        public const string UsingsFromCsFilePattern = "using (?<capturegroup>(.*));";
         public const string ExtensionMethodsFromCsFilePattern = " (?<capturegroup>(\\w|\\d)*)\\(this";
         public const string ClassFromCsFilePattern = "class (?<capturegroup>(\\w*\\d*))";
-        public static string CsProjGuidPattern = "<ProjectGuid>{(?<capturegroup>([\\d\\w-]*))}<\\/ProjectGuid>";
-        public static string ItemGroupProjectReferencepattern = "<ItemGroup>\\s+<ProjectReference ";
+        public const string CsProjGuidPattern = "<ProjectGuid>{(?<capturegroup>([\\d\\w-]*))}<\\/ProjectGuid>";
+        public const string ItemGroupProjectReferencepattern = "<ItemGroup>\\s+<ProjectReference ";
+        public const string EndGlobalSection = "\\}\\s+EndGlobalSection";
         
         public static IEnumerable<string> Get2(string pattern, string file)
         {

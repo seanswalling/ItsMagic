@@ -1,0 +1,8 @@
+Updating Using statements for CreateTerminalGroupFixture.cs
+Adding Project Mercury.Testing Reference to WebRole.Tests.csproj
+Adding Project Mercury.Testing Reference to Mercury.Admin.sln
+Adding Project Mercury.Testing.Factories Reference to WebRole.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to Mercury.Admin.sln
+Adding Project Mercury.Testing.Integrated Reference to WebRole.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to Mercury.Admin.sln
+Removing references from Mercury.Admin.sln

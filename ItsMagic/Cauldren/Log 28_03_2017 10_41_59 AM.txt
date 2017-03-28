@@ -1,0 +1,4 @@
+Updating Using statements for UpgradeTerminalGroupFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserInstigatorStampingMessageHubWriterFixture.cs
+Removing references from Mercury.Admin.sln

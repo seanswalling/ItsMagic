@@ -70,7 +70,7 @@ namespace ItsMagic
         
         public bool ContainsProjectReference(string projectGuid)
         {
-            return Text.Contains($"<Project>{{{projectGuid}}}</Project>");
+            return Text.Contains($"<Project>{{{projectGuid.ToLower()}}}</Project>") || Text.Contains($"<Project>{{{projectGuid.ToUpper()}}}</Project>");
         }
         
         public bool ContainsProjectReference(CsProj project)
@@ -86,8 +86,9 @@ namespace ItsMagic
 
         public void AddProjectReference(CsProj referencedProject)
         {
-            if (Path.Contains(referencedProject.Name+ ".csproj"))
+            if (this == referencedProject)
                 return;
+
             Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
             Uri referencedProjectPath = new Uri(referencedProject.Path);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
@@ -105,7 +106,7 @@ namespace ItsMagic
         
         public void RemoveProjectReference(string projectGuid)
         {
-            var pattern = $".*(?:<ProjectReference.+\\n)(?:.*{projectGuid}.*\\n)(?:.+\\n)+?(?:.*<\\/ProjectReference>\\n)";
+            var pattern = $".*(?:<ProjectReference.+(\\n*\\r*))(?:.*{projectGuid}.*(\\n*\\r*))(?:.+(\\n*\\r*))+?(?:.*<\\/ProjectReference>(\\n*\\r*))";
             Regex regex = new Regex(pattern);
             var replacementText = regex.Replace(Text, "");
             WriteText(replacementText);

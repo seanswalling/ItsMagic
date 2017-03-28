@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Xml;
-using System.Xml.Linq;
 
 namespace ItsMagic
 {
@@ -78,58 +74,71 @@ namespace ItsMagic
 
         public static void AddTestCoreReplacementsProjectReferences(CsProj[] testCoreReplacements)
         {
-            foreach (var solutionFile in GetSolutionFiles(MercurySourceDir).ToArray())
+            //AddTestCoreReplacementsToSln(testCoreReplacements);
+            AddTestCoreReplacementsToCsFile();
+            //AddTestCoreReplacementsToCsProj(testCoreReplacements);
+        }
+
+        private static void AddTestCoreReplacementsToSln(CsProj[] testCoreReplacements)
+        {
+            var slnFiles = GetSolutionFiles(MercurySourceDir);
+            foreach (var solutionFile in slnFiles)
             {
-                foreach (var csProj in solutionFile.CsProjs().ToArray())
+                if (solutionFile.ContainsProjectReference(RegexStore.TestsSharedGuid) ||
+                solutionFile.ContainsProjectReference(RegexStore.TestsCoreGuid))
                 {
-                    foreach (var csFile in csProj.CsFiles())
+                    Cauldron.Add($"Removing references from {solutionFile.Name}.sln");
+                    solutionFile.RemoveProjectReference(RegexStore.TestsSharedGuid);
+                    solutionFile.RemoveProjectReference(RegexStore.TestsCoreGuid);
+
+                    foreach (var testCoreReplacement in testCoreReplacements)
                     {
-                        if (csFile.Usings.Contains("Mercury.Tests.Core") || csFile.Usings.Contains("Mercury.Tests.Shared"))
+                        Cauldron.Add($"Adding Project {testCoreReplacement.Name} Reference to {solutionFile.Name}.sln");
+                        solutionFile.AddProjectReference(testCoreReplacement, "Tests");
+                    }
+                }
+            }
+        }
+
+        private static void AddTestCoreReplacementsToCsProj(CsProj[] testCoreReplacements)
+        {
+            var csProjs = GetCsProjFiles(MercurySourceDir);
+            foreach (var csProj in csProjs)
+            {
+                if (csProj.ContainsProjectReference(RegexStore.TestsSharedGuid) ||
+                csProj.ContainsProjectReference(RegexStore.TestsCoreGuid))
+                {
+                    Cauldron.Add($"Removing references from {csProj.Name}.csproj");
+                    csProj.RemoveProjectReference(RegexStore.TestsSharedGuid);
+                    csProj.RemoveProjectReference(RegexStore.TestsCoreGuid);
+                    foreach (var replacement in testCoreReplacements)
+                    {
+                        if (!csProj.ContainsProjectReference(replacement))
                         {
-                            AddTestCoreReplacementsProjectReferences(csFile, csProj, solutionFile, testCoreReplacements);
+                            Cauldron.Add($"Adding Project {replacement.Name} Reference to {csProj.Name}.csproj");
+                            csProj.AddProjectReference(replacement);
                         }
                     }
                 }
             }
         }
 
-        private static void AddTestCoreReplacementsProjectReferences(CsFile csFile, CsProj csProj, SlnFile solutionFile,
-            CsProj[] projectsToAdd)
+        private static void AddTestCoreReplacementsToCsFile()
         {
-            Cauldron.Add($"Updating Using statements for {csFile.Name}.cs");
-            csFile.RemoveUsing("Mercury.Tests.Core");
-            csFile.RemoveUsing("Mercury.Tests.Shared");
-            csFile.AddUsing("Mercury.Testing");
-            csFile.AddUsing("Mercury.Testing.Factories");
-            csFile.AddUsing("Mercury.Testing.Integrated");
-            csFile.AlphabatiseUsings();
-
-            foreach (var testCoreReplacement in projectsToAdd)
+            var csFiles = GetCsFiles(MercurySourceDir);
+            foreach (var csFile in csFiles)
             {
-                if (!csProj.ContainsProjectReference(testCoreReplacement))
+                Cauldron.Add($"checking {csFile.Name}.cs for Using Statements");
+                if (csFile.Usings.Contains("Mercury.Tests.Core") || csFile.Usings.Contains("Mercury.Tests.Shared"))
                 {
-                    Cauldron.Add($"Adding Project {testCoreReplacement.Name} Reference to {csProj.Name}.csproj");
-                    csProj.AddProjectReference(testCoreReplacement);
+                    Cauldron.Add($"Updating Using statements for {csFile.Name}.cs");
+                    csFile.RemoveUsing("Mercury.Tests.Core");
+                    csFile.RemoveUsing("Mercury.Tests.Shared");
+                    csFile.AddUsing("Mercury.Testing");
+                    csFile.AddUsing("Mercury.Testing.Factories");
+                    csFile.AddUsing("Mercury.Testing.Integrated");
+                    csFile.AlphabatiseUsings();
                 }
-                if (!solutionFile.ContainsProjectReference(testCoreReplacement))
-                {
-                    Cauldron.Add($"Adding Project {testCoreReplacement.Name} Reference to {solutionFile.Name}.sln");
-                    solutionFile.AddProjectReference(testCoreReplacement, "Tests");
-                }
-            }
-            if (csProj.ContainsProjectReference(RegexStore.TestsSharedGuid) ||
-                csProj.ContainsProjectReference(RegexStore.TestsCoreGuid))
-            {
-                Cauldron.Add($"Removing references from {csProj.Name}.csproj");
-                csProj.RemoveProjectReference(RegexStore.TestsSharedGuid);
-                csProj.RemoveProjectReference(RegexStore.TestsCoreGuid);
-            }
-            if (solutionFile.ContainsProjectReference(RegexStore.TestsSharedGuid) ||
-                solutionFile.ContainsProjectReference(RegexStore.TestsCoreGuid))
-            {
-                Cauldron.Add($"Removing references from {solutionFile.Name}.sln");
-                solutionFile.RemoveProjectReference(RegexStore.TestsSharedGuid);
-                solutionFile.RemoveProjectReference(RegexStore.TestsCoreGuid);
             }
         }
 

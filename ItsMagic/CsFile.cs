@@ -41,6 +41,7 @@ namespace ItsMagic
 
         public void AddUsing(string reference)
         {
+            Cauldron.Add($"Add Using: {reference} to {Name}.cs");
             if (!Text.Contains("using " + reference + ";"))
             {
                 TextCache = "using " + reference + ";" + Environment.NewLine + Text;
@@ -51,6 +52,7 @@ namespace ItsMagic
 
         public void RemoveUsing(string reference)
         {
+            Cauldron.Add($"Removing Using: {reference} from {Name}.cs");
             if (Text.Contains("using " + reference + ";"))
             {
                 TextCache = Text.Replace("using " + reference + ";" + Environment.NewLine, "");
@@ -62,6 +64,7 @@ namespace ItsMagic
 
         public void AlphabatiseUsings()
         {
+            Cauldron.Add($"Alphabatise Usings for {Name}.cs");
             var systemUsings = Usings.Where(@using => RegexStore.Contains("(?<!\\.)System\\.*", @using));
             var otherUsings = Usings.Where(@using => !RegexStore.Contains("(?<!\\.)System\\.*", @using));
             foreach(var @using in Usings)
