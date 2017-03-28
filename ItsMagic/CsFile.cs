@@ -95,7 +95,7 @@ namespace ItsMagic
             {
                 if (RegexStore.Contains("[\\s:]" + @class + "[\\s\\.(]", Text))
                 {
-                    Cauldron.Add($"Found Evidence of {csProj.Name}.{@class} in {Name}");
+                    Cauldron.Add($"Found Evidence of {csProj.Name}.{@class} in {Name}.cs");
                     return true;
                 }
             }

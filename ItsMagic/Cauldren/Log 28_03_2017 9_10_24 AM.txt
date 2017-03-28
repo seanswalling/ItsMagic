@@ -1,0 +1,621 @@
+Updating Using statements for CreateTerminalGroupFixture.cs
+Adding Project Mercury.Testing Reference to WebRole.Tests.csproj
+Adding Project Mercury.Testing Reference to Mercury.Admin.sln
+Adding Project Mercury.Testing.Factories Reference to WebRole.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to Mercury.Admin.sln
+Adding Project Mercury.Testing.Integrated Reference to WebRole.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to Mercury.Admin.sln
+Removing references from Mercury.Admin.sln
+Updating Using statements for UpgradeTerminalGroupFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserInstigatorStampingMessageHubWriterFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for CollectionAgentControllerTests.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for Expected.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseBuilder.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseControllerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseGroupControllerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseGroupCreatePostControllerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreBuilder.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseCreatePostControllerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreCommissionBuilder.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreCommissionControllerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreControllerBankAccountsPostFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreControllerCreatePostsFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseEditPostControllerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreControllerGetsFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreControllerEditPostsFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalGroupControllerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalGroupCreatePostControllerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalGroupEditPostControllerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserBuilder.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserControllerEditPostCommandFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserControllerCreatePostCommandFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for Randomness.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for ReadOnlyFranchiseGroupGraphFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreCommissionBuilder.cs
+Adding Project Mercury.Testing Reference to ReadModelPopulator.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to ReadModelPopulator.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to ReadModelPopulator.Tests.csproj
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for MoneRebateTableUpdatedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreContactDetailsChangedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for TestReadModelPopulatorService.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseDetailsObjectMother.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseGroupEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseGroupEventsObjectMother.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseEventsObjectMother.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for FranchiseObjectMother.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for ObjectMother.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for Randomness.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreCommissionEventHandlerOnCreatedFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreCommissionEventHandlerOnUpdatedFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for BankAccountUpdatedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreCreatedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreDisabledEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreEnabledEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreMovedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreGpConfigurationAlteredHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreObjectMother.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreRegionAlteredHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreTimeZoneAlteredHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreRenamedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalAuthorityApprovedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalAuthorityRequestedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalAuthorityRevokedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalGroupCreatedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalGroupUrlUpdatedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalGroupVersionChangedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserAddedToFranchiseEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserAddedToFranchiseGroupEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserAddedToRoleEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserAddedToStoreEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserCreatedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserDisabledEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserEnabledEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserGrantedPermissionEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserPermissionRevokedEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserRemovedFromFranchiseEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserRemovedFromFranchiseGroupEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserRemovedFromRoleEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserRemovedFromStoreEventHandlerFixture.cs
+Removing references from ReadModelPopulator.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for ManualDeclineAssessmentReasonTests.cs
+Adding Project Mercury.Testing.Factories Reference to Contracts.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to Contracts.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for LoanMetricsFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for ExpenditureSourceExFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for StoreGlCodesFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for TaringaGlCodesFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for LoanPaymentMethodsFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for LargeMessageHubContentWriterFixture.cs
+Adding Project Mercury.Testing.Factories Reference to Messages.Client.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for LargeMessageHubReaderFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for InstigatorStampingMessageHubWriterFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for OnNotify.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for OnWrite.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for BufferingMessageHubReaderTests.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for ActiveDirectoryUserAuthenticationFixture.cs
+Adding Project Mercury.Testing Reference to Authentication.Core.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to Authentication.Core.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to Authentication.Core.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for LocalUserAuthenticatorFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for PermissionUnravellerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for DuplicateTests.cs
+Adding Project Mercury.Testing.Integrated Reference to ReferenceData.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for OnConstructionFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for OnListFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for CurrentUserProviderTests.cs
+Adding Project Mercury.Testing Reference to AuthorisationReadModel.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to AuthorisationReadModel.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to AuthorisationReadModel.Tests.csproj
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalAuthorityApprovedEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalAuthorityRequestedEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalAuthorityRevokedEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalGroupCreatedEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalGroupStoreChangedEventSummaryHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for TerminalGroupStoreChangedEventTerminalAuthoritiesHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserAddedToFranchiseEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserAddedToFranchiseGroupEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserAddedToStoreEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserPasswordResetEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserAddedToRoleEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserCreatedEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserDisabledEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserEnabledEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserGrantedPermissionEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserPasswordChangedEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserPermissionRevokedEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserRemovedFromFranchiseEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserRemovedFromFranchiseGroupEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserRemovedFromRoleEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for UserRemovedFromStoreEventHandlerFixture.cs
+Removing references from Mercury.Admin.sln
+Updating Using statements for AlarmDispatcherOnNonTransientErrorFixture.cs
+Adding Project Mercury.Testing Reference to Mercury.ApplicantCheckService.sln
+Adding Project Mercury.Testing.Factories Reference to Mercury.ApplicantCheckService.sln
+Adding Project Mercury.Testing.Integrated Reference to Mercury.ApplicantCheckService.sln
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for AlarmDispatcherOnTransientErrorFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for AlarmUnitOfWorkHandlerErrorFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for EventAnnotationTests.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for PoisonCommandTests.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for TestCommandHandlers.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageStreamBookmarkProviderFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for UnintendedAggregateModificationTests.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for TestCommandProcessor.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for TestCommandProcessorService.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for UnintendedAggregateModificationTests.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageExtensionsFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ControlRequestDispatcherForEmptyQueueFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ControlRequestDispatcherForQueuedMessagesFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ControlRequestDispatcherOnNonTransientExceptionFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ControlRequestDispatcherOnTransientExceptionAboveLimitFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ControlRequestDispatcherOnTransientExceptionBelowLimitFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ControlRequestDispatcherWhenShouldNotRunFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ControlRequestHandlerFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ControlRequestUnitOfWorkWithBadRequestFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ControlRequestUnitOfWorkWithNoHandlerFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for TestControlRequestObjectMother.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for LoadQueuedLargedMessagesProviderFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for PublisherUnitOfWorkWithLargeMessageFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageStoreDocumentsFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for RandomnessExtensions.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageDispatcherOnTransientErrorBelowLevelFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for PublisherUnitOfWorkOnErrorAboveLimitFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for PublisherUnitOfWorkWithCommandFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for PublisherUnitOfWorkWithEventQueueFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for OnWriteNewFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for EventDispatcherOnNonTransientErrorFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageDispatcherOnTransientErrorAboveLevelFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ManagedProcessFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageWriterCommandTimestampFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageWriterAssociateWithInstigatedMessageFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageWriterAssociateWithCloudQueueMessageFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ProcessQueryFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for RebuildDispatcherOnNonTransientErrorFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for RebuildDispatcherOnTransientErrorAboveLimitFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for RebuildDispatcherOnTransientErrorBelowLimitFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageStoreCommandsFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for CommandStoreRaiseUnrecognisedEventFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageWriterCommandFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageDispatcherDisposeFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageDispatcherNotifyFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageWriterAssociateWithAlarmFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for LoadQueueMessagesProviderFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for UnpublishedMessageSourceFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for RebuildDispatcherDisposeFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for RebuildDispatcherFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for RebuildDispatcherNoEventsFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for RebuildUnitOfWorkForExistingAggregateFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for RebuildUnitOfWorkForNewAggregateFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for TestAggregate.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for SingleDispatchUnitOfWorkHandlerErrorFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for SingleDispatchUnitOfWorkWithNoEventsSavedByHandlerFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for SingleDispatchUnitOfWorkWithoutHandlerFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageDispatcherFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageStoreEventsFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageStoreRaiseUnrecognisedEventFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageWriterEventFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MultipleDispatchUnitOfWorkHandlerErrorFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for MessageStreamBookmarkPersisterFixture.cs
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ApplicantCheckCommandBuilder.cs
+Adding Project Mercury.Testing Reference to CommandProcessor.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to CommandProcessor.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to CommandProcessor.Tests.csproj
+Removing references from CommandProcessor.Tests.csproj
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ApplicantCheckFixture.cs
+Removing references from CommandProcessor.Tests.csproj
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for CheckApplicantCreditCommandHandlerFixture.cs
+Removing references from CommandProcessor.Tests.csproj
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for CheckApplicantCreditCommandHandlerOnResultsFixture.cs
+Removing references from CommandProcessor.Tests.csproj
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for CheckApplicantIdentificationCommandHandlerFixture.cs
+Removing references from CommandProcessor.Tests.csproj
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for CheckApplicantIdentificationCommandMapperFixture.cs
+Removing references from CommandProcessor.Tests.csproj
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for DomainStructureValidationFixture.cs
+Removing references from CommandProcessor.Tests.csproj
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for VedaResponseBuilder.cs
+Removing references from CommandProcessor.Tests.csproj
+Removing references from Mercury.ApplicantCheckService.sln
+Updating Using statements for ArrearsReadModel.cs
+Adding Project Mercury.Testing Reference to ArrearsReadModel.Tests.csproj
+Adding Project Mercury.Testing Reference to Mercury.ArrearsReadModel.sln
+Adding Project Mercury.Testing.Factories Reference to ArrearsReadModel.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to Mercury.ArrearsReadModel.sln
+Adding Project Mercury.Testing.Integrated Reference to ArrearsReadModel.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to Mercury.ArrearsReadModel.sln
+Removing references from ArrearsReadModel.Tests.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for PayoutFigureTests.cs
+Removing references from ArrearsReadModel.Tests.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for PersonalLoanPaymentsInArrearsTests.cs
+Removing references from ArrearsReadModel.Tests.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for CashAdvancePaymentsInArrearsTests.cs
+Removing references from ArrearsReadModel.Tests.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for Scenarios.cs
+Removing references from ArrearsReadModel.Tests.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for BankAccountBatchCreatedEventHandlerFixture.cs
+Adding Project Mercury.Testing Reference to BankingReadModel.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to BankingReadModel.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to BankingReadModel.Tests.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for BankAccountBatchDownloadedEventHandlerFixture.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for BankAccountObjectMother.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for BankingInMemoryDatabaseFixtureBase.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for ReturnedItemsFileSummaryObjectMother.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for OnStoreTransferFixture.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for TransferBatchObjectMother.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for TransferObjectMother.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for TransferRejectedEventHandlerFixture.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for ProcessingStartedEventHandlerFixtures.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for CustomerDisputeTests.cs
+Adding Project Mercury.Testing Reference to CustomerDisputeReadModel.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to CustomerDisputeReadModel.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to CustomerDisputeReadModel.Tests.csproj
+Removing references from CustomerDisputeReadModel.Tests.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for RepaymentScheduleComparison.cs
+Adding Project Mercury.Testing Reference to LoanService.Testability.csproj
+Adding Project Mercury.Testing.Factories Reference to LoanService.Testability.csproj
+Adding Project Mercury.Testing.Integrated Reference to LoanService.Testability.csproj
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for RepaymentSchedulerApprover.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for TransactionHistoryApprover.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for CreateMaccLoanScenarioBuilder.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for ImportCashAdvanceBuilder.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for ImportPersonalLoanBuilder.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for FeeScenarios.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for LoanManagementScenarios.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for LoanScenarios.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for PaymentScenarios.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for ScenarioHelpers.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for TestLoanService.cs
+Removing references from LoanService.Testability.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for CashAdvanceProductFactProviderFixture.cs
+Adding Project Mercury.Testing Reference to LoanCommon.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to LoanCommon.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to LoanCommon.Tests.csproj
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for CashAdvanceRepaymentStrategiesFixture.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for KRatingCalculatorTests.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for OnCalculateNumberOfMonthlyFeesFixture.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for LoanNoticeCalculatorTests.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for PersonalLoanProductFactProviderFixture.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for CashAdvanceProductTests.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for PersonalLoanProductTests.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for RepaymentScheduleEx.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for RandomnessExtensions.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for PersonalLoanRepaymentStrategiesFixture.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for RumCalculatorTests.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for AssemblyInfo.cs
+Removing references from Mercury.ArrearsReadModel.sln
+Updating Using statements for OnOtherHandlersFixture.cs
+Adding Project Mercury.Testing Reference to ProcessManager.Tests.csproj
+Adding Project Mercury.Testing Reference to Mercury.AssessmentProcess.sln
+Adding Project Mercury.Testing.Factories Reference to ProcessManager.Tests.csproj
+Adding Project Mercury.Testing.Factories Reference to Mercury.AssessmentProcess.sln
+Adding Project Mercury.Testing.Integrated Reference to ProcessManager.Tests.csproj
+Adding Project Mercury.Testing.Integrated Reference to Mercury.AssessmentProcess.sln
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnAssessmentProcessCompletedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnWaitingForApplicantCreditCheckEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnWaitingForAssessmentDeclinationPartIXEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnWaitingForManualAssessmentCompletionEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnWaitingForManualAssessmentRequestedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnWaitingForMissingDocumentsRequestedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnWaitingForContactCustomerForDeclineCompletionFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnWaitingForContactCustomerForDeclineCreationFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnManualAssessmentTaskAssignmentReleasedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnManualAssessmentTaskAssignedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for AssessmentProcessManagerFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnApplicantCreditCheckCompletedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnAssessmentWithdrawnEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnAssessmentManuallyDeclinedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnAssessmentManuallyApprovedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnContactCustomerForDeclineTaskCreatedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnManualAssessmentAssignedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnManualAssessmentAssignmentReleasedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnManualAssessmentRequestedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnAssessmentDeclinedPartIXEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnDocumentsIncompleteEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnManualAssessmentTaskCreatedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnPersonalLoanAssessmentCreatedEventFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for AssessmentEventsProcessObjectMother.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for OnApplicantCreditCheckAlarmTimeoutFixture.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for AssessmentProcessObjectMother.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for AddMissingBankStatementTests.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for AssessmentScenarios.cs
+Removing references from Mercury.AssessmentProcess.sln
+Updating Using statements for AssessmentsAutoDeclinedPartIXTests.cs

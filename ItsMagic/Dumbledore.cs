@@ -96,7 +96,7 @@ namespace ItsMagic
         private static void AddTestCoreReplacementsProjectReferences(CsFile csFile, CsProj csProj, SlnFile solutionFile,
             CsProj[] projectsToAdd)
         {
-            Cauldron.Add($"Updating Using statements for {csFile.Name}");
+            Cauldron.Add($"Updating Using statements for {csFile.Name}.cs");
             csFile.RemoveUsing("Mercury.Tests.Core");
             csFile.RemoveUsing("Mercury.Tests.Shared");
             csFile.AddUsing("Mercury.Testing");
@@ -108,26 +108,26 @@ namespace ItsMagic
             {
                 if (!csProj.ContainsProjectReference(testCoreReplacement))
                 {
-                    Cauldron.Add($"Adding Project {testCoreReplacement.Name} Reference to {csProj.Name}");
+                    Cauldron.Add($"Adding Project {testCoreReplacement.Name} Reference to {csProj.Name}.csproj");
                     csProj.AddProjectReference(testCoreReplacement);
                 }
                 if (!solutionFile.ContainsProjectReference(testCoreReplacement))
                 {
-                    Cauldron.Add($"Adding Project {testCoreReplacement.Name} Reference to {solutionFile.Name}");
+                    Cauldron.Add($"Adding Project {testCoreReplacement.Name} Reference to {solutionFile.Name}.sln");
                     solutionFile.AddProjectReference(testCoreReplacement, "Tests");
                 }
             }
             if (csProj.ContainsProjectReference(RegexStore.TestsSharedGuid) ||
                 csProj.ContainsProjectReference(RegexStore.TestsCoreGuid))
             {
-                Cauldron.Add($"Removing references from {csProj.Name}");
+                Cauldron.Add($"Removing references from {csProj.Name}.csproj");
                 csProj.RemoveProjectReference(RegexStore.TestsSharedGuid);
                 csProj.RemoveProjectReference(RegexStore.TestsCoreGuid);
             }
             if (solutionFile.ContainsProjectReference(RegexStore.TestsSharedGuid) ||
                 solutionFile.ContainsProjectReference(RegexStore.TestsCoreGuid))
             {
-                Cauldron.Add($"Removing references from {solutionFile.Name}");
+                Cauldron.Add($"Removing references from {solutionFile.Name}.sln");
                 solutionFile.RemoveProjectReference(RegexStore.TestsSharedGuid);
                 solutionFile.RemoveProjectReference(RegexStore.TestsCoreGuid);
             }

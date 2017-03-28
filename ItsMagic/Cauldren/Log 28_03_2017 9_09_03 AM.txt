@@ -1,0 +1,58 @@
+Updating Using statements for CreateTerminalGroupFixture
+Adding Project Mercury.Testing Reference to WebRole.Tests
+Adding Project Mercury.Testing Reference to Mercury.Admin
+Adding Project Mercury.Testing.Factories Reference to WebRole.Tests
+Adding Project Mercury.Testing.Factories Reference to Mercury.Admin
+Adding Project Mercury.Testing.Integrated Reference to WebRole.Tests
+Adding Project Mercury.Testing.Integrated Reference to Mercury.Admin
+Removing references from Mercury.Admin
+Updating Using statements for UpgradeTerminalGroupFixture
+Removing references from Mercury.Admin
+Updating Using statements for UserInstigatorStampingMessageHubWriterFixture
+Removing references from Mercury.Admin
+Updating Using statements for CollectionAgentControllerTests
+Removing references from Mercury.Admin
+Updating Using statements for Expected
+Removing references from Mercury.Admin
+Updating Using statements for FranchiseBuilder
+Removing references from Mercury.Admin
+Updating Using statements for FranchiseControllerFixture
+Removing references from Mercury.Admin
+Updating Using statements for FranchiseGroupControllerFixture
+Removing references from Mercury.Admin
+Updating Using statements for FranchiseGroupCreatePostControllerFixture
+Removing references from Mercury.Admin
+Updating Using statements for StoreBuilder
+Removing references from Mercury.Admin
+Updating Using statements for FranchiseCreatePostControllerFixture
+Removing references from Mercury.Admin
+Updating Using statements for StoreCommissionBuilder
+Removing references from Mercury.Admin
+Updating Using statements for StoreCommissionControllerFixture
+Removing references from Mercury.Admin
+Updating Using statements for StoreControllerBankAccountsPostFixture
+Removing references from Mercury.Admin
+Updating Using statements for StoreControllerCreatePostsFixture
+Removing references from Mercury.Admin
+Updating Using statements for FranchiseEditPostControllerFixture
+Removing references from Mercury.Admin
+Updating Using statements for StoreControllerGetsFixture
+Removing references from Mercury.Admin
+Updating Using statements for StoreControllerEditPostsFixture
+Removing references from Mercury.Admin
+Updating Using statements for TerminalGroupControllerFixture
+Removing references from Mercury.Admin
+Updating Using statements for TerminalGroupCreatePostControllerFixture
+Removing references from Mercury.Admin
+Updating Using statements for TerminalGroupEditPostControllerFixture
+Removing references from Mercury.Admin
+Updating Using statements for UserBuilder
+Removing references from Mercury.Admin
+Updating Using statements for UserControllerEditPostCommandFixture
+Removing references from Mercury.Admin
+Updating Using statements for UserControllerCreatePostCommandFixture
+Removing references from Mercury.Admin
+Updating Using statements for Randomness
+Removing references from Mercury.Admin
+Updating Using statements for ReadOnlyFranchiseGroupGraphFixture
+Removing references from Mercury.Admin
