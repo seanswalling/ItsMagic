@@ -15,7 +15,7 @@ namespace ItsMagic
         } 
         public string Name => Path.GetFileNameWithoutExtension(Filepath);
 
-        public void WriteText(string text)
+        public void WriteFile()
         {
             File.WriteAllText(Filepath, Text);
         }

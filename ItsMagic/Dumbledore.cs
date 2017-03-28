@@ -182,7 +182,7 @@ namespace ItsMagic
             var Regex = new Regex(referenceToReplace.Pattern);
             var csProjText = File.ReadAllText(toUpdate.Filepath);
             csProjText = Regex.Replace(csProjText, replacement);
-            toUpdate.WriteText(csProjText);
+            toUpdate.WriteFile(csProjText);
         }
 
         public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace, string replacement)
@@ -190,7 +190,7 @@ namespace ItsMagic
             var Regex = new Regex(referenceToReplace.Pattern);
             var csProjText = File.ReadAllText(toUpdate.Filepath);
             csProjText = Regex.Replace(csProjText, replacement);
-            toUpdate.WriteText(csProjText);
+            toUpdate.WriteFile(csProjText);
         }
 
         #endregion
@@ -209,7 +209,7 @@ namespace ItsMagic
                     new Regex(
                         "(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
                 csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>", 1);
-                csProj.WriteText(csprojText);
+                csProj.WriteFile(csprojText);
                 CsProj.ReformatXml(csProj.Filepath);
             }
         }

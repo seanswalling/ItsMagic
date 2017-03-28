@@ -100,7 +100,7 @@ namespace ItsMagic
                                                 "<Name>" + referencedProject.Name + "</Name>" + Environment.NewLine +
                                                 "</ProjectReference>" + Environment.NewLine +
                                                 "<ProjectReference ", 1);
-            WriteText(newText);
+            WriteFile(newText);
             ReformatXml(Filepath);
         }
         
@@ -109,7 +109,7 @@ namespace ItsMagic
             var pattern = $".*(?:<ProjectReference.+(\\n*\\r*))(?:.*{projectGuid}.*(\\n*\\r*))(?:.+(\\n*\\r*))+?(?:.*<\\/ProjectReference>(\\n*\\r*))";
             Regex regex = new Regex(pattern);
             var replacementText = regex.Replace(Text, "");
-            WriteText(replacementText);
+            WriteFile(replacementText);
         }
 
         private static void UpdatePackagesConfig(string packages, string reference)
@@ -137,7 +137,7 @@ namespace ItsMagic
                                                    "<HintPath>..\\..\\packages\\NewRelic.Agent.Api.5.19.47.0\\lib\\NewRelic.Api.Agent.dll</HintPath>" +
                                                    "<Private>True</Private>" +
                                                    "</Reference>", 1);
-            WriteText(csProjText);
+            WriteFile(csProjText);
             ReformatXml(Filepath);
         }
 
