@@ -25,7 +25,7 @@ namespace ItsMagic
                 throw new DirectoryNotFoundException();
             }
         }
-        public static string MagicDir => new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.FullName.ToString();
+        public static string MagicDir => new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.FullName;
 
         public static void UpdateAllReferencesToNugetReferences()
         {
