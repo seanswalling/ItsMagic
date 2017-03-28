@@ -42,13 +42,13 @@ namespace ItsMagic
 
         public CsProj(string path)
         {
-            Path = path;
+            Filepath = path;
         }              
 
         public CsFile[] CsFiles()
         {
             if (CsFilesCache != null) return CsFilesCache;
-            var dir = System.IO.Path.GetDirectoryName(Path);
+            var dir = System.IO.Path.GetDirectoryName(Filepath);
             CsFilesCache = RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Text)
                 .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
                 .Where(File.Exists)
@@ -90,7 +90,7 @@ namespace ItsMagic
                 return;
 
             Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
-            Uri referencedProjectPath = new Uri(referencedProject.Path);
+            Uri referencedProjectPath = new Uri(referencedProject.Filepath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
             var regex = new Regex(RegexStore.ItemGroupProjectReferencepattern);
@@ -100,8 +100,8 @@ namespace ItsMagic
                                                 "<Name>" + referencedProject.Name + "</Name>" + Environment.NewLine +
                                                 "</ProjectReference>" + Environment.NewLine +
                                                 "<ProjectReference ", 1);
-            WriteText(newText);
-            ReformatXml(Path);
+            WriteFile(newText);
+            ReformatXml(Filepath);
         }
         
         public void RemoveProjectReference(string projectGuid)
@@ -109,7 +109,7 @@ namespace ItsMagic
             var pattern = $".*(?:<ProjectReference.+(\\n*\\r*))(?:.*{projectGuid}.*(\\n*\\r*))(?:.+(\\n*\\r*))+?(?:.*<\\/ProjectReference>(\\n*\\r*))";
             Regex regex = new Regex(pattern);
             var replacementText = regex.Replace(Text, "");
-            WriteText(replacementText);
+            WriteFile(replacementText);
         }
 
         private static void UpdatePackagesConfig(string packages, string reference)
@@ -130,15 +130,15 @@ namespace ItsMagic
         public void AddNewRelicProjectReference()
         {
             var regex = new Regex(RegexStore.ItemGroupTag);
-            var csProjText = File.ReadAllText(Path);
+            var csProjText = File.ReadAllText(Filepath);
 
             csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
                                                    "<Reference Include=\"NewRelic.Api.Agent, Version=5.19.47.0, Culture=neutral, PublicKeyToken=06552fced0b33d87, processorArchitecture=MSIL\">" +
                                                    "<HintPath>..\\..\\packages\\NewRelic.Agent.Api.5.19.47.0\\lib\\NewRelic.Api.Agent.dll</HintPath>" +
                                                    "<Private>True</Private>" +
                                                    "</Reference>", 1);
-            WriteText(csProjText);
-            ReformatXml(Path);
+            WriteFile(csProjText);
+            ReformatXml(Filepath);
         }
 
         //public void AddProjectReference(string reference) //Nuget Version?

@@ -8,35 +8,16 @@ namespace ItsMagic
     public class CsFile : MagicFile
     {
         private string[] ClassesCache { get; set; }
-        public string[] Classes
-        {
-            get
-            {
-                return ClassesCache ?? (ClassesCache = RegexStore.Get(RegexStore.ClassFromCsFilePattern, Text).ToArray());
-            }
-        }
+        public string[] Classes => ClassesCache ?? (ClassesCache = RegexStore.Get(RegexStore.ClassFromCsFilePattern, Text).ToArray());
         private string[] UsingsCache { get; set; }
-        public string[] Usings
-        {
-            get
-            {
-                return UsingsCache ?? (UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray());
-            }
-        }
+        public string[] Usings => UsingsCache ?? (UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray());
         private string[] ExtensionMethodsCache { get; set; }
-        public string[] ExtensionMethods
-        {
-            get
-            {
-                return ExtensionMethodsCache ??
-                       (ExtensionMethodsCache =
-                           RegexStore.Get(RegexStore.ExtensionMethodsFromCsFilePattern, Text).ToArray());
-            }
-        }
+        public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache =
+                                                RegexStore.Get(RegexStore.ExtensionMethodsFromCsFilePattern, Text).ToArray());
 
         public CsFile(string path)
         {
-            Path = path;
+            Filepath = path;
         }
 
         public void AddUsing(string reference)
@@ -44,8 +25,8 @@ namespace ItsMagic
             Cauldron.Add($"Add Using: {reference} to {Name}.cs");
             if (!Text.Contains("using " + reference + ";"))
             {
-                TextCache = "using " + reference + ";" + Environment.NewLine + Text;
-                WriteText(Text);
+                var text = "using " + reference + ";" + Environment.NewLine + Text;
+                WriteFile(text);
                 UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray();
             }
         }
@@ -55,11 +36,10 @@ namespace ItsMagic
             Cauldron.Add($"Removing Using: {reference} from {Name}.cs");
             if (Text.Contains("using " + reference + ";"))
             {
-                TextCache = Text.Replace("using " + reference + ";" + Environment.NewLine, "");
-                WriteText(Text);
+                var text = Text.Replace("using " + reference + ";" + Environment.NewLine, "");
+                WriteFile(text);
                 UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray();
             }
-
         }
 
         public void AlphabatiseUsings()
@@ -80,18 +60,7 @@ namespace ItsMagic
                 AddUsing(@using);
             }
         }
-
-        public IEnumerable<string> Lines()
-        {
-            using (var reader = new StreamReader(Path))
-            {
-                while (!reader.EndOfStream)
-                {
-                    yield return reader.ReadLine();
-                }
-            }
-        }
-
+  
         public bool HasEvidenceOf(CsProj csProj)
         {
             foreach (var @class in csProj.Classes)
