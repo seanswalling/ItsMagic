@@ -59,8 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CsFileTests.cs" />
+    <Compile Include="CsProjTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StepsTests.cs" />
+    <Compile Include="SlnFileTests.cs" />
+    <Compile Include="TestsBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ItsMagic\ItsMagic.csproj">
