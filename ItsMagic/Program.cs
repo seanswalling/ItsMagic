@@ -36,7 +36,7 @@ namespace ItsMagic
             //var allMercurySolution =
             //    Dumbledore
             //        .GetSolutionFiles(Dumbledore.MercurySourceDir)
-            //        .Single(sln => sln.Filepath.Contains("AllMercury.sln"));
+            //        .Single(sln => sln.FilePath.Contains("AllMercury.sln"));
 
             //foreach (var project in allProjects)
             //{
@@ -45,11 +45,11 @@ namespace ItsMagic
             //}
             //count = 0;
             //var allTestProjects =
-            //    Dumbledore.GetCsProjFiles(Dumbledore.MercurySourceDir).Where(proj => proj.Filepath.Contains(".Test"));
+            //    Dumbledore.GetCsProjFiles(Dumbledore.MercurySourceDir).Where(proj => proj.FilePath.Contains(".Test"));
             //var allTestsSolution =
             //    Dumbledore
             //        .GetSolutionFiles(Dumbledore.MercurySourceDir)
-            //        .Single(sln => sln.Filepath.Contains("AllTests.sln"));
+            //        .Single(sln => sln.FilePath.Contains("AllTests.sln"));
 
             //foreach (var testProject in allTestProjects)
             //{

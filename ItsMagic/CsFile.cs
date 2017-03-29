@@ -17,7 +17,7 @@ namespace ItsMagic
 
         public CsFile(string path)
         {
-            Filepath = path;
+            FilePath = path;
         }
 
         public void AddUsing(string reference)

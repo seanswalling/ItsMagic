@@ -11,14 +11,14 @@ namespace ItsMagic
 
         public SlnFile(string path)
         {
-            Filepath = path;
+            FilePath = path;
         }
 
         public CsProj[] CsProjs()
         {
             if (CsProjsCache == null)
             {
-                var dir = Path.GetDirectoryName(Filepath);
+                var dir = Path.GetDirectoryName(FilePath);
                 CsProjsCache = RegexStore.Get(RegexStore.CsProjFromSlnPattern, Text)
                     .Select(csProjRelPath => Path.Combine(dir, csProjRelPath))
                     .Where(File.Exists)
@@ -50,11 +50,12 @@ namespace ItsMagic
             WriteFile();
         }
 
-        public void AddProjectReference(CsProj projectToAdd, string solutionFolder)
+        public void AddProjectReference(CsProj projectToAdd, string solutionFolder = null)
         {
             AddProjectText(projectToAdd);
             AddDebugAndReleaseInformation(projectToAdd);
-            AddToFolder(projectToAdd, solutionFolder);
+            if(solutionFolder != null)
+                AddToFolder(projectToAdd, solutionFolder);
 
             WriteFile();
         }
@@ -62,7 +63,7 @@ namespace ItsMagic
         private void AddProjectText(CsProj projectToAdd)
         {
             Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
-            Uri referencedProjectPath = new Uri(projectToAdd.Filepath);
+            Uri referencedProjectPath = new Uri(projectToAdd.FilePath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
             Text = RegexStore.ReplaceLastOccurrence(Text,

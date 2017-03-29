@@ -42,13 +42,13 @@ namespace ItsMagic
 
         public CsProj(string path)
         {
-            Filepath = path;
+            FilePath = path;
         }              
 
         public CsFile[] CsFiles()
         {
             if (CsFilesCache != null) return CsFilesCache;
-            var dir = System.IO.Path.GetDirectoryName(Filepath);
+            var dir = System.IO.Path.GetDirectoryName(FilePath);
             CsFilesCache = RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Text)
                 .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
                 .Where(File.Exists)
@@ -90,7 +90,7 @@ namespace ItsMagic
                 return;
 
             Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
-            Uri referencedProjectPath = new Uri(referencedProject.Filepath);
+            Uri referencedProjectPath = new Uri(referencedProject.FilePath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
             var regex = new Regex(RegexStore.ItemGroupProjectReferencepattern);
@@ -101,7 +101,7 @@ namespace ItsMagic
                                                 "</ProjectReference>" + Environment.NewLine +
                                                 "<ProjectReference ", 1);
             WriteFile();
-            ReformatXml(Filepath);
+            ReformatXml(FilePath);
         }
         
         public void RemoveProjectReference(string projectGuid)
@@ -130,7 +130,7 @@ namespace ItsMagic
         public void AddNewRelicProjectReference()
         {
             var regex = new Regex(RegexStore.ItemGroupTag);
-            var csProjText = File.ReadAllText(Filepath);
+            var csProjText = File.ReadAllText(FilePath);
 
             Text = regex.Replace(csProjText, RegexStore.ItemGroupTag +
                                                    "<Reference Include=\"NewRelic.Api.Agent, Version=5.19.47.0, Culture=neutral, PublicKeyToken=06552fced0b33d87, processorArchitecture=MSIL\">" +
@@ -138,7 +138,7 @@ namespace ItsMagic
                                                    "<Private>True</Private>" +
                                                    "</Reference>", 1);
             WriteFile();
-            ReformatXml(Filepath);
+            ReformatXml(FilePath);
         }
 
         //public void AddProjectReference(string reference) //Nuget Version?

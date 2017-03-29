@@ -180,7 +180,7 @@ namespace ItsMagic
         public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace, string replacement)
         {
             var regex = new Regex(referenceToReplace.Pattern);
-            var csProjText = File.ReadAllText(toUpdate.Filepath);
+            var csProjText = File.ReadAllText(toUpdate.FilePath);
             toUpdate.Text = regex.Replace(csProjText, replacement);
             toUpdate.WriteFile();
         }
@@ -188,7 +188,7 @@ namespace ItsMagic
         public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace, string replacement)
         {
             var Regex = new Regex(referenceToReplace.Pattern);
-            var csProjText = File.ReadAllText(toUpdate.Filepath);
+            var csProjText = File.ReadAllText(toUpdate.FilePath);
             toUpdate.Text = Regex.Replace(csProjText, replacement);
             toUpdate.WriteFile();
         }
@@ -204,13 +204,13 @@ namespace ItsMagic
         //    foreach (var csProj in csProjs)
         //    {
         //        Console.WriteLine("Checking: " + csProj);
-        //        var csprojText = File.ReadAllText(csProj.Filepath);
+        //        var csprojText = File.ReadAllText(csProj.FilePath);
         //        Regex reg =
         //            new Regex(
         //                "(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
         //        csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>", 1);
         //        csProj.WriteFile(csprojText);
-        //        CsProj.ReformatXml(csProj.Filepath);
+        //        CsProj.ReformatXml(csProj.FilePath);
         //    }
         //}
 
@@ -293,7 +293,7 @@ namespace ItsMagic
                     pluginProj.WriteFile();
 
                     var readModelConventionsTest = MagicDir + @"\ReadModelConventionsTest\ReadModelConventionsTest.cs";
-                    var pluginProjDir = Path.GetDirectoryName(pluginProj.Filepath) + @"\ReadModelConventionsTest.cs";
+                    var pluginProjDir = Path.GetDirectoryName(pluginProj.FilePath) + @"\ReadModelConventionsTest.cs";
                     File.Copy(readModelConventionsTest, pluginProjDir);
                 }
             }

@@ -5,19 +5,19 @@ namespace ItsMagic
 {
     public class MagicFile : IEquatable<MagicFile>, IComparable<MagicFile>
     {
-        public string Filepath { get; set; }
+        public string FilePath { get; set; }
         private string TextCache { get; set; }
 
         public string Text
         {
-            get { return TextCache ?? (TextCache = File.ReadAllText(Filepath)); }
+            get { return TextCache ?? (TextCache = File.ReadAllText(FilePath)); }
             set {  TextCache = value; }
         } 
-        public string Name => Path.GetFileNameWithoutExtension(Filepath);
+        public string Name => Path.GetFileNameWithoutExtension(FilePath);
 
         public void WriteFile()
         {
-            File.WriteAllText(Filepath, Text);
+            File.WriteAllText(FilePath, Text);
         }
 
         public bool Equals(MagicFile other)
@@ -25,12 +25,12 @@ namespace ItsMagic
             if (other == null)
                 return false;
 
-            return this.Filepath == other.Filepath;
+            return this.FilePath == other.FilePath;
         }
 
         public int CompareTo(MagicFile other)
         {
-            return other == null ? 1 : Filepath.CompareTo(other.Filepath);
+            return other == null ? 1 : FilePath.CompareTo(other.FilePath);
         }
     }
 }
