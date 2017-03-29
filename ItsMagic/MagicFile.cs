@@ -3,7 +3,7 @@ using System.IO;
 
 namespace ItsMagic
 {
-    public class MagicFile : IEquatable<MagicFile>, IComparable<MagicFile>
+    public abstract class MagicFile : IEquatable<MagicFile>, IComparable<MagicFile>
     {
         public string FilePath { get; set; }
         private string TextCache { get; set; }

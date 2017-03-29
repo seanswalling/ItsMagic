@@ -108,63 +108,9 @@ namespace ItsMagic
 
         #region Abstract Later
 
-        //public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace, string replacement)
-        //{
-        //    var regex = new Regex(referenceToReplace.Pattern);
-        //    var csProjText = File.ReadAllText(toUpdate.FilePath);
-        //    toUpdate.Text = regex.Replace(csProjText, replacement);
-        //    toUpdate.WriteFile();
-        //}
 
-        //public static void UpdateNugetPackageReference(CsProj toUpdate, PackagesConfigEntry referenceToReplace, string replacement)
-        //{
-        //    var Regex = new Regex(referenceToReplace.Pattern);
-        //    var csProjText = File.ReadAllText(toUpdate.FilePath);
-        //    toUpdate.Text = Regex.Replace(csProjText, replacement);
-        //    toUpdate.WriteFile();
-        //}
 
         #endregion
-
-        //Deprecated Functions
-
-        //public static void RemoveDuplicateXmlHeader()
-        //{
-        //    var csProjs = Directory.EnumerateFiles(MercurySourceDir, "*.csproj", SearchOption.AllDirectories)
-        //        .Select(file => new CsProj(file));
-        //    foreach (var csProj in csProjs)
-        //    {
-        //        Console.WriteLine("Checking: " + csProj);
-        //        var csprojText = File.ReadAllText(csProj.FilePath);
-        //        Regex reg =
-        //            new Regex(
-        //                "(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
-        //        csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>", 1);
-        //        csProj.WriteFile(csprojText);
-        //        CsProj.ReformatXml(csProj.FilePath);
-        //    }
-        //}
-
-        public static void RemoveLogForNetReference(string[] filesToFix)
-        {
-            Regex reg =
-                new Regex("(\\s)*<Reference Include=\\\"log4net(.*)\\\">(\\s)*(.)*(\\s)*(.)*(\\s)*<\\/Reference>");
-            foreach (var file in filesToFix)
-            {
-                var csProjText = File.ReadAllText(file);
-                csProjText = reg.Replace(csProjText, "");
-                File.WriteAllText(file, csProjText);
-            }
-        }
-
-        public static void AddNewRelicRefsTo(string[] filesThatRequireNewRelic)
-        {
-            foreach (var file in filesThatRequireNewRelic)
-            {
-                var csproj = new CsProj(file);
-                csproj.AddNewRelicProjectReference();
-            }
-        }
 
         //public static void UpdateProjectReferenceWithNugetReference(CsProj toUpdate, ProjectReference reference,
         //    PackagesConfigEntry referenceToAdd)
