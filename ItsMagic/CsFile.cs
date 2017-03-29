@@ -26,7 +26,7 @@ namespace ItsMagic
             if (!Text.Contains("using " + reference + ";"))
             {
                 var text = "using " + reference + ";" + Environment.NewLine + Text;
-                WriteFile(text);
+                WriteFile();
                 UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray();
             }
         }
@@ -37,7 +37,7 @@ namespace ItsMagic
             if (Text.Contains("using " + reference + ";"))
             {
                 var text = Text.Replace("using " + reference + ";" + Environment.NewLine, "");
-                WriteFile(text);
+                WriteFile();
                 UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray();
             }
         }

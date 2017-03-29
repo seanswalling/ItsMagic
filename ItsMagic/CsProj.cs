@@ -94,13 +94,13 @@ namespace ItsMagic
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
             var regex = new Regex(RegexStore.ItemGroupProjectReferencepattern);
-            var newText = regex.Replace(Text, RegexStore.ItemGroupProjectReference +
+            Text = regex.Replace(Text, RegexStore.ItemGroupProjectReference +
                                                 "Include=\"" + relPath.ToString().Replace("src", "..\\..").Replace("/", "\\") + "\">" + Environment.NewLine +
                                                 "<Project>{" + referencedProject.Guid + "}</Project>" + Environment.NewLine +
                                                 "<Name>" + referencedProject.Name + "</Name>" + Environment.NewLine +
                                                 "</ProjectReference>" + Environment.NewLine +
                                                 "<ProjectReference ", 1);
-            WriteFile(newText);
+            WriteFile();
             ReformatXml(Filepath);
         }
         
@@ -108,8 +108,8 @@ namespace ItsMagic
         {
             var pattern = $".*(?:<ProjectReference.+(\\n*\\r*))(?:.*{projectGuid}.*(\\n*\\r*))(?:.+(\\n*\\r*))+?(?:.*<\\/ProjectReference>(\\n*\\r*))";
             Regex regex = new Regex(pattern);
-            var replacementText = regex.Replace(Text, "");
-            WriteFile(replacementText);
+            Text = regex.Replace(Text, "");
+            WriteFile();
         }
 
         private static void UpdatePackagesConfig(string packages, string reference)
@@ -132,12 +132,12 @@ namespace ItsMagic
             var regex = new Regex(RegexStore.ItemGroupTag);
             var csProjText = File.ReadAllText(Filepath);
 
-            csProjText = regex.Replace(csProjText, RegexStore.ItemGroupTag +
+            Text = regex.Replace(csProjText, RegexStore.ItemGroupTag +
                                                    "<Reference Include=\"NewRelic.Api.Agent, Version=5.19.47.0, Culture=neutral, PublicKeyToken=06552fced0b33d87, processorArchitecture=MSIL\">" +
                                                    "<HintPath>..\\..\\packages\\NewRelic.Agent.Api.5.19.47.0\\lib\\NewRelic.Api.Agent.dll</HintPath>" +
                                                    "<Private>True</Private>" +
                                                    "</Reference>", 1);
-            WriteFile(csProjText);
+            WriteFile();
             ReformatXml(Filepath);
         }
 

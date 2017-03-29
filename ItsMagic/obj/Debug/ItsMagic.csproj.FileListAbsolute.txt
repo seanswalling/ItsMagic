@@ -23,5 +23,5 @@ C:\source\ItsMagic\ItsMagic\bin\Debug\Microsoft.Build.Framework.dll
 C:\source\ItsMagic\ItsMagic\bin\Debug\Microsoft.Build.Engine.dll
 C:\source\ItsMagic\ItsMagic\obj\Debug\ItsMagic.exe
 C:\source\ItsMagic\ItsMagic\obj\Debug\ItsMagic.pdb
-C:\source\ItsMagic\ItsMagic\obj\Debug\ItsMagic.csprojResolveAssemblyReference.cache
 E:\github\cc\ItsMagic\ItsMagic\obj\Debug\ItsMagic.csprojResolveAssemblyReference.cache
+C:\source\ItsMagic\ItsMagic\obj\Debug\ItsMagic.csprojResolveAssemblyReference.cache

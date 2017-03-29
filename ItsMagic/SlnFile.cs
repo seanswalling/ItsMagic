@@ -50,14 +50,11 @@ namespace ItsMagic
             WriteFile();
         }
 
-        public void AddProjectReference(CsProj projectToAdd, string solutionFolder = null)
+        public void AddProjectReference(CsProj projectToAdd, string solutionFolder)
         {
-            var replacementText = Text;
-
             AddProjectText(projectToAdd);
             AddDebugAndReleaseInformation(projectToAdd);
-            if (solutionFolder != null)
-                AddToFolder(projectToAdd, solutionFolder);
+            AddToFolder(projectToAdd, solutionFolder);
 
             WriteFile();
         }
@@ -90,17 +87,39 @@ namespace ItsMagic
 
         private void AddToFolder(CsProj projectToAdd, string solutionFolder)
         {
+            if (!SolutionFolderExists(solutionFolder))
+            {
+                CreateSolutionFolder(solutionFolder);
+            }
+
             var solutionFolderGuid =
                 RegexStore.Get($"Project.* = \\\"{solutionFolder}\\\", \\\"{solutionFolder}\\\", \\\"" +
                                "\\{(?<capturegroup>(.*))\\}\\\"", Text).ToArray();
-            if (solutionFolderGuid.Length == 0)
-                return;
 
             string projectToAddEqualsFolderToAdd = $"{{{projectToAdd.Guid.ToUpper()}}} = {{{solutionFolderGuid.Single()}}}";
 
             var reg = new Regex(RegexStore.EndGlobalSection);
             Text = reg.Replace(Text,
                 "}" + Environment.NewLine + "\t\t" + projectToAddEqualsFolderToAdd + Environment.NewLine + "\tEndGlobalSection", 1);
-        }                
+        }
+
+        private bool SolutionFolderExists(string solutionFolder)
+        {
+            return RegexStore.Get(RegexStore.SolutionFolderNamePattern, Text).Contains(solutionFolder);
+        }
+
+        private void CreateSolutionFolder(string solutionFolder)
+        {
+            Text = RegexStore.ReplaceLastOccurrence(Text,
+                RegexStore.EndProject,
+                RegexStore.EndProject + Environment.NewLine + 
+                "Project(\"{2150E333-8FDC-42A3-9474-1A3956D46DE8}\") = " +
+                $"\"{solutionFolder}\", " +
+                $"\"{solutionFolder}\", " +
+                $"\"{{{Guid.NewGuid().ToString().ToUpper()}}}\"" +
+                Environment.NewLine +
+                RegexStore.EndProject);
+            WriteFile();
+        }
     }
 }

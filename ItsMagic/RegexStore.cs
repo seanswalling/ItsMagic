@@ -25,7 +25,9 @@ namespace ItsMagic
         public const string CsProjGuidPattern = "<ProjectGuid>{(?<capturegroup>([\\d\\w-]*))}<\\/ProjectGuid>";
         public const string ItemGroupProjectReferencepattern = "<ItemGroup>\\s+<ProjectReference ";
         public const string EndGlobalSection = "\\}\\s+EndGlobalSection";
-        
+        public const string SolutionFolderNamePattern = "Project\\(\\\"\\{2150E333-8FDC-42A3-9474-1A3956D46DE8\\}\\\"\\) = \\\"(?<capturegroup>(\\w+))\\\"";
+
+
         public static IEnumerable<string> Get2(string pattern, string file)
         {
             Regex regex = new Regex(pattern);

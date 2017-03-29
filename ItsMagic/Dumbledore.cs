@@ -74,9 +74,9 @@ namespace ItsMagic
 
         public static void AddTestCoreReplacementsProjectReferences(CsProj[] testCoreReplacements)
         {
-            //AddTestCoreReplacementsToSln(testCoreReplacements);
-            AddTestCoreReplacementsToCsFile();
-            //AddTestCoreReplacementsToCsProj(testCoreReplacements);
+            AddTestCoreReplacementsToSln(testCoreReplacements);
+            AddTestCoreReplacementsToCsProj(testCoreReplacements);
+            //AddTestCoreReplacementsToCsFile();
         }
 
         private static void AddTestCoreReplacementsToSln(CsProj[] testCoreReplacements)
@@ -179,40 +179,40 @@ namespace ItsMagic
 
         public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace, string replacement)
         {
-            var Regex = new Regex(referenceToReplace.Pattern);
+            var regex = new Regex(referenceToReplace.Pattern);
             var csProjText = File.ReadAllText(toUpdate.Filepath);
-            csProjText = Regex.Replace(csProjText, replacement);
-            toUpdate.WriteFile(csProjText);
+            toUpdate.Text = regex.Replace(csProjText, replacement);
+            toUpdate.WriteFile();
         }
 
         public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace, string replacement)
         {
             var Regex = new Regex(referenceToReplace.Pattern);
             var csProjText = File.ReadAllText(toUpdate.Filepath);
-            csProjText = Regex.Replace(csProjText, replacement);
-            toUpdate.WriteFile(csProjText);
+            toUpdate.Text = Regex.Replace(csProjText, replacement);
+            toUpdate.WriteFile();
         }
 
         #endregion
 
         //Deprecated Functions
 
-        public static void RemoveDuplicateXmlHeader()
-        {
-            var csProjs = Directory.EnumerateFiles(MercurySourceDir, "*.csproj", SearchOption.AllDirectories)
-                .Select(file => new CsProj(file));
-            foreach (var csProj in csProjs)
-            {
-                Console.WriteLine("Checking: " + csProj);
-                var csprojText = File.ReadAllText(csProj.Filepath);
-                Regex reg =
-                    new Regex(
-                        "(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
-                csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>", 1);
-                csProj.WriteFile(csprojText);
-                CsProj.ReformatXml(csProj.Filepath);
-            }
-        }
+        //public static void RemoveDuplicateXmlHeader()
+        //{
+        //    var csProjs = Directory.EnumerateFiles(MercurySourceDir, "*.csproj", SearchOption.AllDirectories)
+        //        .Select(file => new CsProj(file));
+        //    foreach (var csProj in csProjs)
+        //    {
+        //        Console.WriteLine("Checking: " + csProj);
+        //        var csprojText = File.ReadAllText(csProj.Filepath);
+        //        Regex reg =
+        //            new Regex(
+        //                "(\\s+)*<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>(\\s+)<\\?xml version=\\\"1\\.0\\\" encoding=\\\"utf-8\\\"\\?>");
+        //        csprojText = reg.Replace(csprojText, "<?xml version=\"1.0\" encoding=\"utf-8\"?>", 1);
+        //        csProj.WriteFile(csprojText);
+        //        CsProj.ReformatXml(csProj.Filepath);
+        //    }
+        //}
 
         public static void RemoveLogForNetReference(string[] filesToFix)
         {
@@ -278,5 +278,25 @@ namespace ItsMagic
         //    return Directory.EnumerateFiles(projectDirectory, "*."+extension, SearchOption.AllDirectories);
         //}
 
+        public static void UpdateReadModelConventionsTestReference()
+        {
+            var pluginProjs = GetCsProjFiles(MercurySourceDir + @"\Plugins");
+            var pattern = "\\.\\.\\\\\\.\\.\\\\Platform\\\\Tests\\.Core\\\\ReadModelConventionsTest\\.cs\\\">(\\s+)<Link>ReadModelConventionsTest\\.cs<\\/Link>(\\s+)<\\/Compile>";
+            var replacement = "ReadModelConventionsTest.cs\" />";
+
+            foreach (var pluginProj in pluginProjs)
+            {
+                if (pluginProj.Text.Contains(@"Platform\Tests.Core\ReadModelConventionsTest.cs"))
+                {
+                    Regex reg = new Regex(pattern);
+                    pluginProj.Text = reg.Replace(pluginProj.Text, replacement);
+                    pluginProj.WriteFile();
+
+                    var readModelConventionsTest = MagicDir + @"\ReadModelConventionsTest\ReadModelConventionsTest.cs";
+                    var pluginProjDir = Path.GetDirectoryName(pluginProj.Filepath) + @"\ReadModelConventionsTest.cs";
+                    File.Copy(readModelConventionsTest, pluginProjDir);
+                }
+            }
+        }
     }
 }
