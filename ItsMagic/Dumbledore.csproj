@@ -7,8 +7,8 @@
     <ProjectGuid>{979BDAFE-02D5-48EB-8722-3F99FC3275BA}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ItsMagic</RootNamespace>
-    <AssemblyName>ItsMagic</AssemblyName>
+    <RootNamespace>Dumbledore</RootNamespace>
+    <AssemblyName>Dumbledore</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -57,7 +57,7 @@
     <Compile Include="Cauldron.cs" />
     <Compile Include="CsFile.cs" />
     <Compile Include="CsProj.cs" />
-    <Compile Include="Dumbledore.cs" />
+    <Compile Include="Wand.cs" />
     <Compile Include="MagicFile.cs" />
     <Compile Include="NugetPackageReference.cs" />
     <Compile Include="PackagesConfigEntry.cs" />

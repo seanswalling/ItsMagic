@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ItsMagic
+namespace Dumbledore
 {
     public class SlnFile : MagicFile
     {
@@ -71,7 +71,7 @@ namespace ItsMagic
 
         private void AddProjectText(CsProj projectToAdd)
         {
-            Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
+            Uri mercurySourcePath = new Uri(Wand.MercurySourceDir);
             Uri referencedProjectPath = new Uri(projectToAdd.FilePath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 

@@ -1,4 +1,4 @@
-﻿namespace ItsMagic
+﻿namespace Dumbledore
 {
     public class ProjectReference
     {

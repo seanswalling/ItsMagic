@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ItsMagic
+namespace Dumbledore
 {
     static class RegexStore
     {
@@ -40,7 +40,7 @@ namespace ItsMagic
         public static IEnumerable<string> Get2(string pattern, string file)
         {
             Regex regex = new Regex(pattern);
-            foreach (var match in Dumbledore.ReadLines(file)
+            foreach (var match in Wand.ReadLines(file)
                 .Select(line => regex.Match(line))
                 .Where(match => match.Success)
                 .Select(match => match.Groups["capturegroup"].Value))

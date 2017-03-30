@@ -3,17 +3,17 @@ using Xunit;
 using Xunit.Abstractions;
 using System.IO;
 
-namespace ItsMagic.Tests
+namespace Dumbledore.Tests
 {
     public class TestsBase
     {
         public ITestOutputHelper Output { get; set; }
-        public static string sampleCsFile = Dumbledore.MagicDir + @"\Samples\StepsTests.cs";
-        public static string actualCsFile = Dumbledore.MagicDir + @"\Samples\actual.cs";
-        public static string sampleCsProjFile = Dumbledore.MagicDir + @"\Samples\AuthorisationReadModel.csproj";
-        public static string actualCsProjFile = Dumbledore.MagicDir + @"\Samples\actual.csproj";
-        public static string sampleSlnFile = Dumbledore.MagicDir + @"\Samples\Mercury.Terminal.sln";
-        public static string actualSlnFile = Dumbledore.MagicDir + @"\Samples\actual.sln";
+        public static string sampleCsFile = Wand.MagicDir + @"\Samples\StepsTests.cs";
+        public static string actualCsFile = Wand.MagicDir + @"\Samples\actual.cs";
+        public static string sampleCsProjFile = Wand.MagicDir + @"\Samples\AuthorisationReadModel.csproj";
+        public static string actualCsProjFile = Wand.MagicDir + @"\Samples\actual.csproj";
+        public static string sampleSlnFile = Wand.MagicDir + @"\Samples\Mercury.Terminal.sln";
+        public static string actualSlnFile = Wand.MagicDir + @"\Samples\actual.sln";
 
         public CsFile getActualCsFile()
         {

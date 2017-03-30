@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace ItsMagic
+namespace Dumbledore
 {
-    public static class Dumbledore
+    public static class Wand
     {
         public static string MercurySourceDir
         {

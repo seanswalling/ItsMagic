@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace ItsMagic
+namespace Dumbledore
 {
     public abstract class MagicFile : IEquatable<MagicFile>, IComparable<MagicFile>
     {

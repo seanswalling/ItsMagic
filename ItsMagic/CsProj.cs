@@ -7,7 +7,7 @@ using System.Xml;
 using System.Xml.Linq;
 using NuGet;
 
-namespace ItsMagic
+namespace Dumbledore
 {
     public class CsProj : MagicFile
     {
@@ -180,7 +180,7 @@ namespace ItsMagic
                 return;
 
             Cauldron.Add($"Adding {referencedProject.FilePath} project reference to {FilePath}");
-            Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
+            Uri mercurySourcePath = new Uri(Wand.MercurySourceDir);
             Uri referencedProjectPath = new Uri(referencedProject.FilePath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 

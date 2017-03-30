@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using Xunit;
-using Xunit.Abstractions;
-using System.IO;
+﻿using Xunit.Abstractions;
 
-namespace ItsMagic.Tests
+namespace Dumbledore.Tests
 {
     class CsProjTests : TestsBase
     {

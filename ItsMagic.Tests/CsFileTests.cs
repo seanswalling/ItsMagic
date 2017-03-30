@@ -3,7 +3,7 @@ using Xunit;
 using Xunit.Abstractions;
 using System.IO;
 
-namespace ItsMagic.Tests
+namespace Dumbledore.Tests
 {
     public class CsFileTests : TestsBase
     {

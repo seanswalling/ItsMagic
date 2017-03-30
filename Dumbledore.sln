@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItsMagic", "ItsMagic\ItsMagic.csproj", "{979BDAFE-02D5-48EB-8722-3F99FC3275BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dumbledore", "ItsMagic\Dumbledore.csproj", "{979BDAFE-02D5-48EB-8722-3F99FC3275BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItsMagic.Tests", "ItsMagic.Tests\ItsMagic.Tests.csproj", "{C69094FF-0D5D-46ED-8E4A-0DF17D4A4445}"
 EndProject
