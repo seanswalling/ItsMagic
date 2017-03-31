@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -121,6 +122,25 @@ namespace ItsMagic
                 Environment.NewLine +
                 RegexStore.EndProject);
             WriteFile();
+        }
+
+        public void RemoveWhiteSpace()
+        {
+            Regex reg = new Regex("(\\r\\n)+");
+            Text = reg.Replace(Text, Environment.NewLine);
+            WriteFile();
+        }
+
+        public static IEnumerable<SlnFile> SolutionsThatReference(CsProj csProj)
+        {
+            var slns = Dumbledore.GetSolutionFiles(Dumbledore.MercurySourceDir);
+            foreach (var slnFile in slns)
+            {
+                if (slnFile.ContainsProjectReference(csProj))
+                {
+                    yield return slnFile;
+                }
+            }
         }
     }
 }

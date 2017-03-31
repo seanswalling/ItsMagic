@@ -298,5 +298,19 @@ namespace ItsMagic
                 }
             }
         }
+
+        public static void RemoveReferencesToContractsTests()
+        {
+            var csProjs = GetCsProjFiles(MercurySourceDir);
+            foreach (var csProj in csProjs)
+            {
+                csProj.RemoveProjectReference(new CsProj(@"C:\source\Mercury\src\Platform\Contracts.Tests\Contracts.Tests.csproj").Guid);
+            }
+        }
+
+        public static SlnFile[] ListSolutionsReferencing(CsProj csProj)
+        {
+            return GetSolutionFiles(MercurySourceDir).Where(sln => sln.ContainsProjectReference(csProj.Guid)).ToArray();
+        }
     }
 }

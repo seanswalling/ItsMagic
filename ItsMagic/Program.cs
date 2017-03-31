@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace ItsMagic
 {
@@ -9,8 +10,27 @@ namespace ItsMagic
         {
             Stopwatch sw = Stopwatch.StartNew();
 
-            Dumbledore.UpdateReadModelConventionsTestReference();
+            //Dumbledore.UpdateReadModelConventionsTestReference();
+            //Dumbledore.RemoveReferencesToContractsTests();
+            //var refs = Dumbledore.ListSolutionsReferencing(new CsProj(Dumbledore.MercurySourceDir + @"\Reporting\IntegrationTests\IntegrationTests.csproj"));
+            //foreach (var slnFile in refs)
+            //{
+            //    Console.WriteLine(slnFile.Name);
+            //}
 
+            //var slns =
+            //    Dumbledore.GetSolutionFiles(Dumbledore.MercurySourceDir)
+            //        .Where(sln => !sln.FilePath.Contains("Platform.sln"));
+
+            //foreach (var slnFile in slns)
+            //{
+            //    slnFile.RemoveProjectReference("D969683C-AD3A-44E6-9BEA-9AAD7516AEFE");
+            //}
+
+            foreach (var slnFile in SlnFile.SolutionsThatReference(new CsProj(@"C:\source\Mercury\src\Platform\Contracts.Tests\Contracts.Tests.csproj")))
+            {
+                Console.WriteLine(slnFile.Name);
+            }
 
             Console.WriteLine(sw.Elapsed.TotalSeconds);
             Console.WriteLine("Application Complete");

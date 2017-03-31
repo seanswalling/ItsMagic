@@ -106,10 +106,12 @@ namespace ItsMagic
         
         public void RemoveProjectReference(string projectGuid)
         {
+            Cauldron.Add($"Removing project reference with guid {projectGuid} from {Name}");
             var pattern = $".*(?:<ProjectReference.+(\\n*\\r*))(?:.*{projectGuid}.*(\\n*\\r*))(?:.+(\\n*\\r*))+?(?:.*<\\/ProjectReference>(\\n*\\r*))";
             Regex regex = new Regex(pattern);
             Text = regex.Replace(Text, "");
             WriteFile();
+            ReformatXml(FilePath);
         }
 
         private static void UpdatePackagesConfig(string packages, string reference)
