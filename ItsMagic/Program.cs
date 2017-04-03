@@ -27,10 +27,10 @@ namespace ItsMagic
             //    slnFile.RemoveProjectReference("D969683C-AD3A-44E6-9BEA-9AAD7516AEFE");
             //}
 
-            foreach (var slnFile in SlnFile.SolutionsThatReference(new CsProj(@"C:\source\Mercury\src\ApplicantCheckService\CommandProcessor.Tests\CommandProcessor.Tests.csproj")))
-            {
-                Console.WriteLine(slnFile.Name);
-            }
+            //foreach (var slnFile in SlnFile.SolutionsThatReference(new CsProj(@"C:\source\Mercury\src\ApplicantCheckService\CommandProcessor.Tests\CommandProcessor.Tests.csproj")))
+            //{
+            //    Console.WriteLine(slnFile.Name);
+            //}
 
             Console.WriteLine(sw.Elapsed.TotalSeconds);
             Console.WriteLine("Application Complete");

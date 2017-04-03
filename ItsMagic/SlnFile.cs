@@ -41,14 +41,22 @@ namespace ItsMagic
 
         public void RemoveProjectReference(string projectGuid)
         {
-            var pattern = $"(?:Project.+{projectGuid}.*(\\n*\\r*))(?:EndProject(\\n*\\r*))";
-            var regex = new Regex(pattern);
-            Text = regex.Replace(Text, "");
+            if (ContainsProjectReference(projectGuid))
+            {
+                Cauldron.Add($"Removing project reference with guid {projectGuid} from {Name}");
+                var pattern = $"(?:Project.+{projectGuid}.*(\\n*\\r*))(?:EndProject(\\n*\\r*))";
+                var regex = new Regex(pattern);
+                Text = regex.Replace(Text, "");
 
-            pattern = $".*{{{projectGuid}}}.*";
-            regex = new Regex(pattern);
-            Text = regex.Replace(Text, "");
-            WriteFile();
+                pattern = $".*{{{projectGuid}}}.*";
+                regex = new Regex(pattern);
+                Text = regex.Replace(Text, "");
+                WriteFile();
+            }
+            else
+            {
+                Cauldron.Add($"No project of GUID: {projectGuid} found");
+            }
         }
 
         public void AddProjectReference(CsProj projectToAdd, string solutionFolder = null)
