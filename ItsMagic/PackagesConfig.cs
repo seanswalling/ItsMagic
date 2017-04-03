@@ -6,8 +6,8 @@ namespace ItsMagic
 {
     class PackagesConfig : MagicFile
     {
-        private NugetPackageReference[] NugetpackageReferencesCache { get; set; }
-        public NugetPackageReference[] NugetpackageReferences => NugetpackageReferencesCache ?? (NugetpackageReferencesCache = GetNugetPackageReferences());
+        private PackagesConfigEntry[] NugetpackageReferencesCache { get; set; }
+        public PackagesConfigEntry[] NugetpackageReferences => NugetpackageReferencesCache ?? (NugetpackageReferencesCache = GetNugetPackageReferences());
 
         public PackagesConfig(string path)
         {
@@ -16,12 +16,12 @@ namespace ItsMagic
             FilePath = path;
         }
 
-        private NugetPackageReference[] GetNugetPackageReferences()
+        private PackagesConfigEntry[] GetNugetPackageReferences()
         {
-            List<NugetPackageReference> nugetPackageReferences = new List<NugetPackageReference>();
+            List<PackagesConfigEntry> nugetPackageReferences = new List<PackagesConfigEntry>();
             foreach (var package in RegexStore.Get(RegexStore.PackageFromPackagesConfigPattern, Text))
             {
-                nugetPackageReferences.Add(new NugetPackageReference(
+                nugetPackageReferences.Add(new PackagesConfigEntry(
                     RegexStore.Get(RegexStore.PackageIdFromPackagesPattern, package).Single(),
                     RegexStore.Get(RegexStore.PackageVersionFromPackagesPattern, package).Single(),
                     RegexStore.Get(RegexStore.PackageTargetFrameworkFromPackagesPattern, package).Single()));

@@ -11,6 +11,7 @@ namespace ItsMagic
 {
     public class CsProj : MagicFile
     {
+        private PackagesConfig PackagesConfig => new PackagesConfig(Directory.GetParent(FilePath) + @"\packages.config");
         public CsFile[] CsFilesCache { get; private set; }
         private string GuidCache { get; set; }
 
@@ -66,23 +67,65 @@ namespace ItsMagic
             return dependencies.ToArray();
         }
 
-        //private string[] NugetReferenceCache { get; set; }
+        private NugetPackageReference[] NugetReferenceCache { get; set; }
 
-        //public string[] NugetReferences => NugetReferenceCache ?? (NugetReferenceCache = GetNugetProjectDependencies());
+        public NugetPackageReference[] NugetReferences => NugetReferenceCache ?? (NugetReferenceCache = GetNugetProjectDependencies());
 
-        //private string[] GetNugetProjectDependencies()
-        //{
-        //    Cauldron.Add($"Getting Nuget references for {FilePath}");
-        //    List<string> nugetReferences = new List<string>();
-        //    foreach (var reference in RegexStore.Get(RegexStore.NugetReferenceFromCsProj, Text))
-        //    {
-        //        string nugetId = "";
-        //        var srgsxegft = new PackageDependency(nugetId, );
+        private NugetPackageReference[] GetNugetProjectDependencies()
+        {
+            //This needs to be tidied up.
+            //Should we get nuget references from packages.config followed by additional info from csproj, or the other way around?
 
-        //        nugetReferences.Add(reference);
-        //    }
-        //    return nugetReferences.ToArray();
-        //}
+            //Additional problem - How do I map csproj nuget references to packages.config entries. The Id's dont always align?
+
+            Cauldron.Add($"Getting Nuget references for {FilePath}");
+            List<NugetPackageReference> nugetReferences = new List<NugetPackageReference>();
+            foreach (var reference in RegexStore.Get(RegexStore.NugetReferenceFromCsProjPattern, Text))
+            {
+                var nugetId = RegexStore
+                    .Get(RegexStore.NugetIdFromNugetReference, reference)
+                    .Single();
+
+                var hintPath = RegexStore
+                    .Get(RegexStore.NugetHintPathFromNugetReferencePattern, reference)
+                    .Single();
+
+                var include = RegexStore
+                    .Get(RegexStore.NugetIncludeFromNugetReferencePattern, reference)
+                    .Single();
+
+                //var packagesConfigEntry = PackagesConfig
+                //        .NugetpackageReferences
+                //        .Single(entry => entry.Id == nugetId);
+
+                var nugetReference = new NugetPackageReference(nugetId, hintPath, include); 
+                nugetReferences.Add(nugetReference);
+            }
+            return nugetReferences.ToArray();
+        }
+
+        public void AddNugetReference(NugetPackageReference referenceToAdd)
+        {
+            if (ContainsNugetProjectReference(referenceToAdd.Id))
+                return;
+
+            Cauldron.Add($"Adding nuget Reference to {FilePath}");
+
+            var regex = new Regex(RegexStore.ItemGroupTag);
+            Text = regex.Replace(Text,RegexStore.ItemGroupTag + Environment.NewLine +
+                                        $"<Reference Include=\"{referenceToAdd.Include}\">" + Environment.NewLine +
+                                        $"<HintPath>{referenceToAdd.HintPath}</HintPath>" + Environment.NewLine +
+                                        $"<Private>False</Private>" + Environment.NewLine +
+                                        $"</Reference>" + Environment.NewLine
+                                        , 1);
+            WriteFile();
+            ReformatXml(FilePath);
+        }
+
+        public bool ContainsNugetProjectReference(string nugetReference)
+        {
+            return Text.Contains($"<Reference Include=\"{nugetReference}");
+        }
 
         public CsProj(string path)
         {

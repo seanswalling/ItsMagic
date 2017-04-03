@@ -22,6 +22,7 @@ namespace ItsMagic
             }
         }
         public static string MagicDir => new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.FullName;
+        public static string PackagesDir => MercurySourceDir + "\\packages";
 
         public static void UpdateAllReferencesToNugetReferences()
         {
@@ -115,7 +116,7 @@ namespace ItsMagic
         //    toUpdate.WriteFile();
         //}
 
-        //public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace, string replacement)
+        //public static void UpdateNugetPackageReference(CsProj toUpdate, PackagesConfigEntry referenceToReplace, string replacement)
         //{
         //    var Regex = new Regex(referenceToReplace.Pattern);
         //    var csProjText = File.ReadAllText(toUpdate.FilePath);
@@ -166,7 +167,7 @@ namespace ItsMagic
         }
 
         //public static void UpdateProjectReferenceWithNugetReference(CsProj toUpdate, ProjectReference reference,
-        //    NugetPackageReference referenceToAdd)
+        //    PackagesConfigEntry referenceToAdd)
         //{
         //    RemoveReference(toUpdate, reference);
         //    AddNugetReference(toUpdate, reference);

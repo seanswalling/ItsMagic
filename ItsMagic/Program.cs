@@ -45,11 +45,11 @@ namespace ItsMagic
             //    }
             //}
 
-            var workerEngineNugetDependencies =
-                new PackagesConfig(@"C:\source\Mercury\src\Platform\WorkerEngine\packages.config").NugetpackageReferences;
-            foreach (var workerEngineNugetDependency in workerEngineNugetDependencies)
+            var workerEngineNugetReferences = new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine\WorkerEngine.csproj").NugetReferences;
+            foreach (var workerEngineNugetReference in workerEngineNugetReferences)
             {
-                Console.WriteLine($"{workerEngineNugetDependency.Id}, {workerEngineNugetDependency.Version}, {workerEngineNugetDependency.TargetFramework}");
+                //Console.WriteLine($"{workerEngineNugetReference.Id}, {workerEngineNugetReference.Version}, {workerEngineNugetReference.TargetFramework},\n{workerEngineNugetReference.HintPath}");
+                Console.WriteLine($"{workerEngineNugetReference.Include},\n{workerEngineNugetReference.HintPath}");
             }
 
             //string path = "";
