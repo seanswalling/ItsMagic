@@ -107,21 +107,21 @@ namespace ItsMagic
 
         #region Abstract Later
 
-        public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace, string replacement)
-        {
-            var regex = new Regex(referenceToReplace.Pattern);
-            var csProjText = File.ReadAllText(toUpdate.FilePath);
-            toUpdate.Text = regex.Replace(csProjText, replacement);
-            toUpdate.WriteFile();
-        }
+        //public static void UpdateProjectReference(CsProj toUpdate, ProjectReference referenceToReplace, string replacement)
+        //{
+        //    var regex = new Regex(referenceToReplace.Pattern);
+        //    var csProjText = File.ReadAllText(toUpdate.FilePath);
+        //    toUpdate.Text = regex.Replace(csProjText, replacement);
+        //    toUpdate.WriteFile();
+        //}
 
-        public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace, string replacement)
-        {
-            var Regex = new Regex(referenceToReplace.Pattern);
-            var csProjText = File.ReadAllText(toUpdate.FilePath);
-            toUpdate.Text = Regex.Replace(csProjText, replacement);
-            toUpdate.WriteFile();
-        }
+        //public static void UpdateNugetPackageReference(CsProj toUpdate, NugetPackageReference referenceToReplace, string replacement)
+        //{
+        //    var Regex = new Regex(referenceToReplace.Pattern);
+        //    var csProjText = File.ReadAllText(toUpdate.FilePath);
+        //    toUpdate.Text = Regex.Replace(csProjText, replacement);
+        //    toUpdate.WriteFile();
+        //}
 
         #endregion
 

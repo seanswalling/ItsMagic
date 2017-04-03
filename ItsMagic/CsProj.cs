@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
+using NuGet;
 
 namespace ItsMagic
 {
@@ -11,7 +13,10 @@ namespace ItsMagic
     {
         public CsFile[] CsFilesCache { get; private set; }
         private string GuidCache { get; set; }
-        public string Guid => GuidCache ?? (GuidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text).First().ToLower());
+
+        public string Guid
+            => GuidCache ?? (GuidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text).First().ToLower());
+
         public string[] Classes
         {
             get
@@ -21,15 +26,17 @@ namespace ItsMagic
                     .ToArray();
             }
         }
+
         public string[] ExtensionMethods
         {
             get
             {
-                return CsFiles().SelectMany(csFile => csFile.ExtensionMethods)                    
+                return CsFiles().SelectMany(csFile => csFile.ExtensionMethods)
                     .Distinct()
                     .ToArray();
             }
         }
+
         public string[] Usings
         {
             get
@@ -39,6 +46,43 @@ namespace ItsMagic
                     .ToArray();
             }
         }
+
+        private CsProj[] ReferencesCache { get; set; }
+
+        public CsProj[] References => ReferencesCache ?? (ReferencesCache = GetProjectDependencies());
+
+        private CsProj[] GetProjectDependencies()
+        {
+            Cauldron.Add($"Getting Project references for {FilePath}");
+            List<CsProj> dependencies = new List<CsProj>();
+            foreach (var csProjRelPath in RegexStore.Get(RegexStore.CsProjPathFromCsProjPattern, Text))
+            {
+                // platform: x\x\x\x\x\Platform\y\y.proj
+                //platform ref: ..\z\z.proj
+                string commonFolder = Directory.GetParent(Directory.GetParent(FilePath).ToString()).ToString(); //what about multiple step backs?
+                string csProjFullPath = csProjRelPath.Replace("..", commonFolder);
+                dependencies.Add(new CsProj(csProjFullPath));
+            }
+            return dependencies.ToArray();
+        }
+
+        //private string[] NugetReferenceCache { get; set; }
+
+        //public string[] NugetReferences => NugetReferenceCache ?? (NugetReferenceCache = GetNugetProjectDependencies());
+
+        //private string[] GetNugetProjectDependencies()
+        //{
+        //    Cauldron.Add($"Getting Nuget references for {FilePath}");
+        //    List<string> nugetReferences = new List<string>();
+        //    foreach (var reference in RegexStore.Get(RegexStore.NugetReferenceFromCsProj, Text))
+        //    {
+        //        string nugetId = "";
+        //        var srgsxegft = new PackageDependency(nugetId, );
+
+        //        nugetReferences.Add(reference);
+        //    }
+        //    return nugetReferences.ToArray();
+        //}
 
         public CsProj(string path)
         {
@@ -89,6 +133,10 @@ namespace ItsMagic
             if (this == referencedProject)
                 return;
 
+            if (ContainsProjectReference(referencedProject))
+                return;
+
+            Cauldron.Add($"Adding {referencedProject.FilePath} project reference to {FilePath}");
             Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
             Uri referencedProjectPath = new Uri(referencedProject.FilePath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
@@ -120,6 +168,16 @@ namespace ItsMagic
                 Cauldron.Add($"No project of GUID: {projectGuid} found");
             }
         }
+
+        //public void AddNugetPackage(string packageId)
+        //{
+        //    IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+        //    List<IPackage> packages = repo.FindPackagesById(packageId).ToList();
+
+
+        //    string path = "";
+        //    PackageManager packageManager = new PackageManager(repo, path);
+        //}
 
         private static void UpdatePackagesConfig(string packages, string reference)
         {

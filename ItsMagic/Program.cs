@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using NuGet;
 
 namespace ItsMagic
 {
@@ -31,6 +33,27 @@ namespace ItsMagic
             //{
             //    Console.WriteLine(slnFile.Name);
             //}
+            //var testsProjects =
+            //    Dumbledore.GetCsProjFiles(Dumbledore.MercurySourceDir).Where(proj => proj.FilePath.Contains(".Tests.csproj"));
+            //CsProj[] workerEngineDependencies= new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine\WorkerEngine.csproj").References;
+            //foreach (var testsProject in testsProjects)
+            //{
+            //    foreach (var workerEngineDependency in workerEngineDependencies)
+            //    {
+            //        if (testsProject.ContainsProjectReference(new CsProj(@"C:\source\Mercury\src\Platform\WorkerEngine\WorkerEngine.csproj")))
+            //            testsProject.AddProjectReference(workerEngineDependency);
+            //    }
+            //}
+
+            var workerEngineNugetDependencies =
+                new PackagesConfig(@"C:\source\Mercury\src\Platform\WorkerEngine\packages.config").NugetpackageReferences;
+            foreach (var workerEngineNugetDependency in workerEngineNugetDependencies)
+            {
+                Console.WriteLine($"{workerEngineNugetDependency.Id}, {workerEngineNugetDependency.Version}, {workerEngineNugetDependency.TargetFramework}");
+            }
+
+            //string path = "";
+            //PackageManager packageManager = new PackageManager(repo, path);
 
             Console.WriteLine(sw.Elapsed.TotalSeconds);
             Console.WriteLine("Application Complete");

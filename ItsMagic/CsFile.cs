@@ -17,6 +17,8 @@ namespace ItsMagic
 
         public CsFile(string path)
         {
+            if(!File.Exists(path))
+                throw new FileNotFoundException();
             FilePath = path;
         }
 

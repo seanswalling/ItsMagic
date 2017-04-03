@@ -2,11 +2,15 @@
 {
     public class NugetPackageReference
     {
-        public string Include { get; set; }
-        public string HintPath { get; set; }
-        public string SpecificVersion { get; set; }
-        public string Private { get; set; }
-        public string Value { get; set; }
-        public string Pattern { get; internal set; }
+        public string Id { get; set; }
+        public string Version { get; set; }
+        public string TargetFramework { get; set; }
+
+        public NugetPackageReference(string id, string version, string targetFramework)
+        {
+            Id = id;
+            Version = version;
+            TargetFramework = targetFramework;
+        }
     }
 }

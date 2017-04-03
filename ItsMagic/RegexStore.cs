@@ -26,6 +26,11 @@ namespace ItsMagic
         public const string ItemGroupProjectReferencepattern = "<ItemGroup>\\s+<ProjectReference ";
         public const string EndGlobalSection = "\\}\\s+EndGlobalSection";
         public const string SolutionFolderNamePattern = "Project\\(\\\"\\{2150E333-8FDC-42A3-9474-1A3956D46DE8\\}\\\"\\) = \\\"(?<capturegroup>(\\w+))\\\"";
+        public const string CsProjPathFromCsProjPattern = "\"(?<capturegroup>(.*\\.csproj))\"";
+        public const string PackageFromPackagesConfigPattern = "(?<capturegroup>(<package.*\\/>))";
+        public const string PackageIdFromPackagesPattern = "id=\"(?<capturegroup>((\\w+|\\.*)*))\"";
+        public const string PackageVersionFromPackagesPattern = "version=\"(?<capturegroup>((\\d+|\\.*)*))\"";
+        public const string PackageTargetFrameworkFromPackagesPattern = "targetFramework=\"(?<capturegroup>(.*))\"";
 
 
         public static IEnumerable<string> Get2(string pattern, string file)
