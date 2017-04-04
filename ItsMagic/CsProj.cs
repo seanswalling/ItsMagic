@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
-using NuGet;
 
-namespace ItsMagic
+namespace Dumbledore
 {
     public class CsProj : MagicFile
     {
@@ -180,17 +179,17 @@ namespace ItsMagic
                 return;
 
             Cauldron.Add($"Adding {referencedProject.FilePath} project reference to {FilePath}");
-            Uri mercurySourcePath = new Uri(Dumbledore.MercurySourceDir);
+            Uri mercurySourcePath = new Uri(Wand.MercurySourceDir);
             Uri referencedProjectPath = new Uri(referencedProject.FilePath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
             var regex = new Regex(RegexStore.ItemGroupProjectReferencepattern);
             Text = regex.Replace(Text, RegexStore.ItemGroupProjectReference +
-                                                "Include=\"" + relPath.ToString().Replace("src", "..\\..").Replace("/", "\\") + "\">" + Environment.NewLine +
-                                                "<Project>{" + referencedProject.Guid + "}</Project>" + Environment.NewLine +
-                                                "<Name>" + referencedProject.Name + "</Name>" + Environment.NewLine +
-                                                "</ProjectReference>" + Environment.NewLine +
-                                                "<ProjectReference ", 1);
+                                "Include=\"" + relPath.ToString().Replace("src", "..\\..").Replace("/", "\\") + "\">" + Environment.NewLine +
+                                "<Project>{" + referencedProject.Guid + "}</Project>" + Environment.NewLine +
+                                "<Name>" + referencedProject.Name + "</Name>" + Environment.NewLine +
+                                "</ProjectReference>" + Environment.NewLine +
+                                "<ProjectReference ", 1);
             WriteFile();
             ReformatXml(FilePath);
         }
@@ -212,16 +211,6 @@ namespace ItsMagic
             }
         }
 
-        //public void AddNugetPackage(string packageId)
-        //{
-        //    IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
-        //    List<IPackage> packages = repo.FindPackagesById(packageId).ToList();
-
-
-        //    string path = "";
-        //    PackageManager packageManager = new PackageManager(repo, path);
-        //}
-
         private static void UpdatePackagesConfig(string packages, string reference)
         {
             var regex = new Regex(RegexStore.PackagesTag);
@@ -235,21 +224,6 @@ namespace ItsMagic
             ReformatXml(packages);
         }
 
-        //Functions to be deprecated
-
-        public void AddNewRelicProjectReference()
-        {
-            var regex = new Regex(RegexStore.ItemGroupTag);
-            var csProjText = File.ReadAllText(FilePath);
-
-            Text = regex.Replace(csProjText, RegexStore.ItemGroupTag +
-                                                   "<Reference Include=\"NewRelic.Api.Agent, Version=5.19.47.0, Culture=neutral, PublicKeyToken=06552fced0b33d87, processorArchitecture=MSIL\">" +
-                                                   "<HintPath>..\\..\\packages\\NewRelic.Agent.Api.5.19.47.0\\lib\\NewRelic.Api.Agent.dll</HintPath>" +
-                                                   "<Private>True</Private>" +
-                                                   "</Reference>", 1);
-            WriteFile();
-            ReformatXml(FilePath);
-        }
 
         //public void AddProjectReference(string reference) //Nuget Version?
         //{

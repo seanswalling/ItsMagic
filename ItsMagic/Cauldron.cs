@@ -1,14 +1,14 @@
-﻿using System.IO;
+﻿using System;
 using System.Diagnostics;
-using System;
+using System.IO;
 
-namespace ItsMagic
+namespace Dumbledore
 {
     public static class Cauldron
     {
         public static void Add(string log)
         {
-            var logFile = Dumbledore.MagicDir + @"\Cauldren\Log " + Process.GetCurrentProcess().StartTime.ToString().Replace("/","_").Replace(":", "_") + ".txt";
+            var logFile = Wand.MagicDir + @"\Cauldren\Log " + Process.GetCurrentProcess().StartTime.ToString().Replace("/","_").Replace(":", "_") + ".txt";
             if (!File.Exists(logFile))
                File.Create(logFile).Close();
             File.AppendAllText(logFile, log + Environment.NewLine);

@@ -15,6 +15,7 @@ TestTools/
 *.user
 *.sln.docstates
 *.ssms_suo
+**/Cauldron/**
 
 # Build results
 [Dd]ebug/

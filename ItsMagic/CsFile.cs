@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace ItsMagic
+namespace Dumbledore
 {
     public class CsFile : MagicFile
     {
@@ -27,7 +26,7 @@ namespace ItsMagic
             Cauldron.Add($"Add Using: {reference} to {Name}.cs");
             if (!Text.Contains("using " + reference + ";"))
             {
-                var text = "using " + reference + ";" + Environment.NewLine + Text;
+                Text = "using " + reference + ";" + Environment.NewLine + Text;
                 WriteFile();
                 UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray();
             }
@@ -38,7 +37,7 @@ namespace ItsMagic
             Cauldron.Add($"Removing Using: {reference} from {Name}.cs");
             if (Text.Contains("using " + reference + ";"))
             {
-                var text = Text.Replace("using " + reference + ";" + Environment.NewLine, "");
+                Text = Text.Replace("using " + reference + ";" + Environment.NewLine, "");
                 WriteFile();
                 UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray();
             }
