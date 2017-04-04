@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using Xunit;
-using Xunit.Abstractions;
-using System.IO;
+﻿using Xunit.Abstractions;
 
 namespace Dumbledore.Tests
 {

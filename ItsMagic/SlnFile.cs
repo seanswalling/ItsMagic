@@ -141,7 +141,7 @@ namespace Dumbledore
 
         public static IEnumerable<SlnFile> SolutionsThatReference(CsProj csProj)
         {
-            var slns = Dumbledore.GetSolutionFiles(Dumbledore.MercurySourceDir);
+            var slns = Wand.GetSolutionFiles(Wand.MercurySourceDir);
             foreach (var slnFile in slns)
             {
                 if (slnFile.ContainsProjectReference(csProj))

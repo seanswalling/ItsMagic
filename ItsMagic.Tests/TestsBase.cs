@@ -1,42 +1,40 @@
-﻿using System.Linq;
-using Xunit;
-using Xunit.Abstractions;
+﻿using Xunit.Abstractions;
 using System.IO;
 
 namespace Dumbledore.Tests
 {
     public class TestsBase
     {
-        public ITestOutputHelper Output { get; set; }
-        public static string sampleCsFile = Wand.MagicDir + @"\Samples\StepsTests.cs";
-        public static string actualCsFile = Wand.MagicDir + @"\Samples\actual.cs";
-        public static string sampleCsProjFile = Wand.MagicDir + @"\Samples\AuthorisationReadModel.csproj";
-        public static string actualCsProjFile = Wand.MagicDir + @"\Samples\actual.csproj";
-        public static string sampleSlnFile = Wand.MagicDir + @"\Samples\Mercury.Terminal.sln";
-        public static string actualSlnFile = Wand.MagicDir + @"\Samples\actual.sln";
+        protected ITestOutputHelper Output { get; set; }
+        protected static string SampleCsFile = Wand.MagicDir + @"\Samples\StepsTests.cs";
+        protected static string ActualCsFile = Wand.MagicDir + @"\Samples\actual.cs";
+        protected static string SampleCsProjFile = Wand.MagicDir + @"\Samples\AuthorisationReadModel.csproj";
+        protected static string ActualCsProjFile = Wand.MagicDir + @"\Samples\actual.csproj";
+        protected static string SampleSlnFile = Wand.MagicDir + @"\Samples\Mercury.Terminal.sln";
+        protected static string ActualSlnFile = Wand.MagicDir + @"\Samples\actual.sln";
 
-        public CsFile getActualCsFile()
+        public CsFile GetActualCsFile()
         {
-            if (File.Exists(actualCsFile))
-                File.Delete(actualCsFile);
-            File.Copy(sampleCsFile, actualCsFile);
-            return new CsFile(actualCsFile);
+            if (File.Exists(ActualCsFile))
+                File.Delete(ActualCsFile);
+            File.Copy(SampleCsFile, ActualCsFile);
+            return new CsFile(ActualCsFile);
         }
 
-        public CsProj getActualCsProjFile()
+        public CsProj GetActualCsProjFile()
         {
-            if (File.Exists(actualCsProjFile))
-                File.Delete(actualCsProjFile);
-            File.Copy(sampleCsProjFile, actualCsProjFile);
-            return new CsProj(actualCsProjFile);
+            if (File.Exists(ActualCsProjFile))
+                File.Delete(ActualCsProjFile);
+            File.Copy(SampleCsProjFile, ActualCsProjFile);
+            return new CsProj(ActualCsProjFile);
         }
 
-        public CsProj getActualSlnFile()
+        public CsProj GetActualSlnFile()
         {
-            if (File.Exists(actualSlnFile))
-                File.Delete(actualSlnFile);
-            File.Copy(sampleSlnFile, actualSlnFile);
-            return new CsProj(actualSlnFile);
+            if (File.Exists(ActualSlnFile))
+                File.Delete(ActualSlnFile);
+            File.Copy(SampleSlnFile, ActualSlnFile);
+            return new CsProj(ActualSlnFile);
         }
     }
 }

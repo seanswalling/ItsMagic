@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using Xunit;
+﻿using Xunit;
 using Xunit.Abstractions;
-using System.IO;
 
 namespace Dumbledore.Tests
 {
@@ -15,8 +13,8 @@ namespace Dumbledore.Tests
         [Fact]
         private void CanDetectEvidenceOfCsProj()
         {
-            var csFile = getActualCsFile();
-            var csProj = getActualCsProjFile();
+            var csFile = GetActualCsFile();
+            var csProj = GetActualCsProjFile();
 
             Assert.Equal(true, csFile.HasEvidenceOf(csProj));
         }
@@ -24,7 +22,7 @@ namespace Dumbledore.Tests
         [Fact]
         private void CanGetClasses()
         {
-            var file = getActualCsFile();
+            var file = GetActualCsFile();
             string[] expected = { "a", "StepsTests" };
 
             Assert.Equal(expected, file.Classes);
@@ -33,7 +31,7 @@ namespace Dumbledore.Tests
         [Fact]
         private void CanAlphabatiseUsings()
         {
-            var file = getActualCsFile();
+            var file = GetActualCsFile();
             file.AlphabatiseUsings();
             string[] expected = { "System.Linq", "a", "b", "c", "Xunit", "Xunit.Abstractions" };
 

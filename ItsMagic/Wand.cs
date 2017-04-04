@@ -106,55 +106,6 @@ namespace Dumbledore
                 .Select(file => new CsFile(file));
         }
 
-        #region Abstract Later
-
-
-
-        #endregion
-
-        //public static void UpdateProjectReferenceWithNugetReference(CsProj toUpdate, ProjectReference reference,
-        //    PackagesConfigEntry referenceToAdd)
-        //{
-        //    RemoveReference(toUpdate, reference);
-        //    AddNugetReference(toUpdate, reference);
-        //    ReformatXml(toUpdate.Path);
-        //}
-
-        //public static void RemoveReference(CsProj csProj, ProjectReference reference)
-        //{
-        //    var Regex = new Regex(reference.ProjectRefPattern);
-        //    var csProjText = File.ReadAllText(csProj.Path);
-        //    csProjText = Regex.Replace(csProjText, "", 1);
-        //    File.WriteAllText(csProj.Path, csProjText);
-        //}
-
-        //public static void AddNugetReference(CsProj csProj, ProjectReference reference)
-        //{
-        //    var Regex = new Regex(RegexStore.ItemGroupTag);
-        //    var csProjText = File.ReadAllText(csProj.Path);
-        //    csProjText = Regex.Replace(csProjText, RegexStore.ItemGroupTag + reference.NugetRef, 1);
-        //    File.WriteAllText(csProj.Path, csProjText);
-        //    UpdatePackagesConfig(Path.GetDirectoryName(csProj.Path) + "\\packages.config", reference);
-        //}
-
-        //private static void UpdatePackagesConfig(string packages, ProjectReference reference)
-        //{
-        //    var Regex = new Regex(RegexStore.PackagesTag);
-        //    if (!File.Exists(packages))
-        //    {
-        //        File.WriteAllText(packages, "<?xml version=\"1.0\" encoding=\"utf-8\"?><packages></packages>");
-        //    }
-        //    var packagesText = File.ReadAllText(packages);
-        //    packagesText = Regex.Replace(packagesText, RegexStore.PackagesTag + reference.PackagesRef, 1);
-        //    File.WriteAllText(packages, packagesText);
-        //    ReformatXml(packages);
-        //}
-
-        //public static IEnumerable<string> GetFiles(string projectDirectory, string extension)
-        //{
-        //    return Directory.EnumerateFiles(projectDirectory, "*."+extension, SearchOption.AllDirectories);
-        //}
-
         public static void UpdateReadModelConventionsTestReference()
         {
             var pluginProjs = GetCsProjFiles(MercurySourceDir + @"\Plugins");

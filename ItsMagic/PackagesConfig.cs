@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace ItsMagic
+namespace Dumbledore
 {
     class PackagesConfig : MagicFile
     {

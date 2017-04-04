@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C69094FF-0D5D-46ED-8E4A-0DF17D4A4445}</ProjectGuid>
+    <ProjectGuid>{F664C524-5C97-4129-BDB9-42DDE7030362}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dumbledore.Tests</RootNamespace>
