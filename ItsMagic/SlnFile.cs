@@ -52,6 +52,7 @@ namespace Dumbledore
                 regex = new Regex(pattern);
                 Text = regex.Replace(Text, "");
                 WriteFile();
+                RemoveWhiteSpace();
             }
             else
             {

@@ -81,9 +81,14 @@ namespace Dumbledore
             List<NugetPackageReference> nugetReferences = new List<NugetPackageReference>();
             foreach (var reference in RegexStore.Get(RegexStore.NugetReferenceFromCsProjPattern, Text))
             {
+                var dllName = RegexStore
+                    .Get(RegexStore.NugetDllNameFromNugetReference, reference)
+                    .Single();
+
                 var nugetId = RegexStore
                     .Get(RegexStore.NugetIdFromNugetReference, reference)
-                    .Single();
+                    .Single()
+                    .TrimEnd('.');
 
                 var hintPath = RegexStore
                     .Get(RegexStore.NugetHintPathFromNugetReferencePattern, reference)
@@ -93,17 +98,17 @@ namespace Dumbledore
                     .Get(RegexStore.NugetIncludeFromNugetReferencePattern, reference)
                     .Single();
 
-                //var packagesConfigEntry = PackagesConfig
-                //        .NugetpackageReferences
-                //        .Single(entry => entry.Id == nugetId);
+                var packagesConfigEntry = PackagesConfig
+                        .NugetpackageReferences
+                        .Single(entry => entry.Id == nugetId);
 
-                var nugetReference = new NugetPackageReference(nugetId, hintPath, include); 
+                var nugetReference = new NugetPackageReference(nugetId, dllName, hintPath, include, packagesConfigEntry); 
                 nugetReferences.Add(nugetReference);
             }
             return nugetReferences.ToArray();
         }
 
-        public void AddNugetReference(NugetPackageReference referenceToAdd)
+        public void AddNugetReference(NugetPackageReference referenceToAdd, bool copyLocal)
         {
             if (ContainsNugetProjectReference(referenceToAdd.Id))
                 return;
@@ -114,11 +119,12 @@ namespace Dumbledore
             Text = regex.Replace(Text,RegexStore.ItemGroupTag + Environment.NewLine +
                                         $"<Reference Include=\"{referenceToAdd.Include}\">" + Environment.NewLine +
                                         $"<HintPath>{referenceToAdd.HintPath}</HintPath>" + Environment.NewLine +
-                                        $"<Private>False</Private>" + Environment.NewLine +
-                                        $"</Reference>" + Environment.NewLine
+                                        $"<Private>{copyLocal}</Private>" + Environment.NewLine +
+                                        "</Reference>" + Environment.NewLine
                                         , 1);
             WriteFile();
             ReformatXml(FilePath);
+            PackagesConfig.AddPackageEntry(referenceToAdd);
         }
 
         public bool ContainsNugetProjectReference(string nugetReference)
@@ -211,19 +217,31 @@ namespace Dumbledore
             }
         }
 
-        private static void UpdatePackagesConfig(string packages, string reference)
-        {
-            var regex = new Regex(RegexStore.PackagesTag);
-            if (!File.Exists(packages))
-            {
-                File.WriteAllText(packages, RegexStore.PackagesConfigDefault);
-            }
-            var packagesText = File.ReadAllText(packages);
-            packagesText = regex.Replace(packagesText, RegexStore.PackagesTag + reference, 1);
-            File.WriteAllText(packages, packagesText);
-            ReformatXml(packages);
-        }
+        //public void AddNugetPackage(string packageId)
+        //{
+        //    IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+        //    List<IPackage> packages = repo.FindPackagesById(packageId).ToList();
 
+
+        //    string path = "";
+        //    PackageManager packageManager = new PackageManager(repo, path);
+        //}
+
+        //Functions to be deprecated
+
+        public void AddNewRelicProjectReference()
+        {
+            var regex = new Regex(RegexStore.ItemGroupTag);
+            var csProjText = File.ReadAllText(FilePath);
+
+            Text = regex.Replace(csProjText, RegexStore.ItemGroupTag +
+                                                   "<Reference Include=\"NewRelic.Api.Agent, Version=5.19.47.0, Culture=neutral, PublicKeyToken=06552fced0b33d87, processorArchitecture=MSIL\">" +
+                                                   "<HintPath>..\\..\\packages\\NewRelic.Agent.Api.5.19.47.0\\lib\\NewRelic.Api.Agent.dll</HintPath>" +
+                                                   "<Private>True</Private>" +
+                                                   "</Reference>", 1);
+            WriteFile();
+            ReformatXml(FilePath);
+        }
 
         //public void AddProjectReference(string reference) //Nuget Version?
         //{

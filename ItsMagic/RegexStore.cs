@@ -32,9 +32,10 @@ namespace Dumbledore
         public const string PackageVersionFromPackagesPattern = "version=\"(?<capturegroup>((\\d+|\\.*)*))\"";
         public const string PackageTargetFrameworkFromPackagesPattern = "targetFramework=\"(?<capturegroup>(.*))\"";
         public const string NugetReferenceFromCsProjPattern = "(?<capturegroup>(<Reference Include=.*\\s+(\\s*<SpecificVersion>.*\\s*)*<HintPath>.+<\\/HintPath>\\s+.+\\s+<\\/Reference>))";
-        public const string NugetIdFromNugetReference = "Include=\\\"(?<capturegroup>(\\w|\\.)+)";
+        public const string NugetDllNameFromNugetReference = "Include=\\\"(?<capturegroup>(\\w|\\.)+)";
         public const string NugetHintPathFromNugetReferencePattern = "<HintPath>(?<capturegroup>(.+))<\\/HintPath>";
         public const string NugetIncludeFromNugetReferencePattern = "Include=\"(?<capturegroup>(.*))\">";
+        public const string NugetIdFromNugetReference = "packages\\\\(?<capturegroup>(\\w+\\D\\.+)+)";
 
 
         public static IEnumerable<string> Get2(string pattern, string file)

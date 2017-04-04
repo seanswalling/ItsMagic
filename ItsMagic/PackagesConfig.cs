@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace Dumbledore
 {
@@ -12,7 +16,7 @@ namespace Dumbledore
         public PackagesConfig(string path)
         {
             if (!File.Exists(path))
-                throw new FileNotFoundException();
+                File.WriteAllText(path, RegexStore.PackagesConfigDefault);
             FilePath = path;
         }
 
@@ -28,6 +32,37 @@ namespace Dumbledore
             }
 
             return nugetPackageReferences.ToArray();
+        }
+
+        internal void AddPackageEntry(NugetPackageReference referenceToAdd)
+        {
+            if (ContainsEntry(referenceToAdd))
+                return;
+
+            Cauldron.Add($"Adding Package Entry {referenceToAdd.Id} to {FilePath}");
+            var regex = new Regex(RegexStore.PackagesTag);
+            Text = regex.Replace(Text, RegexStore.PackagesTag + 
+                                      Environment.NewLine +
+                                      $"<package id=\"{referenceToAdd.Id}\" " +
+                                      $"version=\"{referenceToAdd.Version}\" " +
+                                      $"targetFramework=\"{referenceToAdd.TargetFramework}\" />");
+            WriteFile();
+            ReformatXml();
+        }
+
+        private bool ContainsEntry(NugetPackageReference referenceToAdd)
+        {
+            return Text.Contains(referenceToAdd.Id);
+        }
+
+        private void ReformatXml()
+        {
+            var doc = XDocument.Load(FilePath);
+            using (XmlTextWriter writer = new XmlTextWriter(FilePath, System.Text.Encoding.UTF8))
+            {
+                writer.Formatting = Formatting.Indented;
+                doc.Save(writer);
+            }
         }
     }
 }
