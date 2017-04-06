@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Dumbledore
 {
-    class PackagesConfig : MagicFile
+    public class PackagesConfig : MagicFile
     {
         private PackagesConfigEntry[] NugetpackageReferencesCache { get; set; }
         public PackagesConfigEntry[] NugetpackageReferences => NugetpackageReferencesCache ?? (NugetpackageReferencesCache = GetNugetPackageReferences());
@@ -22,6 +22,7 @@ namespace Dumbledore
 
         private PackagesConfigEntry[] GetNugetPackageReferences()
         {
+
             List<PackagesConfigEntry> nugetPackageReferences = new List<PackagesConfigEntry>();
             foreach (var package in RegexStore.Get(RegexStore.PackageFromPackagesConfigPattern, Text))
             {
@@ -52,7 +53,7 @@ namespace Dumbledore
 
         private bool ContainsEntry(NugetPackageReference referenceToAdd)
         {
-            return Text.Contains(referenceToAdd.Id);
+            return Text.Contains($"id=\"{referenceToAdd.Id}\"");
         }
 
         private void ReformatXml()

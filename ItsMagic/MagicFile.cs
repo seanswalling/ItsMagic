@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Dumbledore
@@ -20,17 +21,33 @@ namespace Dumbledore
             File.WriteAllText(FilePath, Text);
         }
 
+        public override bool Equals(object obj)
+        {
+            var other = obj as MagicFile;
+            return Equals(other);
+        }
+
         public bool Equals(MagicFile other)
         {
             if (other == null)
                 return false;
 
-            return this.FilePath == other.FilePath;
+            return FilePath == other.FilePath;
+        }
+
+        public override int GetHashCode()
+        {
+            return FilePath.GetHashCode();
         }
 
         public int CompareTo(MagicFile other)
         {
             return other == null ? 1 : FilePath.CompareTo(other.FilePath);
+        }
+
+        public override string ToString()
+        {
+            return FilePath;
         }
     }
 }

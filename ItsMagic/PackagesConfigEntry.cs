@@ -12,5 +12,10 @@
             Version = version;
             TargetFramework = targetFramework;
         }
+
+        public override string ToString()
+        {
+            return Id;
+        }
     }
 }

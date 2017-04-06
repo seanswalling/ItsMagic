@@ -18,5 +18,10 @@
             Id = id;
             DllName = dllName;
         }
+
+        public override string ToString()
+        {
+            return DllName;
+        }
     }
 }

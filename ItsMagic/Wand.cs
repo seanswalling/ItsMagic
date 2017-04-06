@@ -97,7 +97,7 @@ namespace Dumbledore
         public static IEnumerable<CsProj> GetCsProjFiles(string dir)
         {
             return Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
-                .Select(file => new CsProj(file));
+                .Select(file => CsProj.GetCsProj(file));
         }
 
         public static IEnumerable<CsFile> GetCsFiles(string dir)
@@ -132,13 +132,79 @@ namespace Dumbledore
             var csProjs = GetCsProjFiles(MercurySourceDir);
             foreach (var csProj in csProjs)
             {
-                csProj.RemoveProjectReference(new CsProj(@"C:\source\Mercury\src\Platform\Contracts.Tests\Contracts.Tests.csproj").Guid);
+                csProj.RemoveProjectReference(CsProj.GetCsProj(@"C:\source\Mercury\src\Platform\Contracts.Tests\Contracts.Tests.csproj").Guid);
             }
         }
 
         public static SlnFile[] ListSolutionsReferencing(CsProj csProj)
         {
             return GetSolutionFiles(MercurySourceDir).Where(sln => sln.ContainsProjectReference(csProj.Guid)).ToArray();
+        }
+
+        private static readonly HashSet<CsProj> Empty = new HashSet<CsProj>();
+
+        public static HashSet<CsProj> GetAllProjectReferences(CsProj csProj)
+        {
+            if (csProj.References.Length == 0)
+                return Empty;
+
+            HashSet<CsProj> references = new HashSet<CsProj>();
+            references.AddRange(csProj.References);
+
+            foreach (var csProjToTraverse in csProj.References)
+            {
+                references.AddRange(GetAllProjectReferences(csProjToTraverse));
+            }
+            return references;
+        }
+
+        private static HashSet<string> RepairedProjects = new HashSet<string>();
+        public static void RepairProjectReferences(CsProj csProj)
+        {
+            if (RepairedProjects.Contains(csProj.FilePath))
+                return;
+            
+            foreach (var csProjReference in csProj.References)
+            {
+                RepairProjectReferences(csProjReference);
+            }
+            var csProjDependencies = GetAllProjectReferences(csProj);
+            foreach (var csProjDependency in csProjDependencies)
+            {
+                csProj.AddProjectReference(csProjDependency);
+            }
+
+            var nugetDeps = GetNugetReferences(csProj);
+            foreach (var nugetDep in nugetDeps)
+            {
+                csProj.AddNugetReference(nugetDep);
+            }
+
+            RepairedProjects.Add(csProj.FilePath);
+        }
+
+        private static IEnumerable<NugetPackageReference> GetNugetReferences(CsProj csproj)
+        {
+            return csproj.NugetReferences.Concat(
+                    csproj.References.SelectMany(GetNugetReferences)
+                )
+                .Distinct();
+        }
+
+        //For each preferenced project
+            //  get nugets
+
+            // Get nugets --> gets my nugets and my projects nugets
+        }
+
+    public static class HashEx
+    {
+        public static void AddRange<T>(this HashSet<T> target, IEnumerable<T> newItems)
+        {
+            foreach (var newItem in newItems)
+            {
+                target.Add(newItem);
+            }
         }
     }
 }

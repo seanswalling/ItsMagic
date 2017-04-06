@@ -10,7 +10,7 @@ namespace Dumbledore
         public const string ItemGroupTag = "<ItemGroup>";
         public const string PackagesTag = "<packages>";
         public const string EndProject = "EndProject";
-        public const string PackagesConfigDefault = "<? xml version =\"1.0\" encoding=\"utf-8\"?><packages></packages>";
+        public const string PackagesConfigDefault = "<?xml version =\"1.0\" encoding=\"utf-8\"?>\r\n<packages>\r\n</packages>";
         public const string ReleaseAnyCpu = "Release|Any CPU";
         public const string NestedProjects = "GlobalSection(NestedProjects) = preSolution";
         public const string TestsCoreGuid = "AF2AA63F-B129-4D88-9D1A-4BC19E443B00"; //deprecate later
@@ -28,14 +28,14 @@ namespace Dumbledore
         public const string SolutionFolderNamePattern = "Project\\(\\\"\\{2150E333-8FDC-42A3-9474-1A3956D46DE8\\}\\\"\\) = \\\"(?<capturegroup>(\\w+))\\\"";
         public const string CsProjPathFromCsProjPattern = "\"(?<capturegroup>(.*\\.csproj))\"";
         public const string PackageFromPackagesConfigPattern = "(?<capturegroup>(<package.*\\/>))";
-        public const string PackageIdFromPackagesPattern = "id=\"(?<capturegroup>((\\w+|\\.*)*))\"";
-        public const string PackageVersionFromPackagesPattern = "version=\"(?<capturegroup>((\\d+|\\.*)*))\"";
+        public const string PackageIdFromPackagesPattern = "id=\"(?<capturegroup>[\\w\\.-]+)\"";
+        public const string PackageVersionFromPackagesPattern = "version=\"(?<capturegroup>[\\w\\.-]*)\"";
         public const string PackageTargetFrameworkFromPackagesPattern = "targetFramework=\"(?<capturegroup>(.*))\"";
         public const string NugetReferenceFromCsProjPattern = "(?<capturegroup>(<Reference Include=.*\\s+(\\s*<SpecificVersion>.*\\s*)*<HintPath>.+<\\/HintPath>\\s+.+\\s+<\\/Reference>))";
         public const string NugetDllNameFromNugetReference = "Include=\\\"(?<capturegroup>(\\w|\\.)+)";
         public const string NugetHintPathFromNugetReferencePattern = "<HintPath>(?<capturegroup>(.+))<\\/HintPath>";
         public const string NugetIncludeFromNugetReferencePattern = "Include=\"(?<capturegroup>(.*))\">";
-        public const string NugetIdFromNugetReference = "packages\\\\(?<capturegroup>(\\w+\\D\\.+)+)";
+        public const string NugetIdFromNugetReference = "packages\\\\(?<capturegroup>[\\w\\.-]+?)\\.\\d";
 
 
         public static IEnumerable<string> Get2(string pattern, string file)

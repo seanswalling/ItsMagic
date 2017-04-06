@@ -5,17 +5,24 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace Dumbledore
 {
     public class CsProj : MagicFile
     {
-        private PackagesConfig PackagesConfig => new PackagesConfig(Directory.GetParent(FilePath) + @"\packages.config");
-        public CsFile[] CsFilesCache { get; private set; }
-        private string GuidCache { get; set; }
+        private static Dictionary<string, CsProj> CsProjPool = new Dictionary<string, CsProj>();
+        private static readonly string[] HostPaths = GetHostPaths();
 
-        public string Guid
-            => GuidCache ?? (GuidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text).First().ToLower());
+        private readonly bool _isHost;
+
+        private CsProj[] _referencesCache;
+        private string _guidCache;
+        private NugetPackageReference[] _nugetReferenceCache;
+
+        public CsFile[] CsFilesCache { get; private set; }
+
+        public string Guid => _guidCache ?? (_guidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text).First().ToLower());
 
         public string[] Classes
         {
@@ -47,9 +54,54 @@ namespace Dumbledore
             }
         }
 
-        private CsProj[] ReferencesCache { get; set; }
+        public CsProj[] References => _referencesCache ?? (_referencesCache = GetProjectDependencies());
+        
+        public NugetPackageReference[] NugetReferences => _nugetReferenceCache ?? (_nugetReferenceCache = GetNugetProjectDependencies());
 
-        public CsProj[] References => ReferencesCache ?? (ReferencesCache = GetProjectDependencies());
+
+        public void AddNugetReference(NugetPackageReference referenceToAdd)
+        {
+            if (ContainsNugetProjectReference(referenceToAdd))
+                return;
+
+            Cauldron.Add($"Adding nuget Reference to {FilePath}");
+            var isCopyLocal = _isHost;
+            var regex = new Regex(RegexStore.ItemGroupTag);
+            Text = regex.Replace(Text,RegexStore.ItemGroupTag + Environment.NewLine +
+                                        $"<Reference Include=\"{referenceToAdd.Include}\">" + Environment.NewLine +
+                                        $"<HintPath>{referenceToAdd.HintPath}</HintPath>" + Environment.NewLine +
+                                        $"<Private>{isCopyLocal}</Private>" + Environment.NewLine +
+                                        "</Reference>" + Environment.NewLine
+                                        , 1);
+            WriteFile();
+            ReformatXml(FilePath);
+            PackagesConfig().AddPackageEntry(referenceToAdd);
+        }
+
+        private bool ContainsNugetProjectReference(NugetPackageReference nugetReference)
+        {
+            return Text.Contains($"<Reference Include=\"{nugetReference.DllName}");
+            //return Text.Contains(nugetReference.DllName);
+        }
+
+        private CsProj(string path)
+        {
+            if(!File.Exists(path))
+                throw new FileNotFoundException(path);
+            FilePath = path;
+            _isHost = IsHost();
+        }
+
+        public static CsProj GetCsProj(string path)
+        {
+            CsProj result;
+            if (!CsProjPool.TryGetValue(path, out result))
+            {
+                result = new CsProj(path);
+                CsProjPool.Add(path, result);
+            }
+            return result;
+        }
 
         private CsProj[] GetProjectDependencies()
         {
@@ -57,18 +109,16 @@ namespace Dumbledore
             List<CsProj> dependencies = new List<CsProj>();
             foreach (var csProjRelPath in RegexStore.Get(RegexStore.CsProjPathFromCsProjPattern, Text))
             {
-                // platform: x\x\x\x\x\Platform\y\y.proj
-                //platform ref: ..\z\z.proj
-                string commonFolder = Directory.GetParent(Directory.GetParent(FilePath).ToString()).ToString(); //what about multiple step backs?
-                string csProjFullPath = csProjRelPath.Replace("..", commonFolder);
-                dependencies.Add(new CsProj(csProjFullPath));
+                var path = Path.Combine(Directory.GetParent(FilePath).FullName, csProjRelPath);
+                var csProjFullPath = Path.GetFullPath(path);
+                dependencies.Add(GetCsProj(csProjFullPath));
             }
             return dependencies.ToArray();
         }
-
-        private NugetPackageReference[] NugetReferenceCache { get; set; }
-
-        public NugetPackageReference[] NugetReferences => NugetReferenceCache ?? (NugetReferenceCache = GetNugetProjectDependencies());
+        public PackagesConfig PackagesConfig()
+        {
+            return new PackagesConfig(Directory.GetParent(FilePath) + @"\packages.config");
+        }
 
         private NugetPackageReference[] GetNugetProjectDependencies()
         {
@@ -79,7 +129,9 @@ namespace Dumbledore
 
             Cauldron.Add($"Getting Nuget references for {FilePath}");
             List<NugetPackageReference> nugetReferences = new List<NugetPackageReference>();
-            foreach (var reference in RegexStore.Get(RegexStore.NugetReferenceFromCsProjPattern, Text))
+            var references = RegexStore.Get(RegexStore.NugetReferenceFromCsProjPattern, Text)
+                .Where(token=>token.Contains("\\packages\\"));  //i.e. ignore any "lib" references. Cant exclued by !contains(lib) as all packages have a lib folder
+            foreach (var reference in references)
             {
                 var dllName = RegexStore
                     .Get(RegexStore.NugetDllNameFromNugetReference, reference)
@@ -98,44 +150,17 @@ namespace Dumbledore
                     .Get(RegexStore.NugetIncludeFromNugetReferencePattern, reference)
                     .Single();
 
-                var packagesConfigEntry = PackagesConfig
-                        .NugetpackageReferences
-                        .Single(entry => entry.Id == nugetId);
+                var pc = PackagesConfig();
+                var nr = pc
+                    .NugetpackageReferences;
+                var packagesConfigEntry = nr
+                        .Single(entry => string.Equals(entry.Id, nugetId, StringComparison.InvariantCultureIgnoreCase));
 
-                var nugetReference = new NugetPackageReference(nugetId, dllName, hintPath, include, packagesConfigEntry); 
+                var nugetReference = new NugetPackageReference(nugetId, dllName, hintPath, include, packagesConfigEntry);
                 nugetReferences.Add(nugetReference);
             }
             return nugetReferences.ToArray();
         }
-
-        public void AddNugetReference(NugetPackageReference referenceToAdd, bool copyLocal)
-        {
-            if (ContainsNugetProjectReference(referenceToAdd.Id))
-                return;
-
-            Cauldron.Add($"Adding nuget Reference to {FilePath}");
-
-            var regex = new Regex(RegexStore.ItemGroupTag);
-            Text = regex.Replace(Text,RegexStore.ItemGroupTag + Environment.NewLine +
-                                        $"<Reference Include=\"{referenceToAdd.Include}\">" + Environment.NewLine +
-                                        $"<HintPath>{referenceToAdd.HintPath}</HintPath>" + Environment.NewLine +
-                                        $"<Private>{copyLocal}</Private>" + Environment.NewLine +
-                                        "</Reference>" + Environment.NewLine
-                                        , 1);
-            WriteFile();
-            ReformatXml(FilePath);
-            PackagesConfig.AddPackageEntry(referenceToAdd);
-        }
-
-        public bool ContainsNugetProjectReference(string nugetReference)
-        {
-            return Text.Contains($"<Reference Include=\"{nugetReference}");
-        }
-
-        public CsProj(string path)
-        {
-            FilePath = path;
-        }              
 
         public CsFile[] CsFiles()
         {
@@ -185,13 +210,14 @@ namespace Dumbledore
                 return;
 
             Cauldron.Add($"Adding {referencedProject.FilePath} project reference to {FilePath}");
-            Uri mercurySourcePath = new Uri(Wand.MercurySourceDir);
+            Uri mercurySourcePath = new Uri(FilePath);
             Uri referencedProjectPath = new Uri(referencedProject.FilePath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
+            var projectRefPath = relPath.ToString().Replace("/", "\\");
 
             var regex = new Regex(RegexStore.ItemGroupProjectReferencepattern);
             Text = regex.Replace(Text, RegexStore.ItemGroupProjectReference +
-                                "Include=\"" + relPath.ToString().Replace("src", "..\\..").Replace("/", "\\") + "\">" + Environment.NewLine +
+                                "Include=\"" + projectRefPath + "\">" + Environment.NewLine +
                                 "<Project>{" + referencedProject.Guid + "}</Project>" + Environment.NewLine +
                                 "<Name>" + referencedProject.Name + "</Name>" + Environment.NewLine +
                                 "</ProjectReference>" + Environment.NewLine +
@@ -252,5 +278,39 @@ namespace Dumbledore
         //    WriteText(csProjText);
         //    UpdatePackagesConfig(System.IO.Path.GetDirectoryName(Path) + "\\packages.config", reference);
         //} 
+
+        private bool IsHost()
+        {
+            //Does file name end with ".Tests.csproj"
+            return FilePath.EndsWith(".Tests.csproj")
+                   || Text.Contains("349c5851-65df-11da-9384-00065b846f21") //IsWebApp/Site/MVC/WebRole
+                   || IsInHostPath(FilePath);
+
+            // is in services.json
+        }
+
+        private static bool IsInHostPath(string path)
+        {
+            return HostPaths.Any(path.StartsWith);
+        }
+        private static string[] GetHostPaths()
+        {
+            var serviceJsonPath = Path.Combine(Wand.MercurySourceDir, @"..\Hosting\AllServices.json");
+            var serviceJson = File.ReadAllText(serviceJsonPath);
+            var roles = (JArray)JObject.Parse(serviceJson)["Roles"];
+            return roles.Select(r => r["Assembly"].ToString())
+                .Select(relPath => Helper.ToAbsolutePath(relPath, Wand.MercurySourceDir))
+                //Strip everything after \bin\
+                .Select(absPath => GetUntil(absPath, @"\bin\"))
+                .ToArray();
+            //
+        }
+
+        private static string GetUntil(string input, string delimiter)
+        {
+            var idx = input.IndexOf(delimiter);
+            return input.Substring(0, idx);
+        }
+
     }
 }
