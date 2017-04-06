@@ -13,8 +13,6 @@ namespace Dumbledore
         public const string PackagesConfigDefault = "<?xml version =\"1.0\" encoding=\"utf-8\"?>\r\n<packages>\r\n</packages>";
         public const string ReleaseAnyCpu = "Release|Any CPU";
         public const string NestedProjects = "GlobalSection(NestedProjects) = preSolution";
-        public const string TestsCoreGuid = "AF2AA63F-B129-4D88-9D1A-4BC19E443B00"; //deprecate later
-        public const string TestsSharedGuid = "CA12242D-1F50-44BB-9972-D6C6609E4C37"; //deprecate later
         public static string ItemGroupProjectReference = "<ItemGroup>" + Environment.NewLine + "<ProjectReference ";
 
         public const string CsFilesFromCsProjPattern = "<Compile Include=\\\"(?<capturegroup>(.*.cs))\\\"( \\/)*>"; 
@@ -37,24 +35,13 @@ namespace Dumbledore
         public const string NugetIncludeFromNugetReferencePattern = "Include=\"(?<capturegroup>(.*))\">";
         public const string NugetIdFromNugetReference = "packages\\\\(?<capturegroup>[\\w\\.-]+?)\\.\\d";
 
-
-        public static IEnumerable<string> Get2(string pattern, string file)
-        {
-            Regex regex = new Regex(pattern);
-            foreach (var match in Wand.ReadLines(file)
-                .Select(line => regex.Match(line))
-                .Where(match => match.Success)
-                .Select(match => match.Groups["capturegroup"].Value))
-            {
-                yield return match;
-            }
-        }
-
         public static IEnumerable<string> Get(string pattern, string text)
         {
             Regex regex = new Regex(pattern);
             var matchCollection = regex.Matches(text);
-            return matchCollection.Cast<Match>().Select(m => m.Groups["capturegroup"].Value);
+            return matchCollection
+                .Cast<Match>()
+                .Select(m => m.Groups["capturegroup"].Value);
         }
 
         public static string Either(string pattern1, string pattern2)

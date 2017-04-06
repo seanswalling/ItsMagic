@@ -24,69 +24,6 @@ namespace Dumbledore
         public static string MagicDir => new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.FullName;
         public static string PackagesDir => MercurySourceDir + "\\packages";
 
-        public static void UpdateAllReferencesToNugetReferences()
-        {
-            SlnFile[] solutionFiles = Directory.EnumerateFiles(MercurySourceDir, "*.sln", SearchOption.AllDirectories)
-                .Select(file => new SlnFile(file))
-                .ToArray();
-            //{ @"C:\source\Mercury\src\Mercury.ReflectiveTests.sln" };
-            foreach (var solutionFile in solutionFiles)
-            {
-                foreach (var csProj in solutionFile.CsProjs())
-                {
-                    foreach (var csFile in csProj.CsFiles())
-                    {
-
-                    }
-                }
-            }
-        }
-
-        public static void AddProjectReferences(CsProj projectToAdd)
-        {
-            foreach (var solutionFile in GetSolutionFiles(MercurySourceDir).ToArray())
-            {
-                foreach (var csProj in solutionFile.CsProjs().ToArray())
-                {
-                    foreach (var csFile in csProj.CsFiles())
-                    {
-                        if (csFile.HasEvidenceOf(projectToAdd))
-                        {
-                            Cauldron.Add($"Adding References too {csFile.Name}, {csProj.Name} and {solutionFile.Name}");
-                            AddReferences(csFile, csProj, solutionFile, projectToAdd);
-                        }
-                    }
-                }
-            }
-        }
-
-        private static void AddReferences(CsFile csFile, CsProj csProj, SlnFile slnFile, CsProj projectToAdd)
-        {
-            csFile.AddUsing(projectToAdd.Name);
-            if (!csProj.ContainsProjectReference(projectToAdd))
-            {
-                csProj.AddProjectReference(projectToAdd);
-            }
-            if (!slnFile.ContainsProjectReference(projectToAdd))
-            {
-                slnFile.AddProjectReference(projectToAdd, "Common");
-            }
-        }
-
-        public static IEnumerable<string> ReadLines(string file)
-        {
-            if (File.Exists(file))
-            {
-                using (var reader = new StreamReader(file))
-                {
-                    while (!reader.EndOfStream)
-                    {
-                        yield return reader.ReadLine();
-                    }
-                }
-            }
-        }
-
         public static IEnumerable<SlnFile> GetSolutionFiles(string dir)
         {
             return Directory.EnumerateFiles(dir, "*.sln", SearchOption.AllDirectories)
@@ -106,56 +43,9 @@ namespace Dumbledore
                 .Select(file => new CsFile(file));
         }
 
-        public static void UpdateReadModelConventionsTestReference()
-        {
-            var pluginProjs = GetCsProjFiles(MercurySourceDir + @"\Plugins");
-            var pattern = "\\.\\.\\\\\\.\\.\\\\Platform\\\\Tests\\.Core\\\\ReadModelConventionsTest\\.cs\\\">(\\s+)<Link>ReadModelConventionsTest\\.cs<\\/Link>(\\s+)<\\/Compile>";
-            var replacement = "ReadModelConventionsTest.cs\" />";
-
-            foreach (var pluginProj in pluginProjs)
-            {
-                if (pluginProj.Text.Contains(@"Platform\Tests.Core\ReadModelConventionsTest.cs"))
-                {
-                    Regex reg = new Regex(pattern);
-                    pluginProj.Text = reg.Replace(pluginProj.Text, replacement);
-                    pluginProj.WriteFile();
-
-                    var readModelConventionsTest = MagicDir + @"\ReadModelConventionsTest\ReadModelConventionsTest.cs";
-                    var pluginProjDir = Path.GetDirectoryName(pluginProj.FilePath) + @"\ReadModelConventionsTest.cs";
-                    File.Copy(readModelConventionsTest, pluginProjDir);
-                }
-            }
-        }
-
-        public static void RemoveReferencesToContractsTests()
-        {
-            var csProjs = GetCsProjFiles(MercurySourceDir);
-            foreach (var csProj in csProjs)
-            {
-                csProj.RemoveProjectReference(CsProj.GetCsProj(@"C:\source\Mercury\src\Platform\Contracts.Tests\Contracts.Tests.csproj").Guid);
-            }
-        }
-
-        public static SlnFile[] ListSolutionsReferencing(CsProj csProj)
+        public static SlnFile[] GetSolutionsReferencing(CsProj csProj)
         {
             return GetSolutionFiles(MercurySourceDir).Where(sln => sln.ContainsProjectReference(csProj.Guid)).ToArray();
-        }
-
-        private static readonly HashSet<CsProj> Empty = new HashSet<CsProj>();
-
-        public static HashSet<CsProj> GetAllProjectReferences(CsProj csProj)
-        {
-            if (csProj.References.Length == 0)
-                return Empty;
-
-            HashSet<CsProj> references = new HashSet<CsProj>();
-            references.AddRange(csProj.References);
-
-            foreach (var csProjToTraverse in csProj.References)
-            {
-                references.AddRange(GetAllProjectReferences(csProjToTraverse));
-            }
-            return references;
         }
 
         private static HashSet<string> RepairedProjects = new HashSet<string>();
@@ -168,34 +58,59 @@ namespace Dumbledore
             {
                 RepairProjectReferences(csProjReference);
             }
-            var csProjDependencies = GetAllProjectReferences(csProj);
-            foreach (var csProjDependency in csProjDependencies)
+
+            foreach (var csProjDependency in CsProj.GetAllProjectReferences(csProj))
             {
                 csProj.AddProjectReference(csProjDependency);
             }
-
-            var nugetDeps = GetNugetReferences(csProj);
-            foreach (var nugetDep in nugetDeps)
+            
+            foreach (var nugetDependency in CsProj.GetNugetReferences(csProj))
             {
-                csProj.AddNugetReference(nugetDep);
+                csProj.AddNugetReference(nugetDependency);
             }
 
             RepairedProjects.Add(csProj.FilePath);
         }
 
-        private static IEnumerable<NugetPackageReference> GetNugetReferences(CsProj csproj)
+        public static string ToAbsolutePath(string relPath, string path)
         {
-            return csproj.NugetReferences.Concat(
-                    csproj.References.SelectMany(GetNugetReferences)
-                )
-                .Distinct();
+            var abspath = Path.Combine(path, relPath);
+            var result = Path.GetFullPath(abspath);
+            return result.Replace(@"c:\source\mercury\Templates\", @"c:\source\mercury\src\");
         }
 
-        //For each preferenced project
-            //  get nugets
+        public static void FindMissingPackConfigEntries()
+        {
+            foreach (var csProj in Wand.GetCsProjFiles(Wand.MercurySourceDir).ToArray())
+            {
+                var missingCsProjNugetReferences = RegexStore.Get(RegexStore.NugetReferenceFromCsProjPattern, csProj.Text)
+                    .Where(token => token.Contains("\\packages\\"))
+                    .Where(csProjNugetReference =>
+                    {
+                        var nugetId = RegexStore
+                            .Get(RegexStore.NugetIdFromNugetReference, csProjNugetReference)
+                            .Single()
+                            .TrimEnd('.');
 
-            // Get nugets --> gets my nugets and my projects nugets
+
+                        var pc = csProj.PackagesConfig();
+                        var nr = pc
+                            .NugetpackageReferences;
+                        return !nr
+                            .Any(entry => string.Equals(entry.Id, nugetId, StringComparison.InvariantCultureIgnoreCase));
+                    }).ToArray();
+                if (missingCsProjNugetReferences.Length > 0)
+                {
+                    Console.WriteLine($"{csProj} is missing package.config entires for ");
+                    foreach (var reference in missingCsProjNugetReferences)
+                    {
+                        Console.WriteLine($"    {reference}");
+                    }
+                }
+            }
         }
+
+    }
 
     public static class HashEx
     {

@@ -293,13 +293,14 @@ namespace Dumbledore
         {
             return HostPaths.Any(path.StartsWith);
         }
+
         private static string[] GetHostPaths()
         {
             var serviceJsonPath = Path.Combine(Wand.MercurySourceDir, @"..\Hosting\AllServices.json");
             var serviceJson = File.ReadAllText(serviceJsonPath);
             var roles = (JArray)JObject.Parse(serviceJson)["Roles"];
             return roles.Select(r => r["Assembly"].ToString())
-                .Select(relPath => Helper.ToAbsolutePath(relPath, Wand.MercurySourceDir))
+                .Select(relPath => Wand.ToAbsolutePath(relPath, Wand.MercurySourceDir))
                 //Strip everything after \bin\
                 .Select(absPath => GetUntil(absPath, @"\bin\"))
                 .ToArray();
@@ -312,5 +313,27 @@ namespace Dumbledore
             return input.Substring(0, idx);
         }
 
+        public static HashSet<CsProj> GetAllProjectReferences(CsProj csProj)
+        {
+            if (csProj.References.Length == 0)
+                return new HashSet<CsProj>();
+
+            HashSet<CsProj> references = new HashSet<CsProj>();
+            references.AddRange(csProj.References);
+
+            foreach (var csProjToTraverse in csProj.References)
+            {
+                references.AddRange(GetAllProjectReferences(csProjToTraverse));
+            }
+            return references;
+        }
+
+        public static IEnumerable<NugetPackageReference> GetNugetReferences(CsProj csproj)
+        {
+            return csproj.NugetReferences.Concat(
+                    csproj.References.SelectMany(GetNugetReferences)
+                )
+                .Distinct();
+        }
     }
 }
