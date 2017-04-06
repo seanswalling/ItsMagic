@@ -26,7 +26,7 @@ namespace Dumbledore.Tests
             if (File.Exists(ActualCsProjFile))
                 File.Delete(ActualCsProjFile);
             File.Copy(SampleCsProjFile, ActualCsProjFile);
-            return CsProj.GetCsProj(ActualCsProjFile);
+            return CsProj.Get(ActualCsProjFile);
         }
 
         public CsProj GetActualSlnFile()
@@ -34,7 +34,7 @@ namespace Dumbledore.Tests
             if (File.Exists(ActualSlnFile))
                 File.Delete(ActualSlnFile);
             File.Copy(SampleSlnFile, ActualSlnFile);
-            return CsProj.GetCsProj(ActualSlnFile);
+            return CsProj.Get(ActualSlnFile);
         }
     }
 }

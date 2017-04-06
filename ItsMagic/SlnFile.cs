@@ -25,7 +25,7 @@ namespace Dumbledore
                 CsProjsCache = RegexStore.Get(RegexStore.CsProjFromSlnPattern, Text)
                     .Select(csProjRelPath => Path.Combine(dir, csProjRelPath))
                     .Where(File.Exists)
-                    .Select(file => CsProj.GetCsProj(file))
+                    .Select(file => CsProj.Get(file))
                     .ToArray();
             }
             return CsProjsCache;

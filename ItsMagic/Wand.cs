@@ -34,7 +34,7 @@ namespace Dumbledore
         public static IEnumerable<CsProj> GetCsProjFiles(string dir)
         {
             return Directory.EnumerateFiles(dir, "*.csproj", SearchOption.AllDirectories)
-                .Select(file => CsProj.GetCsProj(file));
+                .Select(file => CsProj.Get(file));
         }
 
         public static IEnumerable<CsFile> GetCsFiles(string dir)

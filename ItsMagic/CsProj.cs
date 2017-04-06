@@ -12,18 +12,13 @@ namespace Dumbledore
     public class CsProj : MagicFile
     {
         private static Dictionary<string, CsProj> CsProjPool = new Dictionary<string, CsProj>();
-        private static readonly string[] HostPaths = GetHostPaths();
-
-        private readonly bool _isHost;
-
-        private CsProj[] _referencesCache;
-        private string _guidCache;
+        private static readonly string[] HostPaths = GetHostPaths();       
+        
+        private CsFile[] _csFilesCache;
         private NugetPackageReference[] _nugetReferenceCache;
-
-        public CsFile[] CsFilesCache { get; private set; }
-
-        public string Guid => _guidCache ?? (_guidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text).First().ToLower());
-
+        private string _guidCache;
+        private CsProj[] _referencesCache;
+        
         public string[] Classes
         {
             get
@@ -33,7 +28,6 @@ namespace Dumbledore
                     .ToArray();
             }
         }
-
         public string[] ExtensionMethods
         {
             get
@@ -43,7 +37,6 @@ namespace Dumbledore
                     .ToArray();
             }
         }
-
         public string[] Usings
         {
             get
@@ -53,11 +46,39 @@ namespace Dumbledore
                     .ToArray();
             }
         }
-
-        public CsProj[] References => _referencesCache ?? (_referencesCache = GetProjectDependencies());
-        
+        public string Guid => _guidCache ?? (_guidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text).First().ToLower());
+        public CsProj[] References => _referencesCache ?? (_referencesCache = GetProjectReferences());//new Lazy<CsProj[]>(GetProjectDependencies).Value;
         public NugetPackageReference[] NugetReferences => _nugetReferenceCache ?? (_nugetReferenceCache = GetNugetProjectDependencies());
 
+        private CsProj(string path)
+        {
+            if(!File.Exists(path))
+                throw new FileNotFoundException(path);
+            FilePath = path;
+        }
+
+        public static CsProj Get(string path)
+        {
+            CsProj result;
+            if (!CsProjPool.TryGetValue(path, out result))
+            {
+                result = new CsProj(path);
+                CsProjPool.Add(path, result);
+            }
+            return result;
+        }
+
+        public CsFile[] CsFiles()
+        {
+            if (_csFilesCache != null) return _csFilesCache;
+            var dir = System.IO.Path.GetDirectoryName(FilePath);
+            _csFilesCache = RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Text)
+                .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
+                .Where(File.Exists)
+                .Select(file => new CsFile(file))
+                .ToArray();
+            return _csFilesCache;
+        }
 
         public void AddNugetReference(NugetPackageReference referenceToAdd)
         {
@@ -65,7 +86,7 @@ namespace Dumbledore
                 return;
 
             Cauldron.Add($"Adding nuget Reference to {FilePath}");
-            var isCopyLocal = _isHost;
+            var isCopyLocal = IsHost();
             var regex = new Regex(RegexStore.ItemGroupTag);
             Text = regex.Replace(Text,RegexStore.ItemGroupTag + Environment.NewLine +
                                         $"<Reference Include=\"{referenceToAdd.Include}\">" + Environment.NewLine +
@@ -78,32 +99,54 @@ namespace Dumbledore
             PackagesConfig().AddPackageEntry(referenceToAdd);
         }
 
+        public void AddProjectReference(CsProj referencedProject)
+        {
+            if (this == referencedProject)
+                return;
+
+            if (ContainsProjectReference(referencedProject))
+                return;
+
+            Cauldron.Add($"Adding {referencedProject.FilePath} project reference to {FilePath}");
+            Uri mercurySourcePath = new Uri(FilePath);
+            Uri referencedProjectPath = new Uri(referencedProject.FilePath);
+            Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
+            var projectRefPath = relPath.ToString().Replace("/", "\\");
+
+            var regex = new Regex(RegexStore.ItemGroupProjectReferencepattern);
+            Text = regex.Replace(Text, RegexStore.ItemGroupProjectReference +
+                                "Include=\"" + projectRefPath + "\">" + Environment.NewLine +
+                                "<Project>{" + referencedProject.Guid + "}</Project>" + Environment.NewLine +
+                                "<Name>" + referencedProject.Name + "</Name>" + Environment.NewLine +
+                                "</ProjectReference>" + Environment.NewLine +
+                                "<ProjectReference ", 1);
+            WriteFile();
+            ReformatXml(FilePath);
+        }
+
         private bool ContainsNugetProjectReference(NugetPackageReference nugetReference)
         {
             return Text.Contains($"<Reference Include=\"{nugetReference.DllName}");
             //return Text.Contains(nugetReference.DllName);
         }
 
-        private CsProj(string path)
+        public bool ContainsProjectReference(string projectGuid)
         {
-            if(!File.Exists(path))
-                throw new FileNotFoundException(path);
-            FilePath = path;
-            _isHost = IsHost();
+            return Text.Contains($"<Project>{{{projectGuid.ToLower()}}}</Project>") || Text.Contains($"<Project>{{{projectGuid.ToUpper()}}}</Project>");
         }
 
-        public static CsProj GetCsProj(string path)
+        public bool ContainsProjectReference(CsProj project)
         {
-            CsProj result;
-            if (!CsProjPool.TryGetValue(path, out result))
-            {
-                result = new CsProj(path);
-                CsProjPool.Add(path, result);
-            }
-            return result;
+            var guid = project.Guid;
+            var upperGuidRegex = guid.ToUpper().Replace("-", "\\-");
+            var lowerGuidRegex = guid.ToLower().Replace("-", "\\-");
+            if (RegexStore.Contains("<Project>{" + upperGuidRegex + "}<\\/Project>", Text) ||
+                RegexStore.Contains("<Project>{" + lowerGuidRegex + "}<\\/Project>", Text))
+                return true;
+            return false;
         }
 
-        private CsProj[] GetProjectDependencies()
+        private CsProj[] GetProjectReferences()
         {
             Cauldron.Add($"Getting Project references for {FilePath}");
             List<CsProj> dependencies = new List<CsProj>();
@@ -111,7 +154,7 @@ namespace Dumbledore
             {
                 var path = Path.Combine(Directory.GetParent(FilePath).FullName, csProjRelPath);
                 var csProjFullPath = Path.GetFullPath(path);
-                dependencies.Add(GetCsProj(csProjFullPath));
+                dependencies.Add(Get(csProjFullPath));
             }
             return dependencies.ToArray();
         }
@@ -161,71 +204,7 @@ namespace Dumbledore
             }
             return nugetReferences.ToArray();
         }
-
-        public CsFile[] CsFiles()
-        {
-            if (CsFilesCache != null) return CsFilesCache;
-            var dir = System.IO.Path.GetDirectoryName(FilePath);
-            CsFilesCache = RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Text)
-                .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
-                .Where(File.Exists)
-                .Select(file => new CsFile(file))
-                .ToArray();
-            return CsFilesCache;
-        }
-        
-        public static string ReformatXml(string file)
-        {
-            var doc = XDocument.Load(file);
-            using (XmlTextWriter writer = new XmlTextWriter(file, System.Text.Encoding.UTF8))
-            {
-                writer.Formatting = Formatting.Indented;
-                doc.Save(writer);
-            }
-            return file;
-        }
-        
-        public bool ContainsProjectReference(string projectGuid)
-        {
-            return Text.Contains($"<Project>{{{projectGuid.ToLower()}}}</Project>") || Text.Contains($"<Project>{{{projectGuid.ToUpper()}}}</Project>");
-        }
-        
-        public bool ContainsProjectReference(CsProj project)
-        {
-            var guid = project.Guid;
-            var upperGuidRegex = guid.ToUpper().Replace("-", "\\-");
-            var lowerGuidRegex = guid.ToLower().Replace("-", "\\-");
-            if (RegexStore.Contains("<Project>{" + upperGuidRegex + "}<\\/Project>", Text) ||
-                RegexStore.Contains("<Project>{" + lowerGuidRegex + "}<\\/Project>", Text))
-                return true;
-            return false;
-        }
-
-        public void AddProjectReference(CsProj referencedProject)
-        {
-            if (this == referencedProject)
-                return;
-
-            if (ContainsProjectReference(referencedProject))
-                return;
-
-            Cauldron.Add($"Adding {referencedProject.FilePath} project reference to {FilePath}");
-            Uri mercurySourcePath = new Uri(FilePath);
-            Uri referencedProjectPath = new Uri(referencedProject.FilePath);
-            Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
-            var projectRefPath = relPath.ToString().Replace("/", "\\");
-
-            var regex = new Regex(RegexStore.ItemGroupProjectReferencepattern);
-            Text = regex.Replace(Text, RegexStore.ItemGroupProjectReference +
-                                "Include=\"" + projectRefPath + "\">" + Environment.NewLine +
-                                "<Project>{" + referencedProject.Guid + "}</Project>" + Environment.NewLine +
-                                "<Name>" + referencedProject.Name + "</Name>" + Environment.NewLine +
-                                "</ProjectReference>" + Environment.NewLine +
-                                "<ProjectReference ", 1);
-            WriteFile();
-            ReformatXml(FilePath);
-        }
-        
+                
         public void RemoveProjectReference(string projectGuid)
         {
             if (ContainsProjectReference(projectGuid))
@@ -242,44 +221,8 @@ namespace Dumbledore
                 Cauldron.Add($"No project of GUID: {projectGuid} found");
             }
         }
-
-        //public void AddNugetPackage(string packageId)
-        //{
-        //    IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
-        //    List<IPackage> packages = repo.FindPackagesById(packageId).ToList();
-
-
-        //    string path = "";
-        //    PackageManager packageManager = new PackageManager(repo, path);
-        //}
-
-        //Functions to be deprecated
-
-        public void AddNewRelicProjectReference()
-        {
-            var regex = new Regex(RegexStore.ItemGroupTag);
-            var csProjText = File.ReadAllText(FilePath);
-
-            Text = regex.Replace(csProjText, RegexStore.ItemGroupTag +
-                                                   "<Reference Include=\"NewRelic.Api.Agent, Version=5.19.47.0, Culture=neutral, PublicKeyToken=06552fced0b33d87, processorArchitecture=MSIL\">" +
-                                                   "<HintPath>..\\..\\packages\\NewRelic.Agent.Api.5.19.47.0\\lib\\NewRelic.Api.Agent.dll</HintPath>" +
-                                                   "<Private>True</Private>" +
-                                                   "</Reference>", 1);
-            WriteFile();
-            ReformatXml(FilePath);
-        }
-
-        //public void AddProjectReference(string reference) //Nuget Version?
-        //{
-        //    var regex = new Regex("Some Pattern Here");
-        //    var csProjText = File.ReadAllText(Path);
-
-        //    csProjText = regex.Replace(csProjText, "Something here", 1);
-        //    WriteText(csProjText);
-        //    UpdatePackagesConfig(System.IO.Path.GetDirectoryName(Path) + "\\packages.config", reference);
-        //} 
-
-        private bool IsHost()
+        
+        public bool IsHost()
         {
             //Does file name end with ".Tests.csproj"
             return FilePath.EndsWith(".Tests.csproj")
@@ -287,6 +230,29 @@ namespace Dumbledore
                    || IsInHostPath(FilePath);
 
             // is in services.json
+        }
+
+        public static HashSet<CsProj> GetAllProjectReferences(CsProj csProj)
+        {
+            if (csProj.References.Length == 0)
+                return new HashSet<CsProj>();
+
+            HashSet<CsProj> references = new HashSet<CsProj>();
+            references.AddRange(csProj.References);
+
+            foreach (var csProjToTraverse in csProj.References)
+            {
+                references.AddRange(GetAllProjectReferences(csProjToTraverse));
+            }
+            return references;
+        }
+
+        public static IEnumerable<NugetPackageReference> GetNugetReferences(CsProj csproj)
+        {
+            return csproj.NugetReferences.Concat(
+                    csproj.References.SelectMany(GetNugetReferences)
+                )
+                .Distinct();
         }
 
         private static bool IsInHostPath(string path)
@@ -313,27 +279,15 @@ namespace Dumbledore
             return input.Substring(0, idx);
         }
 
-        public static HashSet<CsProj> GetAllProjectReferences(CsProj csProj)
+        public static string ReformatXml(string file)
         {
-            if (csProj.References.Length == 0)
-                return new HashSet<CsProj>();
-
-            HashSet<CsProj> references = new HashSet<CsProj>();
-            references.AddRange(csProj.References);
-
-            foreach (var csProjToTraverse in csProj.References)
+            var doc = XDocument.Load(file);
+            using (XmlTextWriter writer = new XmlTextWriter(file, System.Text.Encoding.UTF8))
             {
-                references.AddRange(GetAllProjectReferences(csProjToTraverse));
+                writer.Formatting = Formatting.Indented;
+                doc.Save(writer);
             }
-            return references;
-        }
-
-        public static IEnumerable<NugetPackageReference> GetNugetReferences(CsProj csproj)
-        {
-            return csproj.NugetReferences.Concat(
-                    csproj.References.SelectMany(GetNugetReferences)
-                )
-                .Distinct();
+            return file;
         }
     }
 }
