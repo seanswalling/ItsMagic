@@ -14,11 +14,9 @@ namespace Dumbledore
         public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache =
                                                 RegexStore.Get(RegexStore.ExtensionMethodsFromCsFilePattern, Text).ToArray());
 
-        public CsFile(string path)
+        public CsFile(string path) : base(path)
         {
-            if(!File.Exists(path))
-                throw new FileNotFoundException();
-            FilePath = path;
+            
         }
 
         public void AddUsing(string reference)
@@ -64,7 +62,7 @@ namespace Dumbledore
   
         public bool HasEvidenceOf(CsProj csProj)
         {
-            foreach (var @class in csProj.Classes)
+            foreach (var @class in csProj.Classes())
             {
                 if (RegexStore.Contains("[\\s:]" + @class + "[\\s\\.(]", Text))
                 {

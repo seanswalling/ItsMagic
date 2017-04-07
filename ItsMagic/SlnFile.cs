@@ -10,11 +10,8 @@ namespace Dumbledore
     {
         private CsProj[] CsProjsCache { get; set; }
 
-        public SlnFile(string path)
+        public SlnFile(string path) : base(path)
         {
-            if (!File.Exists(path))
-                throw new FileNotFoundException();
-            FilePath = path;
         }
 
         public CsProj[] CsProjs()

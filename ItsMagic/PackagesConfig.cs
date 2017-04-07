@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Dumbledore
 {
-    public class PackagesConfig : MagicFile
+    public class PackagesConfig
     {
         private PackagesConfigEntry[] NugetpackageReferencesCache { get; set; }
         public PackagesConfigEntry[] NugetpackageReferences => NugetpackageReferencesCache ?? (NugetpackageReferencesCache = GetNugetPackageReferences());
@@ -18,7 +18,11 @@ namespace Dumbledore
             if (!File.Exists(path))
                 File.WriteAllText(path, RegexStore.PackagesConfigDefault);
             FilePath = path;
+            Text = File.ReadAllText(FilePath);
         }
+
+        public string FilePath { get; set; }
+        public string Text { get; set; }
 
         private PackagesConfigEntry[] GetNugetPackageReferences()
         {
@@ -47,7 +51,9 @@ namespace Dumbledore
                                       $"<package id=\"{referenceToAdd.Id}\" " +
                                       $"version=\"{referenceToAdd.Version}\" " +
                                       $"targetFramework=\"{referenceToAdd.TargetFramework}\" />");
-            WriteFile();
+             
+            File.WriteAllText(FilePath, Text);
+        
             ReformatXml();
         }
 

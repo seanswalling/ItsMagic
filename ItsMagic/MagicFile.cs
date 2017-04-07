@@ -6,14 +6,19 @@ namespace Dumbledore
 {
     public abstract class MagicFile : IEquatable<MagicFile>, IComparable<MagicFile>
     {
-        public string FilePath { get; set; }
-        private string TextCache { get; set; }
 
-        public string Text
+        protected MagicFile(string filePath)
         {
-            get { return TextCache ?? (TextCache = File.ReadAllText(FilePath)); }
-            set {  TextCache = value; }
-        } 
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException();
+            FilePath = filePath;
+            Text = File.ReadAllText(FilePath);
+        }
+
+        public string FilePath { get; }
+
+        public string Text { get ; set; }
+
         public string Name => Path.GetFileNameWithoutExtension(FilePath);
 
         public void WriteFile()

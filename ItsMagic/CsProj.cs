@@ -11,63 +11,27 @@ namespace Dumbledore
 {
     public class CsProj : MagicFile
     {
-        private static Dictionary<string, CsProj> CsProjPool = new Dictionary<string, CsProj>();
-        private static readonly string[] HostPaths = GetHostPaths();       
-        
+        private static readonly Dictionary<string, CsProj> CsProjPool = new Dictionary<string, CsProj>();
+        private static readonly string[] HostPaths = GetHostPaths();
+
         private CsFile[] _csFilesCache;
-        private NugetPackageReference[] _nugetReferenceCache;
-        private string _guidCache;
-        private CsProj[] _referencesCache;
         
-        public string[] Classes
+        
+        private CsProj(string path) : base(path)
         {
-            get
-            {
-                return CsFiles().SelectMany(csFile => csFile.Classes)
-                    .Distinct()
-                    .ToArray();
-            }
-        }
-        public string[] ExtensionMethods
-        {
-            get
-            {
-                return CsFiles().SelectMany(csFile => csFile.ExtensionMethods)
-                    .Distinct()
-                    .ToArray();
-            }
-        }
-        public string[] Usings
-        {
-            get
-            {
-                return CsFiles().SelectMany(csFile => csFile.Usings)
-                    .Distinct()
-                    .ToArray();
-            }
-        }
-        public string Guid => _guidCache ?? (_guidCache = RegexStore.Get(RegexStore.CsProjGuidPattern, Text).First().ToLower());
-        public CsProj[] References => _referencesCache ?? (_referencesCache = GetProjectReferences());//new Lazy<CsProj[]>(GetProjectDependencies).Value;
-        public NugetPackageReference[] NugetReferences => _nugetReferenceCache ?? (_nugetReferenceCache = GetNugetProjectDependencies());
-
-        private CsProj(string path)
-        {
-            if(!File.Exists(path))
-                throw new FileNotFoundException(path);
-            FilePath = path;
+            Guid = RegexStore.Get(RegexStore.CsProjGuidPattern, Text).First().ToLower();
+            References = GetProjectReferences();
+            NugetReferences = GetNugetProjectDependencies();
         }
 
-        public static CsProj Get(string path)
-        {
-            CsProj result;
-            if (!CsProjPool.TryGetValue(path, out result))
-            {
-                result = new CsProj(path);
-                CsProjPool.Add(path, result);
-            }
-            return result;
-        }
 
+        public string Guid { get; }
+        public CsProj[] References { get; }
+        public NugetPackageReference[] NugetReferences { get; }
+
+
+
+       
         public CsFile[] CsFiles()
         {
             if (_csFilesCache != null) return _csFilesCache;
@@ -88,7 +52,7 @@ namespace Dumbledore
             Cauldron.Add($"Adding nuget Reference to {FilePath}");
             var isCopyLocal = IsHost();
             var regex = new Regex(RegexStore.ItemGroupTag);
-            Text = regex.Replace(Text,RegexStore.ItemGroupTag + Environment.NewLine +
+            Text = regex.Replace(Text, RegexStore.ItemGroupTag + Environment.NewLine +
                                         $"<Reference Include=\"{referenceToAdd.Include}\">" + Environment.NewLine +
                                         $"<HintPath>{referenceToAdd.HintPath}</HintPath>" + Environment.NewLine +
                                         $"<Private>{isCopyLocal}</Private>" + Environment.NewLine +
@@ -124,12 +88,6 @@ namespace Dumbledore
             ReformatXml(FilePath);
         }
 
-        private bool ContainsNugetProjectReference(NugetPackageReference nugetReference)
-        {
-            return Text.Contains($"<Reference Include=\"{nugetReference.DllName}");
-            //return Text.Contains(nugetReference.DllName);
-        }
-
         public bool ContainsProjectReference(string projectGuid)
         {
             return Text.Contains($"<Project>{{{projectGuid.ToLower()}}}</Project>") || Text.Contains($"<Project>{{{projectGuid.ToUpper()}}}</Project>");
@@ -146,6 +104,103 @@ namespace Dumbledore
             return false;
         }
 
+        
+        public PackagesConfig PackagesConfig()
+        {
+            return new PackagesConfig(Directory.GetParent(FilePath) + @"\packages.config");
+        }
+
+        public void RemoveProjectReference(string projectGuid)
+        {
+            if (ContainsProjectReference(projectGuid))
+            {
+                Cauldron.Add($"Removing project reference with guid {projectGuid} from {Name}");
+                var pattern = $".*(?:<ProjectReference.+(\\n*\\r*))(?:.*{projectGuid}.*(\\n*\\r*))(?:.+(\\n*\\r*))+?(?:.*<\\/ProjectReference>(\\n*\\r*))";
+                Regex regex = new Regex(pattern);
+                Text = regex.Replace(Text, "");
+                WriteFile();
+                ReformatXml(FilePath);
+            }
+            else
+            {
+                Cauldron.Add($"No project of GUID: {projectGuid} found");
+            }
+        }
+
+        public bool IsHost()
+        {
+            //Does file name end with ".Tests.csproj"
+            return FilePath.EndsWith(".Tests.csproj")
+                   || Text.Contains("349c5851-65df-11da-9384-00065b846f21") //IsWebApp/Site/MVC/WebRole
+                   || IsInHostPath(FilePath);
+
+            // is in services.json
+        }
+
+        public string[] Classes()
+        {
+            return CsFiles().SelectMany(csFile => csFile.Classes)
+                .Distinct()
+                .ToArray();
+        }
+        public string[] ExtensionMethods()
+        {
+            return CsFiles().SelectMany(csFile => csFile.ExtensionMethods)
+                .Distinct()
+                .ToArray();
+        }
+        public string[] Usings()
+        {
+            return CsFiles().SelectMany(csFile => csFile.Usings)
+                .Distinct()
+                .ToArray();
+        }
+
+        public static CsProj Get(string path)
+        {
+            CsProj result;
+            if (!CsProjPool.TryGetValue(path, out result))
+            {
+                result = new CsProj(path);
+                CsProjPool.Add(path, result);
+            }
+            return result;
+        }
+        
+        public static HashSet<CsProj> GetAllProjectReferences(CsProj csProj)
+        {
+            if (csProj.References.Length == 0)
+                return new HashSet<CsProj>();
+
+            HashSet<CsProj> references = new HashSet<CsProj>();
+            references.AddRange(csProj.References);
+
+            foreach (var csProjToTraverse in csProj.References)
+            {
+                references.AddRange(GetAllProjectReferences(csProjToTraverse));
+            }
+            return references;
+        }
+
+        public static IEnumerable<NugetPackageReference> GetNugetReferences(CsProj csproj)
+        {
+            return csproj.NugetReferences.Concat(
+                    csproj.References.SelectMany(GetNugetReferences)
+                )
+                .Distinct();
+        }
+
+        public static string ReformatXml(string file)
+        {
+            var doc = XDocument.Load(file);
+            using (XmlTextWriter writer = new XmlTextWriter(file, System.Text.Encoding.UTF8))
+            {
+                writer.Formatting = Formatting.Indented;
+                doc.Save(writer);
+            }
+            return file;
+        }
+
         private CsProj[] GetProjectReferences()
         {
             Cauldron.Add($"Getting Project references for {FilePath}");
@@ -158,9 +213,10 @@ namespace Dumbledore
             }
             return dependencies.ToArray();
         }
-        public PackagesConfig PackagesConfig()
+
+        private bool ContainsNugetProjectReference(NugetPackageReference nugetReference)
         {
-            return new PackagesConfig(Directory.GetParent(FilePath) + @"\packages.config");
+            return Text.Contains($"<Reference Include=\"{nugetReference.DllName}");
         }
 
         private NugetPackageReference[] GetNugetProjectDependencies()
@@ -173,7 +229,7 @@ namespace Dumbledore
             Cauldron.Add($"Getting Nuget references for {FilePath}");
             List<NugetPackageReference> nugetReferences = new List<NugetPackageReference>();
             var references = RegexStore.Get(RegexStore.NugetReferenceFromCsProjPattern, Text)
-                .Where(token=>token.Contains("\\packages\\"));  //i.e. ignore any "lib" references. Cant exclued by !contains(lib) as all packages have a lib folder
+                .Where(token => token.Contains("\\packages\\"));  //i.e. ignore any "lib" references. Cant exclued by !contains(lib) as all packages have a lib folder
             foreach (var reference in references)
             {
                 var dllName = RegexStore
@@ -204,56 +260,6 @@ namespace Dumbledore
             }
             return nugetReferences.ToArray();
         }
-                
-        public void RemoveProjectReference(string projectGuid)
-        {
-            if (ContainsProjectReference(projectGuid))
-            {
-                Cauldron.Add($"Removing project reference with guid {projectGuid} from {Name}");
-                var pattern = $".*(?:<ProjectReference.+(\\n*\\r*))(?:.*{projectGuid}.*(\\n*\\r*))(?:.+(\\n*\\r*))+?(?:.*<\\/ProjectReference>(\\n*\\r*))";
-                Regex regex = new Regex(pattern);
-                Text = regex.Replace(Text, "");
-                WriteFile();
-                ReformatXml(FilePath);
-            }
-            else
-            {
-                Cauldron.Add($"No project of GUID: {projectGuid} found");
-            }
-        }
-        
-        public bool IsHost()
-        {
-            //Does file name end with ".Tests.csproj"
-            return FilePath.EndsWith(".Tests.csproj")
-                   || Text.Contains("349c5851-65df-11da-9384-00065b846f21") //IsWebApp/Site/MVC/WebRole
-                   || IsInHostPath(FilePath);
-
-            // is in services.json
-        }
-
-        public static HashSet<CsProj> GetAllProjectReferences(CsProj csProj)
-        {
-            if (csProj.References.Length == 0)
-                return new HashSet<CsProj>();
-
-            HashSet<CsProj> references = new HashSet<CsProj>();
-            references.AddRange(csProj.References);
-
-            foreach (var csProjToTraverse in csProj.References)
-            {
-                references.AddRange(GetAllProjectReferences(csProjToTraverse));
-            }
-            return references;
-        }
-
-        public static IEnumerable<NugetPackageReference> GetNugetReferences(CsProj csproj)
-        {
-            return csproj.NugetReferences.Concat(
-                    csproj.References.SelectMany(GetNugetReferences)
-                )
-                .Distinct();
-        }
 
         private static bool IsInHostPath(string path)
         {
@@ -277,17 +283,6 @@ namespace Dumbledore
         {
             var idx = input.IndexOf(delimiter);
             return input.Substring(0, idx);
-        }
-
-        public static string ReformatXml(string file)
-        {
-            var doc = XDocument.Load(file);
-            using (XmlTextWriter writer = new XmlTextWriter(file, System.Text.Encoding.UTF8))
-            {
-                writer.Formatting = Formatting.Indented;
-                doc.Save(writer);
-            }
-            return file;
         }
     }
 }
