@@ -7,12 +7,12 @@ namespace Dumbledore
     public class CsFile : MagicFile
     {
         private string[] ClassesCache { get; set; }
-        public string[] Classes => ClassesCache ?? (ClassesCache = RegexStore.Get(RegexStore.ClassFromCsFilePattern, Text).ToArray());
+        public string[] Classes => ClassesCache ?? (ClassesCache = RegexStore.Get(_classPattern, Text).ToArray());
         private string[] UsingsCache { get; set; }
-        public string[] Usings => UsingsCache ?? (UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray());
+        public string[] Usings => UsingsCache ?? (UsingsCache = RegexStore.Get(_usingsPattern, Text).ToArray());
         private string[] ExtensionMethodsCache { get; set; }
         public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache =
-                                                RegexStore.Get(RegexStore.ExtensionMethodsFromCsFilePattern, Text).ToArray());
+                                                RegexStore.Get(_extensionPattern, Text).ToArray());
 
         public CsFile(string path) : base(path)
         {
@@ -26,7 +26,7 @@ namespace Dumbledore
             {
                 Text = "using " + reference + ";" + Environment.NewLine + Text;
                 WriteFile();
-                UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray();
+                UsingsCache = RegexStore.Get(_usingsPattern, Text).ToArray();
             }
         }
 
@@ -37,7 +37,7 @@ namespace Dumbledore
             {
                 Text = Text.Replace("using " + reference + ";" + Environment.NewLine, "");
                 WriteFile();
-                UsingsCache = RegexStore.Get(RegexStore.UsingsFromCsFilePattern, Text).ToArray();
+                UsingsCache = RegexStore.Get(_usingsPattern, Text).ToArray();
             }
         }
 
@@ -78,6 +78,10 @@ namespace Dumbledore
             //    }
             //}
             return false;
-        }        
+        }
+
+        private const string _usingsPattern = "using (?<capturegroup>(.*));";
+        private const string _extensionPattern = " (?<capturegroup>(\\w|\\d)*)\\(this";
+        private const string _classPattern = "class (?<capturegroup>(\\w*\\d*))";
     }
 }

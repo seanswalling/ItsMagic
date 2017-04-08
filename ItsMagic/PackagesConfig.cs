@@ -13,27 +13,27 @@ namespace Dumbledore
         private PackagesConfigEntry[] NugetpackageReferencesCache { get; set; }
         public PackagesConfigEntry[] NugetpackageReferences => NugetpackageReferencesCache ?? (NugetpackageReferencesCache = GetNugetPackageReferences());
 
+        public string FilePath { get; set; }
+        public string Text { get; set; }
+
         public PackagesConfig(string path)
         {
             if (!File.Exists(path))
-                File.WriteAllText(path, RegexStore.PackagesConfigDefault);
+                File.WriteAllText(path, _packagesConfigDefault);
             FilePath = path;
             Text = File.ReadAllText(FilePath);
         }
-
-        public string FilePath { get; set; }
-        public string Text { get; set; }
 
         private PackagesConfigEntry[] GetNugetPackageReferences()
         {
 
             List<PackagesConfigEntry> nugetPackageReferences = new List<PackagesConfigEntry>();
-            foreach (var package in RegexStore.Get(RegexStore.PackageFromPackagesConfigPattern, Text))
+            foreach (var package in RegexStore.Get(_packagePattern, Text))
             {
                 nugetPackageReferences.Add(new PackagesConfigEntry(
-                    RegexStore.Get(RegexStore.PackageIdFromPackagesPattern, package).Single(),
-                    RegexStore.Get(RegexStore.PackageVersionFromPackagesPattern, package).Single(),
-                    RegexStore.Get(RegexStore.PackageTargetFrameworkFromPackagesPattern, package).Single()));
+                    RegexStore.Get(_packageIdPattern, package).Single(),
+                    RegexStore.Get(_packageVersionPattern, package).Single(),
+                    RegexStore.Get(_packageTargetFrameworkPattern, package).Single()));
             }
 
             return nugetPackageReferences.ToArray();
@@ -45,8 +45,8 @@ namespace Dumbledore
                 return;
 
             Cauldron.Add($"Adding Package Entry {referenceToAdd.Id} to {FilePath}");
-            var regex = new Regex(RegexStore.PackagesTag);
-            Text = regex.Replace(Text, RegexStore.PackagesTag + 
+            var regex = new Regex(_packagesTag);
+            Text = regex.Replace(Text, _packagesTag + 
                                       Environment.NewLine +
                                       $"<package id=\"{referenceToAdd.Id}\" " +
                                       $"version=\"{referenceToAdd.Version}\" " +
@@ -71,5 +71,12 @@ namespace Dumbledore
                 doc.Save(writer);
             }
         }
+
+        private const string _packagesTag = "<packages>";
+        private const string _packagesConfigDefault = "<?xml version =\"1.0\" encoding=\"utf-8\"?>\r\n<packages>\r\n</packages>";
+        private const string _packagePattern = "(?<capturegroup>(<package.*\\/>))";
+        private const string _packageIdPattern = "id=\"(?<capturegroup>[\\w\\.-]+)\"";
+        private const string _packageVersionPattern = "version=\"(?<capturegroup>[\\w\\.-]*)\"";
+        private const string _packageTargetFrameworkPattern = "targetFramework=\"(?<capturegroup>(.*))\"";
     }
 }

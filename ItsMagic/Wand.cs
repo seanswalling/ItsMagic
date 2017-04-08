@@ -79,16 +79,18 @@ namespace Dumbledore
             return result.Replace(@"c:\source\mercury\Templates\", @"c:\source\mercury\src\");
         }
 
+        private const string NugetReferenceFromCsProjPattern = "(?<capturegroup>(<Reference Include=.*\\s+(\\s*<SpecificVersion>.*\\s*)*<HintPath>.+<\\/HintPath>\\s+.+\\s+<\\/Reference>))";
+        private const string NugetIdFromNugetReference = "packages\\\\(?<capturegroup>[\\w\\.-]+?)\\.\\d";
         public static void FindMissingPackConfigEntries()
         {
             foreach (var csProj in Wand.GetCsProjFiles(Wand.MercurySourceDir).ToArray())
             {
-                var missingCsProjNugetReferences = RegexStore.Get(RegexStore.NugetReferenceFromCsProjPattern, csProj.Text)
+                var missingCsProjNugetReferences = RegexStore.Get(NugetReferenceFromCsProjPattern, csProj.Text)
                     .Where(token => token.Contains("\\packages\\"))
                     .Where(csProjNugetReference =>
                     {
                         var nugetId = RegexStore
-                            .Get(RegexStore.NugetIdFromNugetReference, csProjNugetReference)
+                            .Get(NugetIdFromNugetReference, csProjNugetReference)
                             .Single()
                             .TrimEnd('.');
 

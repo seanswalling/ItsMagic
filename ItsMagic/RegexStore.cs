@@ -7,34 +7,6 @@ namespace Dumbledore
 {
     static class RegexStore
     {
-        public const string ItemGroupTag = "<ItemGroup>";
-        public const string PackagesTag = "<packages>";
-        public const string EndProject = "EndProject";
-        public const string PackagesConfigDefault = "<?xml version =\"1.0\" encoding=\"utf-8\"?>\r\n<packages>\r\n</packages>";
-        public const string ReleaseAnyCpu = "Release|Any CPU";
-        public const string NestedProjects = "GlobalSection(NestedProjects) = preSolution";
-        public static string ItemGroupProjectReference = "<ItemGroup>" + Environment.NewLine + "<ProjectReference ";
-
-        public const string CsFilesFromCsProjPattern = "<Compile Include=\\\"(?<capturegroup>(.*.cs))\\\"( \\/)*>"; 
-        public const string CsProjFromSlnPattern = "Project(.*) = .*, \\\"(?<capturegroup>.*\\.csproj)\\\", \\\".*\\\"";
-        public const string UsingsFromCsFilePattern = "using (?<capturegroup>(.*));";
-        public const string ExtensionMethodsFromCsFilePattern = " (?<capturegroup>(\\w|\\d)*)\\(this";
-        public const string ClassFromCsFilePattern = "class (?<capturegroup>(\\w*\\d*))";
-        public const string CsProjGuidPattern = "<ProjectGuid>{(?<capturegroup>([\\d\\w-]*))}<\\/ProjectGuid>";
-        public const string ItemGroupProjectReferencepattern = "<ItemGroup>\\s+<ProjectReference ";
-        public const string EndGlobalSection = "\\}\\s+EndGlobalSection";
-        public const string SolutionFolderNamePattern = "Project\\(\\\"\\{2150E333-8FDC-42A3-9474-1A3956D46DE8\\}\\\"\\) = \\\"(?<capturegroup>(\\w+))\\\"";
-        public const string CsProjPathFromCsProjPattern = "\"(?<capturegroup>(.*\\.csproj))\"";
-        public const string PackageFromPackagesConfigPattern = "(?<capturegroup>(<package.*\\/>))";
-        public const string PackageIdFromPackagesPattern = "id=\"(?<capturegroup>[\\w\\.-]+)\"";
-        public const string PackageVersionFromPackagesPattern = "version=\"(?<capturegroup>[\\w\\.-]*)\"";
-        public const string PackageTargetFrameworkFromPackagesPattern = "targetFramework=\"(?<capturegroup>(.*))\"";
-        public const string NugetReferenceFromCsProjPattern = "(?<capturegroup>(<Reference Include=.*\\s+(\\s*<SpecificVersion>.*\\s*)*<HintPath>.+<\\/HintPath>\\s+.+\\s+<\\/Reference>))";
-        public const string NugetDllNameFromNugetReference = "Include=\\\"(?<capturegroup>(\\w|\\.)+)";
-        public const string NugetHintPathFromNugetReferencePattern = "<HintPath>(?<capturegroup>(.+))<\\/HintPath>";
-        public const string NugetIncludeFromNugetReferencePattern = "Include=\"(?<capturegroup>(.*))\">";
-        public const string NugetIdFromNugetReference = "packages\\\\(?<capturegroup>[\\w\\.-]+?)\\.\\d";
-
         public static IEnumerable<string> Get(string pattern, string text)
         {
             Regex regex = new Regex(pattern);

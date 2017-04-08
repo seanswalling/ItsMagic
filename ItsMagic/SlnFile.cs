@@ -19,7 +19,7 @@ namespace Dumbledore
             if (CsProjsCache == null)
             {
                 var dir = Path.GetDirectoryName(FilePath);
-                CsProjsCache = RegexStore.Get(RegexStore.CsProjFromSlnPattern, Text)
+                CsProjsCache = RegexStore.Get(_csProjPattern, Text)
                     .Select(csProjRelPath => Path.Combine(dir, csProjRelPath))
                     .Where(File.Exists)
                     .Select(file => CsProj.Get(file))
@@ -76,8 +76,8 @@ namespace Dumbledore
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
             Text = RegexStore.ReplaceLastOccurrence(Text,
-                RegexStore.EndProject,
-                RegexStore.EndProject + "\n" + "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = " +
+                _endProject,
+                _endProject + "\n" + "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = " +
                 $"\"{projectToAdd.Name}\"," +
                 $" \"{relPath.ToString().Replace("src", "").Replace("/", "\\").TrimStart('\\')}\", " +
                 $"\"{{{projectToAdd.Guid.ToUpper()}}}\"\r\n" +
@@ -87,8 +87,8 @@ namespace Dumbledore
         private void AddDebugAndReleaseInformation(CsProj projectToAdd)
         {
             Text = RegexStore.ReplaceLastOccurrence(Text,
-                RegexStore.ReleaseAnyCpu,
-                RegexStore.ReleaseAnyCpu +
+                _releaseAnyCpu,
+                _releaseAnyCpu +
                 Environment.NewLine + $"\t\t{{{projectToAdd.Guid.ToUpper()}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU" +
                 Environment.NewLine + $"\t\t{{{projectToAdd.Guid.ToUpper()}}}.Debug|Any CPU.Build.0 = Debug|Any CPU" +
                 Environment.NewLine + $"\t\t{{{projectToAdd.Guid.ToUpper()}}}.Release|Any CPU.ActiveCfg = Release|Any CPU" +
@@ -108,27 +108,27 @@ namespace Dumbledore
 
             string projectToAddEqualsFolderToAdd = $"{{{projectToAdd.Guid.ToUpper()}}} = {{{solutionFolderGuid.Single()}}}";
 
-            var reg = new Regex(RegexStore.EndGlobalSection);
+            var reg = new Regex(_endGlobalSection);
             Text = reg.Replace(Text,
                 "}" + Environment.NewLine + "\t\t" + projectToAddEqualsFolderToAdd + Environment.NewLine + "\tEndGlobalSection", 1);
         }
 
         private bool SolutionFolderExists(string solutionFolder)
         {
-            return RegexStore.Get(RegexStore.SolutionFolderNamePattern, Text).Contains(solutionFolder);
+            return RegexStore.Get(_solutionFolderNamePattern, Text).Contains(solutionFolder);
         }
 
         private void CreateSolutionFolder(string solutionFolder)
         {
             Text = RegexStore.ReplaceLastOccurrence(Text,
-                RegexStore.EndProject,
-                RegexStore.EndProject + Environment.NewLine + 
+                _endProject,
+                _endProject + Environment.NewLine + 
                 "Project(\"{2150E333-8FDC-42A3-9474-1A3956D46DE8}\") = " +
                 $"\"{solutionFolder}\", " +
                 $"\"{solutionFolder}\", " +
                 $"\"{{{Guid.NewGuid().ToString().ToUpper()}}}\"" +
                 Environment.NewLine +
-                RegexStore.EndProject);
+                _endProject);
             WriteFile();
         }
 
@@ -151,5 +151,10 @@ namespace Dumbledore
             }
         }
 
+        private const string _endProject = "EndProject";
+        private const string _releaseAnyCpu = "Release|Any CPU";
+        private const string _csProjPattern = "Project(.*) = .*, \\\"(?<capturegroup>.*\\.csproj)\\\", \\\".*\\\"";
+        private const string _endGlobalSection = "\\}\\s+EndGlobalSection";
+        private const string _solutionFolderNamePattern = "Project\\(\\\"\\{2150E333-8FDC-42A3-9474-1A3956D46DE8\\}\\\"\\) = \\\"(?<capturegroup>(\\w+))\\\"";
     }
 }

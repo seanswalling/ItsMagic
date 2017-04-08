@@ -54,7 +54,8 @@ namespace Dumbledore
 
         private static Group Match(string line)
         {
-            var regex = new Regex(RegexStore.CsProjPathFromCsProjPattern);
+            string pattern = "\"(?<capturegroup>(.*\\.csproj))\"";
+            var regex = new Regex(pattern);
             return regex.Match(line).Groups["capturegroup"];
         }
 

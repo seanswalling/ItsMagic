@@ -15,28 +15,23 @@ namespace Dumbledore
         private static readonly string[] HostPaths = GetHostPaths();
 
         private CsFile[] _csFilesCache;
-        
-        
+                
         private CsProj(string path) : base(path)
         {
-            Guid = RegexStore.Get(RegexStore.CsProjGuidPattern, Text).First().ToLower();
+            Guid = RegexStore.Get(_csProjGuidPattern, Text).First().ToLower();
             References = GetProjectReferences();
             NugetReferences = GetNugetProjectDependencies();
         }
-
-
+        
         public string Guid { get; }
         public CsProj[] References { get; }
         public NugetPackageReference[] NugetReferences { get; }
-
-
-
-       
+        
         public CsFile[] CsFiles()
         {
             if (_csFilesCache != null) return _csFilesCache;
             var dir = System.IO.Path.GetDirectoryName(FilePath);
-            _csFilesCache = RegexStore.Get(RegexStore.CsFilesFromCsProjPattern, Text)
+            _csFilesCache = RegexStore.Get(_csFilesPattern, Text)
                 .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
                 .Where(File.Exists)
                 .Select(file => new CsFile(file))
@@ -51,8 +46,8 @@ namespace Dumbledore
 
             Cauldron.Add($"Adding nuget Reference to {FilePath}");
             var isCopyLocal = IsHost();
-            var regex = new Regex(RegexStore.ItemGroupTag);
-            Text = regex.Replace(Text, RegexStore.ItemGroupTag + Environment.NewLine +
+            var regex = new Regex(_itemGroupTag);
+            Text = regex.Replace(Text, _itemGroupTag + Environment.NewLine +
                                         $"<Reference Include=\"{referenceToAdd.Include}\">" + Environment.NewLine +
                                         $"<HintPath>{referenceToAdd.HintPath}</HintPath>" + Environment.NewLine +
                                         $"<Private>{isCopyLocal}</Private>" + Environment.NewLine +
@@ -77,8 +72,8 @@ namespace Dumbledore
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
             var projectRefPath = relPath.ToString().Replace("/", "\\");
 
-            var regex = new Regex(RegexStore.ItemGroupProjectReferencepattern);
-            Text = regex.Replace(Text, RegexStore.ItemGroupProjectReference +
+            var regex = new Regex(_itemGroupProjectReferencePattern);
+            Text = regex.Replace(Text, _itemGroupProjectReference +
                                 "Include=\"" + projectRefPath + "\">" + Environment.NewLine +
                                 "<Project>{" + referencedProject.Guid + "}</Project>" + Environment.NewLine +
                                 "<Name>" + referencedProject.Name + "</Name>" + Environment.NewLine +
@@ -205,7 +200,7 @@ namespace Dumbledore
         {
             Cauldron.Add($"Getting Project references for {FilePath}");
             List<CsProj> dependencies = new List<CsProj>();
-            foreach (var csProjRelPath in RegexStore.Get(RegexStore.CsProjPathFromCsProjPattern, Text))
+            foreach (var csProjRelPath in RegexStore.Get(_csProjPathPattern, Text))
             {
                 var path = Path.Combine(Directory.GetParent(FilePath).FullName, csProjRelPath);
                 var csProjFullPath = Path.GetFullPath(path);
@@ -228,25 +223,25 @@ namespace Dumbledore
 
             Cauldron.Add($"Getting Nuget references for {FilePath}");
             List<NugetPackageReference> nugetReferences = new List<NugetPackageReference>();
-            var references = RegexStore.Get(RegexStore.NugetReferenceFromCsProjPattern, Text)
+            var references = RegexStore.Get(_nugetReferencePattern, Text)
                 .Where(token => token.Contains("\\packages\\"));  //i.e. ignore any "lib" references. Cant exclued by !contains(lib) as all packages have a lib folder
             foreach (var reference in references)
             {
                 var dllName = RegexStore
-                    .Get(RegexStore.NugetDllNameFromNugetReference, reference)
+                    .Get(_nugetDllNameFromNugetReferencePattern, reference)
                     .Single();
 
                 var nugetId = RegexStore
-                    .Get(RegexStore.NugetIdFromNugetReference, reference)
+                    .Get(_nugetIdFromNugetReferencePattern, reference)
                     .Single()
                     .TrimEnd('.');
 
                 var hintPath = RegexStore
-                    .Get(RegexStore.NugetHintPathFromNugetReferencePattern, reference)
+                    .Get(_nugetHintPathPattern, reference)
                     .Single();
 
                 var include = RegexStore
-                    .Get(RegexStore.NugetIncludeFromNugetReferencePattern, reference)
+                    .Get(_nugetIncludeFromNugetReferencePattern, reference)
                     .Single();
 
                 var pc = PackagesConfig();
@@ -284,5 +279,17 @@ namespace Dumbledore
             var idx = input.IndexOf(delimiter);
             return input.Substring(0, idx);
         }
+
+        private const string _itemGroupTag = "<ItemGroup>";
+        private static string _itemGroupProjectReference = "<ItemGroup>" + Environment.NewLine + "<ProjectReference ";
+        private const string _csFilesPattern = "<Compile Include=\\\"(?<capturegroup>(.*.cs))\\\"( \\/)*>";
+        private const string _csProjGuidPattern = "<ProjectGuid>{(?<capturegroup>([\\d\\w-]*))}<\\/ProjectGuid>";
+        private const string _itemGroupProjectReferencePattern = "<ItemGroup>\\s+<ProjectReference ";
+        private const string _csProjPathPattern = "\"(?<capturegroup>(.*\\.csproj))\"";
+        private const string _nugetReferencePattern = "(?<capturegroup>(<Reference Include=.*\\s+(\\s*<SpecificVersion>.*\\s*)*<HintPath>.+<\\/HintPath>\\s+.+\\s+<\\/Reference>))";
+        private const string _nugetHintPathPattern = "<HintPath>(?<capturegroup>(.+))<\\/HintPath>";
+        private const string _nugetDllNameFromNugetReferencePattern = "Include=\\\"(?<capturegroup>(\\w|\\.)+)";
+        private const string _nugetIncludeFromNugetReferencePattern = "Include=\"(?<capturegroup>(.*))\">";
+        private const string _nugetIdFromNugetReferencePattern = "packages\\\\(?<capturegroup>[\\w\\.-]+?)\\.\\d";
     }
 }
