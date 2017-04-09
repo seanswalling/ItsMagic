@@ -16,11 +16,6 @@ namespace Dumbledore
                 .Select(m => m.Groups["capturegroup"].Value);
         }
 
-        public static string Either(string pattern1, string pattern2)
-        {
-            return pattern1 + "|" + pattern2;
-        }
-
         public static bool Contains(string pattern, string inputText)
         {
             Regex regex = new Regex(pattern);

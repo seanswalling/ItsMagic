@@ -64,6 +64,7 @@
     <Compile Include="Cauldron.cs" />
     <Compile Include="CsFile.cs" />
     <Compile Include="CsProj.cs" />
+    <Compile Include="Librarian.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Wand.cs" />
     <Compile Include="MagicFile.cs" />
