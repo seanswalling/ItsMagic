@@ -13,9 +13,12 @@ namespace Dumbledore
         {
             //TODO transform this whole app into a class lib and make a cli then make a gui.
             var sw = Stopwatch.StartNew();
-            Helper.FindInvalidCsprojReferences();
-            Wand.FindMissingPackConfigEntries();
-            
+
+            var slnFile = new SlnFile(Wand.MercurySourceDir + @"\Mercury.Platform.sln");
+            slnFile.RemoveProjectReference(CsProj.Get(Wand.MercurySourceDir + @"\Platform\Mercury.CoreTypes\Mercury.CoreTypes.csproj").Guid);
+
+            //Helper.FindInvalidCsprojReferences();
+            //Wand.FindMissingPackConfigEntries();
             Console.WriteLine($"\nApplication Complete: {sw.Elapsed.TotalSeconds}");
             Console.ReadLine();
         }
