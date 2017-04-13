@@ -48,7 +48,7 @@ namespace Dumbledore
                 Text = regex.Replace(Text, "");
 
                 pattern = $".*{{{projectGuid}}}.*\\n";
-                regex = new Regex(pattern);
+                regex = new Regex(pattern, RegexOptions.IgnoreCase);
                 Text = regex.Replace(Text, "");
                 WriteFile();
                 RemoveWhiteSpace();//Remove This
