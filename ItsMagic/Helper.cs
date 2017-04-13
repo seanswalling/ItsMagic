@@ -1,33 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace Dumbledore
 {
-    class Program
+    static class Helper
     {
-        static void Main()
-        {
-            //TODO transform this whole app into a class lib and make a cli then make a gui.
-            var sw = Stopwatch.StartNew();
-
-            var slnFile = new SlnFile(Wand.MercurySourceDir + @"\Mercury.Platform.sln");
-            slnFile.RemoveProjectReference(CsProj.Get(Wand.MercurySourceDir + @"\Platform\Mercury.CoreTypes\Mercury.CoreTypes.csproj").Guid);
-
-            //Helper.FindInvalidCsprojReferences();
-            //Wand.FindMissingPackConfigEntries();
-            Console.WriteLine($"\nApplication Complete: {sw.Elapsed.TotalSeconds}");
-            Console.ReadLine();
-        }
-       
-    }
-
-    internal static class Helper
-    {
-
         public static void FindInvalidCsprojReferences()
         {
             var dic = Directory.EnumerateFiles(@"c:\source\mercury", "*.csproj", SearchOption.AllDirectories)
@@ -61,9 +40,5 @@ namespace Dumbledore
             var regex = new Regex(pattern);
             return regex.Match(line).Groups["capturegroup"];
         }
-
-
     }
-
-    
 }

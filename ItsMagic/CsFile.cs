@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -14,9 +15,25 @@ namespace Dumbledore
         public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache =
                                                 RegexStore.Get(_extensionPattern, Text).ToArray());
 
+        public string[] textAsLines { get; set; }
         public CsFile(string path) : base(path)
         {
-            
+                
+        }
+
+        public void ReadLines()
+        {
+            textAsLines = File.ReadAllLines(FilePath);
+        }
+
+        public void RemoveLines(int[] lineNumbersToRemove)
+        {
+            textAsLines = textAsLines.Where((line, index) => !lineNumbersToRemove.Contains(index + 1)).ToArray();
+        }
+
+        public void WriteLines()
+        {
+            File.WriteAllLines(FilePath, textAsLines);
         }
 
         public void AddUsing(string reference)

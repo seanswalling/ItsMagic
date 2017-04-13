@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,8 +19,8 @@ namespace Dumbledore
         private CsProj(string path) : base(path)
         {
             Guid = RegexStore.Get(_csProjGuidPattern, Text).First().ToLower();
-            References = GetProjectReferences();
-            NugetReferences = GetNugetProjectDependencies();
+            //References = GetProjectReferences();
+            //NugetReferences = GetNugetProjectDependencies();
         }
         
         public string Guid { get; }
@@ -111,7 +111,7 @@ namespace Dumbledore
             {
                 Cauldron.Add($"Removing project reference with guid {projectGuid} from {Name}");
                 var pattern = $".*(?:<ProjectReference.+(\\n*\\r*))(?:.*{projectGuid}.*(\\n*\\r*))(?:.+(\\n*\\r*))+?(?:.*<\\/ProjectReference>(\\n*\\r*))";
-                Regex regex = new Regex(pattern);
+                Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
                 Text = regex.Replace(Text, "");
                 WriteFile();
                 ReformatXml(FilePath);
@@ -161,7 +161,15 @@ namespace Dumbledore
             }
             return result;
         }
-        
+
+        public void RemoveCompileEntry(string csFileName)
+        {
+            var rstr = string.Format(_compileEntry, csFileName);
+            var regex = new Regex(rstr);
+            Text = regex.Replace(Text, "");
+            WriteFile();
+        }
+
         public static HashSet<CsProj> GetAllProjectReferences(CsProj csProj)
         {
             if (csProj.References.Length == 0)
@@ -196,12 +204,16 @@ namespace Dumbledore
             return file;
         }
 
-        private CsProj[] GetProjectReferences()
+        private CsProj[] GetProjectReferences(string[] removedProjects = null)
         {
             Cauldron.Add($"Getting Project references for {FilePath}");
             List<CsProj> dependencies = new List<CsProj>();
             foreach (var csProjRelPath in RegexStore.Get(_csProjPathPattern, Text))
             {
+                if (removedProjects != null && removedProjects.Contains(Path.GetFileName(csProjRelPath)))
+                {
+                    continue;
+                }
                 var path = Path.Combine(Directory.GetParent(FilePath).FullName, csProjRelPath);
                 var csProjFullPath = Path.GetFullPath(path);
                 dependencies.Add(Get(csProjFullPath));
@@ -291,5 +303,6 @@ namespace Dumbledore
         private const string _nugetDllNameFromNugetReferencePattern = "Include=\\\"(?<capturegroup>(\\w|\\.)+)";
         private const string _nugetIncludeFromNugetReferencePattern = "Include=\"(?<capturegroup>(.*))\">";
         private const string _nugetIdFromNugetReferencePattern = "packages\\\\(?<capturegroup>[\\w\\.-]+?)\\.\\d";
+        private const string _compileEntry = "<Compile Include\\.+>\\n\\.+<Link>.+{0}</Link>\\n\\.+</Compile>";
     }
 }
