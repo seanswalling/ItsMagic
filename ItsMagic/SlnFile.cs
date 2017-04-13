@@ -43,7 +43,7 @@ namespace Dumbledore
             if (ContainsProjectReference(projectGuid))
             {
                 Cauldron.Add($"Removing project reference with guid {projectGuid} from {Name}");
-                var pattern = $"(?:Project.+{projectGuid.ToUpper()}.+\\n)(?:EndProject.+\\n)";
+                var pattern = $"(?:Project.+{projectGuid}.+\\n)(?:EndProject.+\\n)";
                 var regex = new Regex(pattern);
                 Text = regex.Replace(Text, "");
 
@@ -51,7 +51,7 @@ namespace Dumbledore
                 regex = new Regex(pattern);
                 Text = regex.Replace(Text, "");
                 WriteFile();
-                RemoveWhiteSpace();
+                RemoveWhiteSpace();//Remove This
             }
             else
             {
