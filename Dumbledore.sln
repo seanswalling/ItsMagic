@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dumbledore", "ItsMagic\Dumb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dumbledore.Tests", "ItsMagic.Tests\Dumbledore.Tests.csproj", "{F664C524-5C97-4129-BDB9-42DDE7030362}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoveLogRepo", "RemoveLogRepo\RemoveLogRepo.csproj", "{86D7AFF2-025E-441E-8125-4025AD63C7CE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F664C524-5C97-4129-BDB9-42DDE7030362}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F664C524-5C97-4129-BDB9-42DDE7030362}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F664C524-5C97-4129-BDB9-42DDE7030362}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86D7AFF2-025E-441E-8125-4025AD63C7CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86D7AFF2-025E-441E-8125-4025AD63C7CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86D7AFF2-025E-441E-8125-4025AD63C7CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86D7AFF2-025E-441E-8125-4025AD63C7CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

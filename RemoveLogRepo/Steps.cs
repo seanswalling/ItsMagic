@@ -43,18 +43,14 @@ namespace RemoveLogRepo
                 var buildLogRepoMethod = Enumerable.Range(265, 11).ToArray();
                 var definLogRepoMethod = Enumerable.Range(276, 6).ToArray();
                 var linesToRemove = new int[] { 15, 120, 129, 130, 131, 132, 145, 151, 156, 173, 182, 187, 193 }.Concat(buildLogRepoMethod).Concat(definLogRepoMethod).ToArray();
-                Lfn.ReadLines();
                 Lfn.RemoveLines(linesToRemove);
-                Lfn.WriteLines();
             }
 
             private static void EditTermLog()
             {
                 var buildLogrepoMethod = Enumerable.Range(133, 11).ToArray();
                 var lineToRemove = new int[] { 1, 10, 45, 51, 57 }.Concat(buildLogrepoMethod).ToArray();
-                Tl.ReadLines();
                 Tl.RemoveLines(lineToRemove);
-                Tl.WriteLines();
             }
 
             private static void RemoveRefInCsProjs()
@@ -139,9 +135,7 @@ namespace RemoveLogRepo
                 ConfigGenerator.RemoveCompileEntry("LogRepositoryEnvironmentConfiguration.cs");
                 int[] configBuilder = Enumerable.Range(770, 12).ToArray();
                 int[] linestoremove = new int[] { 82 }.Concat(configBuilder).ToArray();
-                Program.ReadLines();
                 Program.RemoveLines(linestoremove);
-                Program.WriteLines();
             }
 
         }
@@ -159,9 +153,7 @@ namespace RemoveLogRepo
             private static void Removeservicedesc()
             {
                 var servicedesc = Enumerable.Range(2321, 51).ToArray();
-                Ss.ReadLines();
                 Ss.RemoveLines(servicedesc);
-                Ss.WriteLines();
             }
         }
     }

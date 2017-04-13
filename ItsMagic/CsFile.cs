@@ -8,17 +8,20 @@ namespace Dumbledore
     public class CsFile : MagicFile
     {
         private static readonly Dictionary<string, CsFile> CsFilePool = new Dictionary<string, CsFile>();
-
-        private string[] ClassesCache { get; set; }
-        private string[] UsingsCache { get; set; }
+        public string[] Classes { get; set; }
+        public List<string> Usings { get; set; }
         private string[] ExtensionMethodsCache { get; set; }
+        public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache =
+                                                RegexStore.Get(ExtensionPattern, Text).ToArray());
 
         private CsFile(string path) : base(path)
         {
             if (Path.GetExtension(FilePath) != ".cs")
                 throw new FileFormatException();
+				
+			Usings = RegexStore.Get(UsingsPattern, Text).ToList();
+            Classes = RegexStore.Get(ClassPattern, Text).ToArray();
         }
-
         public static CsFile Get(string path)
         {
             CsFile result;
@@ -30,50 +33,57 @@ namespace Dumbledore
             return result;
         }
 
-        public string[] Classes => ClassesCache ?? (ClassesCache = GetClasses());
-        public string[] Usings => UsingsCache ?? (UsingsCache = GetUsings());
-        public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache = GetExtensionMethods());
-
-        public string[] TextAsLines { get; set; }
-
-        public void ReadLines()
-        {
-            TextAsLines = File.ReadAllLines(FilePath);
-        }
-
-        public void RemoveLines(int[] lineNumbersToRemove)
-        {
-            TextAsLines = TextAsLines.Where((line, index) => !lineNumbersToRemove.Contains(index + 1)).ToArray();
-        }
-
-        public void WriteLines()
-        {
-            File.WriteAllLines(FilePath, TextAsLines);
-        }
-
         public void AddUsing(string reference)
         {
             Cauldron.Add($"Add Using: {reference} to {Name}.cs");
-            if (!Text.Contains("using " + reference + ";"))
+            if (!Usings.Contains(reference))
             {
-                Text = "using " + reference + ";" + Environment.NewLine + Text;
-                WriteFile();
-                UsingsCache = new Librarian(_usingsPattern, Text).Get("capturegroup").ToArray();
+                Usings.Add(reference);
             }
         }
 
         public void RemoveUsing(string reference)
         {
             Cauldron.Add($"Removing Using: {reference} from {Name}.cs");
-            if (Text.Contains("using " + reference + ";"))
+            if (Usings.Contains(reference))
             {
-                Text = Text.Replace("using " + reference + ";" + Environment.NewLine, "");
-                WriteFile();
-                UsingsCache = new Librarian(_usingsPattern, Text).Get("capturegroup").ToArray();
+                Usings.RemoveAt(Usings.IndexOf(reference));
             }
         }
 
-        public void AlphabatiseUsings()
+        private void UpdateUsingsInText()
+        {
+            
+        }
+
+        public void SortUsings()
+        {
+            Usings.Sort(new UsingComparer());
+        }
+
+        private class UsingComparer : IComparer<string>
+        {
+            public int Compare(string x, string y)
+            {
+                var isXSystemUsing = RegexStore.Contains("(?<!\\.)System\\.*", x);
+                var isYSystemusing = RegexStore.Contains("(?<!\\.)System\\.*", y);
+
+                if (isXSystemUsing && !isYSystemusing)
+                {
+                    return -1;
+                }
+
+                if (!isXSystemUsing && isYSystemusing)
+                {
+                    return 1;
+                }
+
+                return string.CompareOrdinal(x, y);
+            }
+        }
+
+        [Obsolete]
+        public void AlphabatiseUsings()//TODO I don't think this has use anymore, if we want to retain this functionality i suggest trying to embed it into the Removal/Adding process.
         {
             Cauldron.Add($"Alphabatise Usings for {Name}.cs");
             var systemUsings = Usings.Where(@using => new Librarian("(?<!\\.)System\\.*", @using).HasMatch());
@@ -129,8 +139,8 @@ namespace Dumbledore
             return new Librarian(_extensionPattern, Text).Get("capturegroup").ToArray();
         }
 
-        private const string _usingsPattern = "using (?<capturegroup>(.*));";
-        private const string _extensionPattern = " (?<capturegroup>(\\w|\\d)*)\\(this";
-        private const string _classPattern = "class (?<capturegroup>(\\w*\\d*))";
+        private const string UsingsPattern = "using (?<capturegroup>(.*));";
+        private const string ExtensionPattern = " (?<capturegroup>(\\w|\\d)*)\\(this";
+        private const string ClassPattern = "class (?<capturegroup>(\\w*\\d*))";
     }
 }

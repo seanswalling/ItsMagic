@@ -54,7 +54,7 @@ namespace Dumbledore
         private static HashSet<string> RepairedProjects = new HashSet<string>();
         public static void RepairProjectReferences(CsProj csProj)
         {
-            if (RepairedProjects.Contains(csProj.FilePath))
+            if (RepairedProjects.Contains(csProj.Filepath))
                 return;
             
             foreach (var csProjReference in csProj.References)
@@ -72,7 +72,7 @@ namespace Dumbledore
                 csProj.AddNugetReference(nugetDependency);
             }
 
-            RepairedProjects.Add(csProj.FilePath);
+            RepairedProjects.Add(csProj.Filepath);
         }
 
         public static string ToAbsolutePath(string relPath, string path)

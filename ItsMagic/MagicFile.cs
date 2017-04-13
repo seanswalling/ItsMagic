@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Dumbledore
 {
-    public abstract class MagicFile : IEquatable<MagicFile>, IComparable<MagicFile>
+    public abstract class MagicFile : IComparable<MagicFile>
     {
         public bool Exists { get; }
-
         protected MagicFile(string filePath)
         {
-            FilePath = filePath;
+            Filepath = filePath;
             if (File.Exists(FilePath))
             {
-                Text = File.ReadAllText(FilePath);
+            Text = File.ReadAllText(Filepath);
             }
 
             Exists = true;
@@ -21,44 +20,32 @@ namespace Dumbledore
                 Exists = false;
         }
 
-        public string FilePath { get; }
+        public string Filepath { get; }
 
         public string Text { get ; set; }
 
-        public string Name => Path.GetFileNameWithoutExtension(FilePath);
+        public string Name => Path.GetFileNameWithoutExtension(Filepath);
 
         public void WriteFile()
         {
-            File.WriteAllText(FilePath, Text);
-        }
-
-        public override bool Equals(object obj)
-        {
-            var other = obj as MagicFile;
-            return Equals(other);
-        }
-
-        public bool Equals(MagicFile other)
-        {
-            if (other == null)
-                return false;
-
-            return FilePath == other.FilePath;
-        }
-
-        public override int GetHashCode()
-        {
-            return FilePath.GetHashCode();
+            File.WriteAllText(Filepath, Text);
         }
 
         public int CompareTo(MagicFile other)
         {
-            return other == null ? 1 : FilePath.CompareTo(other.FilePath);
+            return other == null ? 1 : string.Compare(Filepath, other.Filepath, StringComparison.Ordinal);
         }
-
-        public override string ToString()
+        /// <summary>
+        /// Read the file as an array, removes the given line numbers then rewrites
+        /// the array before refreshing the Text property.
+        /// </summary>
+        /// <param name="lineNumbersToRemove"></param>
+        public void RemoveLines(int[] lineNumbersToRemove)
         {
-            return FilePath;
+            var content = File.ReadAllLines(Filepath);
+            content = content.Where((line, index) => !lineNumbersToRemove.Contains(index + 1)).ToArray();
+            File.WriteAllLines(Filepath, content);
+            Text = File.ReadAllText(Filepath);
         }
     }
 }
