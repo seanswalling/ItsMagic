@@ -17,7 +17,7 @@ namespace Dumbledore
                 if (Directory.Exists(dir1))
                     return dir1;
                 if (Directory.Exists(dir2))
-                    return dir1;
+                    return dir2;
                 throw new DirectoryNotFoundException();
             }
         }
