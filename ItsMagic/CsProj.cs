@@ -97,8 +97,8 @@ namespace Dumbledore
             var guid = project.Guid;
             var upperGuidRegex = guid.ToUpper().Replace("-", "\\-");
             var lowerGuidRegex = guid.ToLower().Replace("-", "\\-");
-            if (new Librarian("<Project>{" + upperGuidRegex + "}<\\/Project>", Text).Contains() ||
-                new Librarian("<Project>{" + lowerGuidRegex + "}<\\/Project>", Text).Contains())
+            if (new Librarian("<Project>{" + upperGuidRegex + "}<\\/Project>", Text).HasMatch() ||
+                new Librarian("<Project>{" + lowerGuidRegex + "}<\\/Project>", Text).HasMatch())
                 return true;
             return false;
         }

@@ -26,7 +26,7 @@ namespace Dumbledore
                 .Select(m => m.Groups[captureGroup].Value);
         }
 
-        public bool Contains()
+        public bool HasMatch()
         {
             var matches = Matches(_input);
             if (matches.Count > 0)

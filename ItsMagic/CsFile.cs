@@ -61,8 +61,8 @@ namespace Dumbledore
         public void AlphabatiseUsings()
         {
             Cauldron.Add($"Alphabatise Usings for {Name}.cs");
-            var systemUsings = Usings.Where(@using => new Librarian("(?<!\\.)System\\.*", @using).Contains());
-            var otherUsings = Usings.Where(@using => !new Librarian("(?<!\\.)System\\.*", @using).Contains());
+            var systemUsings = Usings.Where(@using => new Librarian("(?<!\\.)System\\.*", @using).HasMatch());
+            var otherUsings = Usings.Where(@using => !new Librarian("(?<!\\.)System\\.*", @using).HasMatch());
             foreach(var @using in Usings)
             {
                 RemoveUsing(@using);
@@ -81,7 +81,7 @@ namespace Dumbledore
         {
             foreach (var @class in csProj.Classes())
             {
-                if (new Librarian("[\\s:]" + @class + "[\\s\\.(]", Text).Contains())
+                if (new Librarian("[\\s:]" + @class + "[\\s\\.(]", Text).HasMatch())
                 {
                     Cauldron.Add($"Found Evidence of {csProj.Name}.{@class} in {Name}.cs");
                     return true;
