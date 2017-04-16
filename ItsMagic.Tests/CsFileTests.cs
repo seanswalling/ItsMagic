@@ -11,7 +11,7 @@ namespace Dumbledore.Tests
         }
 
         [Fact]
-        private void CanDetectEvidenceOfCsProj()
+        public void CanDetectEvidenceOfCsProj()
         {
             var csFile = GetActualCsFile();
             var csProj = GetActualCsProjFile();
@@ -20,7 +20,7 @@ namespace Dumbledore.Tests
         }
 
         [Fact]
-        private void CanGetClasses()
+        public void CanGetClasses()
         {
             var file = GetActualCsFile();
             string[] expected = { "a", "StepsTests" };
@@ -29,7 +29,7 @@ namespace Dumbledore.Tests
         }
 
         [Fact]
-        private void CanAlphabatiseUsings()
+        public void CanAlphabatiseUsings()
         {
             var file = GetActualCsFile();
             file.AlphabatiseUsings();
