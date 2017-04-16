@@ -29,6 +29,15 @@ namespace Dumbledore.Tests
         }
 
         [Fact]
+        public void CanAddProjectReference()
+        {
+            var slnFile = GetActualSlnFile();
+            var csProj = CsProj.Get(SampleCsProjFile);
+            slnFile.AddProjectReference(csProj);
+            Assert.Equal(true, slnFile.ContainsProjectReference(csProj));
+        }
+
+        [Fact]
         public void CanRepairWhiteSpace()
         {
             var slnFile = GetActualSlnFile();
