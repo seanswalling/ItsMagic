@@ -32,12 +32,12 @@ namespace Dumbledore.Tests
             return CsProj.Get(ActualCsProjFile);
         }
 
-        public CsProj GetActualSlnFile()
+        public SlnFile GetActualSlnFile()
         {
             if (File.Exists(ActualSlnFile))
                 File.Delete(ActualSlnFile);
             File.Copy(SampleSlnFile, ActualSlnFile);
-            return CsProj.Get(ActualSlnFile);
+            return new SlnFile(ActualSlnFile);
         }
     }
 }

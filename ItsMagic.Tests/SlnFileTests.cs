@@ -17,5 +17,13 @@ namespace Dumbledore.Tests
             Assert.Equal(true, slnFile.ContainsProjectReference("57FA7CF2-9479-4C8B-83B4-0C2262A5E6FC"));
             Assert.Equal(true, slnFile.ContainsProjectReference("57FA7CF2-9479-4C8B-83B4-0C2262A5E6FC".ToLower()));
         }
+
+        [Fact]
+        public void CanRemoveProjectReferences()
+        {
+            var slnFile = GetActualSlnFile();
+            slnFile.RemoveProjectReference("57FA7CF2-9479-4C8B-83B4-0C2262A5E6FC");
+            Assert.Equal(false, slnFile.Text.Contains("57FA7CF2-9479-4C8B-83B4-0C2262A5E6FC"));
+        }
     }
 }

@@ -14,6 +14,11 @@ namespace Dumbledore
             _input = input;
         }
 
+        public Librarian(string pattern, string input, RegexOptions regexOptions) : base(pattern, regexOptions)
+        {
+            _input = input;
+        }
+
         public IEnumerable<string> Get(string captureGroup = null)
         {
             var match = Matches(_input).Cast<Match>();
