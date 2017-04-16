@@ -8,12 +8,12 @@ namespace Dumbledore
     public class CsFile : MagicFile
     {
         private string[] ClassesCache { get; set; }
-        public string[] Classes => ClassesCache ?? (ClassesCache = RegexStore.Get(_classPattern, Text).ToArray());
+        public string[] Classes => ClassesCache ?? (ClassesCache = new Librarian(_classPattern, Text).Get("capturegroup").ToArray());
         private string[] UsingsCache { get; set; }
-        public string[] Usings => UsingsCache ?? (UsingsCache = RegexStore.Get(_usingsPattern, Text).ToArray());
+        public string[] Usings => UsingsCache ?? (UsingsCache = new Librarian(_usingsPattern, Text).Get("capturegroup").ToArray());
         private string[] ExtensionMethodsCache { get; set; }
         public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache =
-                                                RegexStore.Get(_extensionPattern, Text).ToArray());
+                                                new Librarian(_extensionPattern, Text).Get("capturegroup").ToArray());
 
         public string[] textAsLines { get; set; }
         public CsFile(string path) : base(path)
@@ -43,7 +43,7 @@ namespace Dumbledore
             {
                 Text = "using " + reference + ";" + Environment.NewLine + Text;
                 WriteFile();
-                UsingsCache = RegexStore.Get(_usingsPattern, Text).ToArray();
+                UsingsCache = new Librarian(_usingsPattern, Text).Get("capturegroup").ToArray();
             }
         }
 
@@ -54,15 +54,15 @@ namespace Dumbledore
             {
                 Text = Text.Replace("using " + reference + ";" + Environment.NewLine, "");
                 WriteFile();
-                UsingsCache = RegexStore.Get(_usingsPattern, Text).ToArray();
+                UsingsCache = new Librarian(_usingsPattern, Text).Get("capturegroup").ToArray();
             }
         }
 
         public void AlphabatiseUsings()
         {
             Cauldron.Add($"Alphabatise Usings for {Name}.cs");
-            var systemUsings = Usings.Where(@using => RegexStore.Contains("(?<!\\.)System\\.*", @using));
-            var otherUsings = Usings.Where(@using => !RegexStore.Contains("(?<!\\.)System\\.*", @using));
+            var systemUsings = Usings.Where(@using => new Librarian("(?<!\\.)System\\.*", @using).Contains());
+            var otherUsings = Usings.Where(@using => !new Librarian("(?<!\\.)System\\.*", @using).Contains());
             foreach(var @using in Usings)
             {
                 RemoveUsing(@using);
@@ -81,7 +81,7 @@ namespace Dumbledore
         {
             foreach (var @class in csProj.Classes())
             {
-                if (RegexStore.Contains("[\\s:]" + @class + "[\\s\\.(]", Text))
+                if (new Librarian("[\\s:]" + @class + "[\\s\\.(]", Text).Contains())
                 {
                     Cauldron.Add($"Found Evidence of {csProj.Name}.{@class} in {Name}.cs");
                     return true;

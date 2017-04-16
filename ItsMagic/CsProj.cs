@@ -18,7 +18,10 @@ namespace Dumbledore
                 
         private CsProj(string path) : base(path)
         {
-            Guid = RegexStore.Get(_csProjGuidPattern, Text).First().ToLower();
+            Guid = new Librarian(_csProjGuidPattern, Text)
+                .Get("capturegroup")
+                .First()
+                .ToLower();
             //References = GetProjectReferences();
             //NugetReferences = GetNugetProjectDependencies();
         }
@@ -30,8 +33,9 @@ namespace Dumbledore
         public CsFile[] CsFiles()
         {
             if (_csFilesCache != null) return _csFilesCache;
-            var dir = System.IO.Path.GetDirectoryName(FilePath);
-            _csFilesCache = RegexStore.Get(_csFilesPattern, Text)
+            var dir = Path.GetDirectoryName(FilePath);
+            _csFilesCache = new Librarian(_csFilesPattern, Text)
+                .Get("capturegroup")
                 .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
                 .Where(File.Exists)
                 .Select(file => new CsFile(file))
@@ -93,8 +97,8 @@ namespace Dumbledore
             var guid = project.Guid;
             var upperGuidRegex = guid.ToUpper().Replace("-", "\\-");
             var lowerGuidRegex = guid.ToLower().Replace("-", "\\-");
-            if (RegexStore.Contains("<Project>{" + upperGuidRegex + "}<\\/Project>", Text) ||
-                RegexStore.Contains("<Project>{" + lowerGuidRegex + "}<\\/Project>", Text))
+            if (new Librarian("<Project>{" + upperGuidRegex + "}<\\/Project>", Text).Contains() ||
+                new Librarian("<Project>{" + lowerGuidRegex + "}<\\/Project>", Text).Contains())
                 return true;
             return false;
         }
@@ -208,7 +212,7 @@ namespace Dumbledore
         {
             Cauldron.Add($"Getting Project references for {FilePath}");
             List<CsProj> dependencies = new List<CsProj>();
-            foreach (var csProjRelPath in RegexStore.Get(_csProjPathPattern, Text))
+            foreach (var csProjRelPath in new Librarian(_csProjPathPattern, Text).Get("capturegroup"))
             {
                 if (removedProjects != null && removedProjects.Contains(Path.GetFileName(csProjRelPath)))
                 {
@@ -235,25 +239,26 @@ namespace Dumbledore
 
             Cauldron.Add($"Getting Nuget references for {FilePath}");
             List<NugetPackageReference> nugetReferences = new List<NugetPackageReference>();
-            var references = RegexStore.Get(_nugetReferencePattern, Text)
+            var references = new Librarian(_nugetReferencePattern, Text)
+                .Get("capturegroup")
                 .Where(token => token.Contains("\\packages\\"));  //i.e. ignore any "lib" references. Cant exclued by !contains(lib) as all packages have a lib folder
             foreach (var reference in references)
             {
-                var dllName = RegexStore
-                    .Get(_nugetDllNameFromNugetReferencePattern, reference)
+                var dllName = new Librarian(_nugetDllNameFromNugetReferencePattern, reference)
+                    .Get("capturegroup")
                     .Single();
 
-                var nugetId = RegexStore
-                    .Get(_nugetIdFromNugetReferencePattern, reference)
+                var nugetId = new Librarian(_nugetIdFromNugetReferencePattern, reference)
+                    .Get("capturegroup")
                     .Single()
                     .TrimEnd('.');
 
-                var hintPath = RegexStore
-                    .Get(_nugetHintPathPattern, reference)
+                var hintPath = new Librarian(_nugetHintPathPattern, reference)
+                    .Get("capturegroup")
                     .Single();
 
-                var include = RegexStore
-                    .Get(_nugetIncludeFromNugetReferencePattern, reference)
+                var include = new Librarian(_nugetIncludeFromNugetReferencePattern, reference)
+                    .Get("capturegroup")
                     .Single();
 
                 var pc = PackagesConfig();

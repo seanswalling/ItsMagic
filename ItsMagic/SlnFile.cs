@@ -19,7 +19,8 @@ namespace Dumbledore
             if (CsProjsCache == null)
             {
                 var dir = Path.GetDirectoryName(FilePath);
-                CsProjsCache = RegexStore.Get(_csProjPattern, Text)
+                CsProjsCache = new Librarian(_csProjPattern, Text)
+                    .Get("capturegroup")
                     .Select(csProjRelPath => Path.Combine(dir, csProjRelPath))
                     .Where(File.Exists)
                     .Select(file => CsProj.Get(file))
@@ -75,8 +76,7 @@ namespace Dumbledore
             Uri referencedProjectPath = new Uri(projectToAdd.FilePath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
-            Text = RegexStore.ReplaceLastOccurrence(Text,
-                _endProject,
+            Text = Text.ReplaceLastOccurrence(_endProject,
                 _endProject + "\n" + "Project(\"{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}\") = " +
                 $"\"{projectToAdd.Name}\"," +
                 $" \"{relPath.ToString().Replace("src", "").Replace("/", "\\").TrimStart('\\')}\", " +
@@ -86,8 +86,7 @@ namespace Dumbledore
 
         private void AddDebugAndReleaseInformation(CsProj projectToAdd)
         {
-            Text = RegexStore.ReplaceLastOccurrence(Text,
-                _releaseAnyCpu,
+            Text = Text.ReplaceLastOccurrence(_releaseAnyCpu,
                 _releaseAnyCpu +
                 Environment.NewLine + $"\t\t{{{projectToAdd.Guid.ToUpper()}}}.Debug|Any CPU.ActiveCfg = Debug|Any CPU" +
                 Environment.NewLine + $"\t\t{{{projectToAdd.Guid.ToUpper()}}}.Debug|Any CPU.Build.0 = Debug|Any CPU" +
@@ -103,8 +102,10 @@ namespace Dumbledore
             }
 
             var solutionFolderGuid =
-                RegexStore.Get($"Project.* = \\\"{solutionFolder}\\\", \\\"{solutionFolder}\\\", \\\"" +
-                               "\\{(?<capturegroup>(.*))\\}\\\"", Text).ToArray();
+                new Librarian($"Project.* = \\\"{solutionFolder}\\\", \\\"{solutionFolder}\\\", \\\"" +
+                               "\\{(?<capturegroup>(.*))\\}\\\"", Text)
+                               .Get("capturegroup")
+                               .ToArray();
 
             string projectToAddEqualsFolderToAdd = $"{{{projectToAdd.Guid.ToUpper()}}} = {{{solutionFolderGuid.Single()}}}";
 
@@ -115,13 +116,14 @@ namespace Dumbledore
 
         private bool SolutionFolderExists(string solutionFolder)
         {
-            return RegexStore.Get(_solutionFolderNamePattern, Text).Contains(solutionFolder);
+            return new Librarian(_solutionFolderNamePattern, Text)
+                .Get("capturegroup")
+                .Contains(solutionFolder);
         }
 
         private void CreateSolutionFolder(string solutionFolder)
         {
-            Text = RegexStore.ReplaceLastOccurrence(Text,
-                _endProject,
+            Text = Text.ReplaceLastOccurrence(_endProject,
                 _endProject + Environment.NewLine + 
                 "Project(\"{2150E333-8FDC-42A3-9474-1A3956D46DE8}\") = " +
                 $"\"{solutionFolder}\", " +

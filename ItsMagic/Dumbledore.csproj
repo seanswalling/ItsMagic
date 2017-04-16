@@ -64,7 +64,9 @@
     <Compile Include="Cauldron.cs" />
     <Compile Include="CsFile.cs" />
     <Compile Include="CsProj.cs" />
+    <Compile Include="Librarian.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="StringExt.cs" />
     <Compile Include="Wand.cs" />
     <Compile Include="MagicFile.cs" />
     <Compile Include="NugetPackageReference.cs" />
@@ -72,7 +74,6 @@
     <Compile Include="PackagesConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProjectReference.cs" />
-    <Compile Include="RegexStore.cs" />
     <Compile Include="SlnFile.cs" />
   </ItemGroup>
   <ItemGroup>

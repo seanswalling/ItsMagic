@@ -85,12 +85,13 @@ namespace Dumbledore
         {
             foreach (var csProj in Wand.GetCsProjFiles(Wand.MercurySourceDir).ToArray())
             {
-                var missingCsProjNugetReferences = RegexStore.Get(NugetReferenceFromCsProjPattern, csProj.Text)
+                var missingCsProjNugetReferences = new Librarian(NugetReferenceFromCsProjPattern, csProj.Text)
+                    .Get("capturegroup")
                     .Where(token => token.Contains("\\packages\\"))
                     .Where(csProjNugetReference =>
                     {
-                        var nugetId = RegexStore
-                            .Get(NugetIdFromNugetReference, csProjNugetReference)
+                        var nugetId = new Librarian(NugetIdFromNugetReference, csProjNugetReference)
+                            .Get("capturegroup")
                             .Single()
                             .TrimEnd('.');
 
