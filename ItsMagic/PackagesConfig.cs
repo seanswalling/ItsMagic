@@ -28,12 +28,12 @@ namespace Dumbledore
         {
 
             List<PackagesConfigEntry> nugetPackageReferences = new List<PackagesConfigEntry>();
-            foreach (var package in RegexStore.Get(_packagePattern, Text))
+            foreach (var package in new Librarian(_packagePattern, Text).Get("capturegroup"))
             {
                 nugetPackageReferences.Add(new PackagesConfigEntry(
-                    RegexStore.Get(_packageIdPattern, package).Single(),
-                    RegexStore.Get(_packageVersionPattern, package).Single(),
-                    RegexStore.Get(_packageTargetFrameworkPattern, package).Single()));
+                    new Librarian(_packageIdPattern, package).Get("capturegroup").Single(),
+                    new Librarian(_packageVersionPattern, package).Get("capturegroup").Single(),
+                    new Librarian(_packageTargetFrameworkPattern, package).Get("capturegroup").Single()));
             }
 
             return nugetPackageReferences.ToArray();

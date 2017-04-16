@@ -35,16 +35,5 @@ namespace Dumbledore
             }
             return false;
         }
-
-        public string ReplaceLastOccurrenceWith(string source, string find, string Replace)
-        {
-            int place = source.LastIndexOf(find, StringComparison.Ordinal);
-
-            if (place == -1)
-                return source;
-
-            string result = source.Remove(place, find.Length).Insert(place, Replace);
-            return result;
-        }
     }
 }
