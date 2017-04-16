@@ -6,11 +6,14 @@ namespace Dumbledore.Tests
     public class TestsBase
     {
         protected ITestOutputHelper Output { get; set; }
+
         protected static string SampleCsFile = Wand.MagicDir + @"\Samples\StepsTests.cs";
         protected static string ActualCsFile = Wand.MagicDir + @"\Samples\actual.cs";
-        protected static string SampleCsProjFile = Wand.MagicDir + @"\Samples\AuthorisationReadModel.csproj";
+
+        protected static string SampleCsProjFile = Wand.MagicDir + @"\Samples\StepsTests.csproj";
         protected static string ActualCsProjFile = Wand.MagicDir + @"\Samples\actual.csproj";
-        protected static string SampleSlnFile = Wand.MagicDir + @"\Samples\Mercury.Terminal.sln";
+
+        protected static string SampleSlnFile = Wand.MagicDir + @"\Samples\StepsTests.sln";
         protected static string ActualSlnFile = Wand.MagicDir + @"\Samples\actual.sln";
 
         public CsFile GetActualCsFile()
