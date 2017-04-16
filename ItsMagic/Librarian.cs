@@ -5,11 +5,11 @@ using System.Text.RegularExpressions;
 
 namespace Dumbledore
 {
-    class Librarian : Regex
+    public class Librarian : Regex
     {
         private string _input {get;}
 
-        public Librarian(string pattern, string input) : base(pattern)
+        public Librarian(string pattern, string input = null) : base(pattern)
         {
             _input = input;
         }
@@ -30,7 +30,7 @@ namespace Dumbledore
             return match
                 .Select(m => m.Groups[captureGroup].Value);
         }
-
+        
         public bool HasMatch()
         {
             var matches = Matches(_input);

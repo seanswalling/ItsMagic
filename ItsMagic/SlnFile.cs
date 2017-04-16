@@ -66,6 +66,12 @@ namespace Dumbledore
             WriteFile();
         }
 
+        public void RepairWhiteSpace()
+        {
+            Text = new Librarian("(\\t*\\r\\n){2,}").Replace(Text, Environment.NewLine);
+            WriteFile();
+        }
+
         private void RemoveProjectText(string projectGuid)
         {
             var pattern = $"(?:Project.+{projectGuid}.+\\n)(?:EndProject.+\\n)";
@@ -141,13 +147,6 @@ namespace Dumbledore
                 $"\"{{{Guid.NewGuid().ToString().ToUpper()}}}\"" +
                 Environment.NewLine +
                 _endProject);
-            WriteFile();
-        }
-
-        public void RemoveWhiteSpace()
-        {
-            Regex reg = new Regex("(\\r\\n)+");
-            Text = reg.Replace(Text, Environment.NewLine);
             WriteFile();
         }
 

@@ -1,5 +1,7 @@
 ﻿using Xunit;
 using Xunit.Abstractions;
+using System.IO;
+using System.Linq;
 
 namespace Dumbledore.Tests
 {
@@ -24,6 +26,15 @@ namespace Dumbledore.Tests
             var slnFile = GetActualSlnFile();
             slnFile.RemoveProjectReference("57FA7CF2-9479-4C8B-83B4-0C2262A5E6FC");
             Assert.Equal(false, slnFile.Text.Contains("57FA7CF2-9479-4C8B-83B4-0C2262A5E6FC"));
+        }
+
+        [Fact]
+        public void CanRepairWhiteSpace()
+        {
+            var slnFile = GetActualSlnFile();
+            slnFile.RepairWhiteSpace();
+
+            Assert.Equal(false, new Librarian("(\\t*\\r\\n){2,}", slnFile.Text).HasMatch());
         }
     }
 }
