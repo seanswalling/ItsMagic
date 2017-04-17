@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using Xunit;
-using Xunit.Abstractions;
+using System.Linq;
 using a;
 using b;
 using c;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace ItsMagic.Tests
 {

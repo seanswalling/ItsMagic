@@ -17,7 +17,7 @@ namespace Dumbledore
             if (!File.Exists(FilePath))
                 throw new FileNotFoundException();
 
-            if (Path.GetExtension(FilePath) != "sln")
+            if (Path.GetExtension(FilePath) != ".sln")
                 throw new FileFormatException();
         }
 

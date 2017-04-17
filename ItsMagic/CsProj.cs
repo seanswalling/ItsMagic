@@ -20,7 +20,7 @@ namespace Dumbledore
 
         private CsProj(string path) : base(path)
         {
-            if (Path.GetExtension(FilePath) != "csproj")
+            if (Path.GetExtension(FilePath) != ".csproj")
                 throw new FileFormatException();
 
             if (File.Exists(FilePath))
