@@ -33,21 +33,21 @@ namespace Dumbledore
         public string[] Usings => UsingsCache ?? (UsingsCache = GetUsings());
         public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache = GetExtensionMethods());
 
-        public string[] textAsLines { get; set; }
+        public string[] TextAsLines { get; set; }
 
         public void ReadLines()
         {
-            textAsLines = File.ReadAllLines(FilePath);
+            TextAsLines = File.ReadAllLines(FilePath);
         }
 
         public void RemoveLines(int[] lineNumbersToRemove)
         {
-            textAsLines = textAsLines.Where((line, index) => !lineNumbersToRemove.Contains(index + 1)).ToArray();
+            TextAsLines = TextAsLines.Where((line, index) => !lineNumbersToRemove.Contains(index + 1)).ToArray();
         }
 
         public void WriteLines()
         {
-            File.WriteAllLines(FilePath, textAsLines);
+            File.WriteAllLines(FilePath, TextAsLines);
         }
 
         public void AddUsing(string reference)
