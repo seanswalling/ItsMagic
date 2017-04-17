@@ -14,6 +14,11 @@ namespace Dumbledore
 
         private SlnFile(string path) : base(path)
         {
+            if (!File.Exists(FilePath))
+                throw new FileNotFoundException();
+
+            if (Path.GetExtension(FilePath) != "sln")
+                throw new FileFormatException();
         }
 
         public static SlnFile Get(string path)

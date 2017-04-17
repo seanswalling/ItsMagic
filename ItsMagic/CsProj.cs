@@ -20,10 +20,16 @@ namespace Dumbledore
 
         private CsProj(string path) : base(path)
         {
-            Guid = new Librarian(_csProjGuidPattern, Text)
-                .Get("capturegroup")
-                .First()
-                .ToLower();
+            if (Path.GetExtension(FilePath) != "csproj")
+                throw new FileFormatException();
+
+            if (File.Exists(FilePath))
+            {
+                Guid = new Librarian(_csProjGuidPattern, Text)
+                    .Get("capturegroup")
+                    .First()
+                    .ToLower();
+            }
         }
 
         public static CsProj Get(string path)
@@ -36,7 +42,7 @@ namespace Dumbledore
             }
             return result;
         }
-
+        
         public string Guid { get; }
         public CsProj[] References => _csProjCache ?? (_csProjCache = GetProjectReferences());
         public NugetPackageReference[] NugetReferences => _NuPkgCache ?? (_NuPkgCache = GetNugetProjectDependencies());

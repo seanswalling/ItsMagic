@@ -15,7 +15,8 @@ namespace Dumbledore
 
         private CsFile(string path) : base(path)
         {
-                
+            if (Path.GetExtension(FilePath) != "cs")
+                throw new FileFormatException();
         }
 
         public static CsFile Get(string path)
