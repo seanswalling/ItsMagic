@@ -10,7 +10,7 @@ namespace Dumbledore
     {
         private static readonly Dictionary<string, SlnFile> SlnFilePool = new Dictionary<string, SlnFile>();
 
-        private CsProj[] CsProjsCache { get; set; }
+        private CsProj[] _csProjsCache { get; set; }
 
         private SlnFile(string path) : base(path)
         {
@@ -27,23 +27,8 @@ namespace Dumbledore
             return result;
         }
 
-        public CsProj[] CsProjs => CsProjsCache ?? (CsProjsCache = GetCsProjs());
+        public CsProj[] CsProjs => _csProjsCache ?? (_csProjsCache = GetCsProjs());
         
-        private CsProj[] GetCsProjs()
-        {
-            if (CsProjsCache == null)
-            {
-                var dir = Path.GetDirectoryName(FilePath);
-                CsProjsCache = new Librarian(_csProjPattern, Text)
-                    .Get("capturegroup")
-                    .Select(csProjRelPath => Path.Combine(dir, csProjRelPath))
-                    .Where(File.Exists)
-                    .Select(file => CsProj.Get(file))
-                    .ToArray();
-            }
-            return CsProjsCache;
-        }
-
         public bool ContainsProjectReference(string projectGuid)
         {
             return Text.Contains(projectGuid.ToUpper());
@@ -64,6 +49,7 @@ namespace Dumbledore
                 RemoveRemainingReferences(projectGuid);
 
                 WriteFile();
+                _csProjsCache = null;
             }
             else
             {
@@ -79,12 +65,28 @@ namespace Dumbledore
                 AddToFolder(projectToAdd, solutionFolder);
 
             WriteFile();
+            _csProjsCache = null;
         }
 
         public void RepairWhiteSpace()
         {
             Text = new Librarian("(\\t*\\r\\n){2,}").Replace(Text, Environment.NewLine);
             WriteFile();
+        }
+
+        private CsProj[] GetCsProjs()
+        {
+            if (_csProjsCache == null)
+            {
+                var dir = Path.GetDirectoryName(FilePath);
+                _csProjsCache = new Librarian(_csProjPattern, Text)
+                    .Get("capturegroup")
+                    .Select(csProjRelPath => Path.Combine(dir, csProjRelPath))
+                    .Where(File.Exists)
+                    .Select(file => CsProj.Get(file))
+                    .ToArray();
+            }
+            return _csProjsCache;
         }
 
         private void RemoveProjectText(string projectGuid)
