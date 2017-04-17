@@ -8,15 +8,28 @@ namespace Dumbledore
 {
     public class SlnFile : MagicFile
     {
+        private static readonly Dictionary<string, SlnFile> SlnFilePool = new Dictionary<string, SlnFile>();
+
         private CsProj[] CsProjsCache { get; set; }
 
-        public SlnFile(string path) : base(path)
+        private SlnFile(string path) : base(path)
         {
         }
 
+        public static SlnFile Get(string path)
+        {
+            SlnFile result;
+            if (!SlnFilePool.TryGetValue(path, out result))
+            {
+                result = new SlnFile(path);
+                SlnFilePool.Add(path, result);
+            }
+            return result;
+        }
 
-
-        public CsProj[] CsProjs()
+        public CsProj[] CsProjs => CsProjsCache ?? (CsProjsCache = GetCsProjs());
+        
+        private CsProj[] GetCsProjs()
         {
             if (CsProjsCache == null)
             {

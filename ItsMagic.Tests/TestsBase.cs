@@ -37,7 +37,7 @@ namespace Dumbledore.Tests
             if (File.Exists(ActualSlnFile))
                 File.Delete(ActualSlnFile);
             File.Copy(SampleSlnFile, ActualSlnFile);
-            return new SlnFile(ActualSlnFile);
+            return SlnFile.Get(ActualSlnFile);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Dumbledore
         {
             return Directory.EnumerateFiles(dir, "*.sln", SearchOption.AllDirectories)
                 .Where(File.Exists)
-                .Select(file => new SlnFile(file));
+                .Select(file => SlnFile.Get(file));
         }
 
         public static IEnumerable<CsProj> GetCsProjFiles(string dir)

@@ -25,7 +25,18 @@ namespace Dumbledore
                 .First()
                 .ToLower();
         }
-        
+
+        public static CsProj Get(string path)
+        {
+            CsProj result;
+            if (!CsProjPool.TryGetValue(path, out result))
+            {
+                result = new CsProj(path);
+                CsProjPool.Add(path, result);
+            }
+            return result;
+        }
+
         public string Guid { get; }
         public CsProj[] References => _csProjCache ?? (_csProjCache = GetProjectReferences());
         public NugetPackageReference[] NugetReferences => _NuPkgCache ?? (_NuPkgCache = GetNugetProjectDependencies());
@@ -156,18 +167,7 @@ namespace Dumbledore
                 .Distinct()
                 .ToArray();
         }
-
-        public static CsProj Get(string path)
-        {
-            CsProj result;
-            if (!CsProjPool.TryGetValue(path, out result))
-            {
-                result = new CsProj(path);
-                CsProjPool.Add(path, result);
-            }
-            return result;
-        }
-
+        
         public void RemoveCompileEntry(string csFileName)
         {
             var rstr = string.Format(_compileEntry, csFileName);
