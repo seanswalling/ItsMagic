@@ -14,10 +14,13 @@ namespace Dumbledore
             {
                 string dir1 = @"C:\source\Mercury\src";
                 string dir2 = @"E:\github\cc\Mercury\src";
+                string dir3 = @"C:\Mercury\src";
                 if (Directory.Exists(dir1))
                     return dir1;
                 if (Directory.Exists(dir2))
                     return dir2;
+                if (Directory.Exists(dir3))
+                    return dir3;
                 throw new DirectoryNotFoundException();
             }
         }
