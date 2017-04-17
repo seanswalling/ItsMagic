@@ -16,6 +16,7 @@ namespace Dumbledore
 
         private CsFile[] _csFilesCache;
         private CsProj[] _csProjCache;
+        private NugetPackageReference[] _NuPkgCache;
 
         private CsProj(string path) : base(path)
         {
@@ -23,13 +24,12 @@ namespace Dumbledore
                 .Get("capturegroup")
                 .First()
                 .ToLower();
-            //NugetReferences = GetNugetProjectDependencies();
         }
         
         public string Guid { get; }
         public CsProj[] References => _csProjCache ?? (_csProjCache = GetProjectReferences());
-        public NugetPackageReference[] NugetReferences { get; }
-        
+        public NugetPackageReference[] NugetReferences => _NuPkgCache ?? (_NuPkgCache = GetNugetProjectDependencies());
+
         public CsFile[] CsFiles()
         {
             if (_csFilesCache != null) return _csFilesCache;
