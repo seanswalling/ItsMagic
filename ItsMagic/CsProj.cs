@@ -60,6 +60,7 @@ namespace Dumbledore
             WriteFile();
             ReformatXml(FilePath);
             PackagesConfig().AddPackageEntry(referenceToAdd);
+            _NuPkgCache = null;
         }
 
         public void AddProjectReference(CsProj referencedProject)
@@ -85,6 +86,7 @@ namespace Dumbledore
                                 "<ProjectReference ", 1);
             WriteFile();
             ReformatXml(FilePath);
+            _csProjCache = null;
         }
 
         public bool ContainsProjectReference(string projectGuid)
@@ -118,6 +120,7 @@ namespace Dumbledore
                 Text = regex.Replace(Text, "");
                 WriteFile();
                 ReformatXml(FilePath);
+                _csProjCache = null;
             }
             else
             {
