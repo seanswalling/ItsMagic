@@ -15,19 +15,19 @@ namespace Dumbledore
         private static readonly string[] HostPaths = GetHostPaths();
 
         private CsFile[] _csFilesCache;
-                
+        private CsProj[] _csProjCache;
+
         private CsProj(string path) : base(path)
         {
             Guid = new Librarian(_csProjGuidPattern, Text)
                 .Get("capturegroup")
                 .First()
                 .ToLower();
-            //References = GetProjectReferences();
             //NugetReferences = GetNugetProjectDependencies();
         }
         
         public string Guid { get; }
-        public CsProj[] References { get; }
+        public CsProj[] References => _csProjCache ?? (_csProjCache = GetProjectReferences());
         public NugetPackageReference[] NugetReferences { get; }
         
         public CsFile[] CsFiles()
@@ -102,8 +102,7 @@ namespace Dumbledore
                 return true;
             return false;
         }
-
-        
+                
         public PackagesConfig PackagesConfig()
         {
             return new PackagesConfig(Directory.GetParent(FilePath) + @"\packages.config");
