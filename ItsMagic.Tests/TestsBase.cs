@@ -21,7 +21,7 @@ namespace Dumbledore.Tests
             if (File.Exists(ActualCsFile))
                 File.Delete(ActualCsFile);
             File.Copy(SampleCsFile, ActualCsFile);
-            return new CsFile(ActualCsFile);
+            return CsFile.Get(ActualCsFile);
         }
 
         public CsProj GetActualCsProjFile()

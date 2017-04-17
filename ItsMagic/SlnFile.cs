@@ -74,6 +74,18 @@ namespace Dumbledore
             WriteFile();
         }
 
+        public static IEnumerable<SlnFile> SolutionsThatReference(CsProj csProj)
+        {
+            var slns = Wand.GetSolutionFiles(Wand.MercurySourceDir);
+            foreach (var slnFile in slns)
+            {
+                if (slnFile.ContainsProjectReference(csProj))
+                {
+                    yield return slnFile;
+                }
+            }
+        }
+
         private CsProj[] GetCsProjs()
         {
             if (_csProjsCache == null)
@@ -165,18 +177,6 @@ namespace Dumbledore
                 Environment.NewLine +
                 _endProject);
             WriteFile();
-        }
-
-        public static IEnumerable<SlnFile> SolutionsThatReference(CsProj csProj)
-        {
-            var slns = Wand.GetSolutionFiles(Wand.MercurySourceDir);
-            foreach (var slnFile in slns)
-            {
-                if (slnFile.ContainsProjectReference(csProj))
-                {
-                    yield return slnFile;
-                }
-            }
         }
 
         private const string _endProject = "EndProject";

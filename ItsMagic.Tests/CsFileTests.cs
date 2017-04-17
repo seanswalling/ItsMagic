@@ -10,14 +10,14 @@ namespace Dumbledore.Tests
             Output = output;
         }
 
-        [Fact]
-        public void CanDetectEvidenceOfCsProj()
-        {
-            var csFile = GetActualCsFile();
-            var csProj = GetActualCsProjFile();
+        //[Fact]
+        //public void CanDetectEvidenceOfCsProj()
+        //{
+        //    var csFile = GetActualCsFile();
+        //    var csProj = GetActualCsProjFile();
 
-            Assert.Equal(true, csFile.HasEvidenceOf(csProj));
-        }
+        //    Assert.Equal(true, csFile.HasEvidenceOf(csProj));
+        //}
 
         [Fact]
         public void CanGetClasses()

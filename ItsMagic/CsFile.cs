@@ -7,19 +7,33 @@ namespace Dumbledore
 {
     public class CsFile : MagicFile
     {
-        private string[] ClassesCache { get; set; }
-        public string[] Classes => ClassesCache ?? (ClassesCache = new Librarian(_classPattern, Text).Get("capturegroup").ToArray());
-        private string[] UsingsCache { get; set; }
-        public string[] Usings => UsingsCache ?? (UsingsCache = new Librarian(_usingsPattern, Text).Get("capturegroup").ToArray());
-        private string[] ExtensionMethodsCache { get; set; }
-        public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache =
-                                                new Librarian(_extensionPattern, Text).Get("capturegroup").ToArray());
+        private static readonly Dictionary<string, CsFile> CsFilePool = new Dictionary<string, CsFile>();
 
-        public string[] textAsLines { get; set; }
-        public CsFile(string path) : base(path)
+        private string[] ClassesCache { get; set; }
+        private string[] UsingsCache { get; set; }
+        private string[] ExtensionMethodsCache { get; set; }
+
+        private CsFile(string path) : base(path)
         {
                 
         }
+
+        public static CsFile Get(string path)
+        {
+            CsFile result;
+            if (!CsFilePool.TryGetValue(path, out result))
+            {
+                result = new CsFile(path);
+                CsFilePool.Add(path, result);
+            }
+            return result;
+        }
+
+        public string[] Classes => ClassesCache ?? (ClassesCache = GetClasses());
+        public string[] Usings => UsingsCache ?? (UsingsCache = GetUsings());
+        public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache = GetExtensionMethods());
+
+        public string[] textAsLines { get; set; }
 
         public void ReadLines()
         {
@@ -79,6 +93,8 @@ namespace Dumbledore
   
         public bool HasEvidenceOf(CsProj csProj)
         {
+            throw new NotImplementedException(); //https://github.com/Jordan466/ItsMagic/issues/21
+
             foreach (var @class in csProj.Classes())
             {
                 if (new Librarian("[\\s:]" + @class + "[\\s\\.(]", Text).HasMatch())
@@ -95,6 +111,21 @@ namespace Dumbledore
             //    }
             //}
             return false;
+        }
+
+        private string[] GetClasses()
+        {
+            return new Librarian(_classPattern, Text).Get("capturegroup").ToArray();
+        }
+
+        private string[] GetUsings()
+        {
+            return new Librarian(_usingsPattern, Text).Get("capturegroup").ToArray();
+        }
+
+        private string[] GetExtensionMethods()
+        {
+            return new Librarian(_extensionPattern, Text).Get("capturegroup").ToArray();
         }
 
         private const string _usingsPattern = "using (?<capturegroup>(.*));";

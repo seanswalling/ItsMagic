@@ -49,7 +49,7 @@ namespace Dumbledore
                 .Get("capturegroup")
                 .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
                 .Where(File.Exists)
-                .Select(file => new CsFile(file))
+                .Select(file => CsFile.Get(file))
                 .ToArray();
             return _csFilesCache;
         }

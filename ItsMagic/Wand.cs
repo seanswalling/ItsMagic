@@ -43,7 +43,7 @@ namespace Dumbledore
         public static IEnumerable<CsFile> GetCsFiles(string dir)
         {
             return Directory.EnumerateFiles(dir, "*.cs", SearchOption.AllDirectories)
-                .Select(file => new CsFile(file));
+                .Select(file => CsFile.Get(file));
         }
 
         public static SlnFile[] GetSolutionsReferencing(CsProj csProj)
