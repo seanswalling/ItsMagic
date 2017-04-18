@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Dumbledore
 {
     public class Librarian : Regex
     {
-        private string _input {get;}
+        private readonly string _input;
 
         public Librarian(string pattern, string input = null) : base(pattern)
         {
@@ -34,11 +35,7 @@ namespace Dumbledore
         public bool HasMatch()
         {
             var matches = Matches(_input);
-            if (matches.Count > 0)
-            {
-                return true;
-            }
-            return false;
+            return matches.Count > 0;
         }
     }
 }

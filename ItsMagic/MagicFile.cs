@@ -7,24 +7,25 @@ namespace Dumbledore
     public abstract class MagicFile : IComparable<MagicFile>
     {
         public bool Exists { get; }
-        protected MagicFile(string filePath)
-        {
-            Filepath = filePath;
-            if (File.Exists(FilePath))
-            {
-            Text = File.ReadAllText(Filepath);
-            }
-
-            Exists = true;
-            if (!File.Exists(FilePath))
-                Exists = false;
-        }
 
         public string Filepath { get; }
 
         public string Text { get ; set; }
 
         public string Name => Path.GetFileNameWithoutExtension(Filepath);
+
+        protected MagicFile(string filePath)
+        {
+            Filepath = filePath;
+            if (File.Exists(Filepath))
+            {
+                Text = File.ReadAllText(Filepath);
+            }
+
+            Exists = true;
+            if (!File.Exists(Filepath))
+                Exists = false;
+        }
 
         public void WriteFile()
         {

@@ -10,17 +10,16 @@ namespace Dumbledore
         private static readonly Dictionary<string, CsFile> CsFilePool = new Dictionary<string, CsFile>();
         public string[] Classes { get; set; }
         public List<string> Usings { get; set; }
-        private string[] ExtensionMethodsCache { get; set; }
-        public string[] ExtensionMethods => ExtensionMethodsCache ?? (ExtensionMethodsCache =
-                                                RegexStore.Get(ExtensionPattern, Text).ToArray());
+        public string[] ExtensionMethods { get; set; }
 
         private CsFile(string path) : base(path)
         {
-            if (Path.GetExtension(FilePath) != ".cs")
+            if (Path.GetExtension(Filepath) != ".cs")
                 throw new FileFormatException();
 				
-			Usings = RegexStore.Get(UsingsPattern, Text).ToList();
-            Classes = RegexStore.Get(ClassPattern, Text).ToArray();
+			Usings = GetUsings().ToList();
+            Classes = GetClasses();
+            ExtensionMethods = GetExtensionMethods();
         }
         public static CsFile Get(string path)
         {
@@ -51,12 +50,13 @@ namespace Dumbledore
             }
         }
 
-        private void UpdateUsingsInText()
+        public void UpdateUsingsInText()
         {
-            
+            SortUsings();
+            Text = new Librarian(UsingBlock).Replace(Text, string.Concat(Usings));
         }
 
-        public void SortUsings()
+        private void SortUsings()
         {
             Usings.Sort(new UsingComparer());
         }
@@ -65,8 +65,8 @@ namespace Dumbledore
         {
             public int Compare(string x, string y)
             {
-                var isXSystemUsing = RegexStore.Contains("(?<!\\.)System\\.*", x);
-                var isYSystemusing = RegexStore.Contains("(?<!\\.)System\\.*", y);
+                var isXSystemUsing = IsSystemUsing(x);
+                var isYSystemusing = IsSystemUsing(y);
 
                 if (isXSystemUsing && !isYSystemusing)
                 {
@@ -126,19 +126,25 @@ namespace Dumbledore
 
         private string[] GetClasses()
         {
-            return new Librarian(_classPattern, Text).Get("capturegroup").ToArray();
+            return new Librarian(ClassPattern, Text).Get("capturegroup").ToArray();
         }
 
         private string[] GetUsings()
         {
-            return new Librarian(_usingsPattern, Text).Get("capturegroup").ToArray();
+            return new Librarian(UsingsPattern, Text).Get("capturegroup").ToArray();
         }
 
         private string[] GetExtensionMethods()
         {
-            return new Librarian(_extensionPattern, Text).Get("capturegroup").ToArray();
+            return new Librarian(ExtensionPattern, Text).Get("capturegroup").ToArray();
         }
 
+        private static bool IsSystemUsing(string reference)
+        {
+            return new Librarian("(?<!\\.)System\\.*", reference).HasMatch();
+        }
+
+        private const string UsingBlock = "(using.+\\n)+";
         private const string UsingsPattern = "using (?<capturegroup>(.*));";
         private const string ExtensionPattern = " (?<capturegroup>(\\w|\\d)*)\\(this";
         private const string ClassPattern = "class (?<capturegroup>(\\w*\\d*))";

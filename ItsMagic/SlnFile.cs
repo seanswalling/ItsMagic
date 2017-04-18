@@ -14,10 +14,10 @@ namespace Dumbledore
 
         private SlnFile(string path) : base(path)
         {
-            if (!File.Exists(FilePath))
+            if (!File.Exists(Filepath))
                 throw new FileNotFoundException();
 
-            if (Path.GetExtension(FilePath) != ".sln")
+            if (Path.GetExtension(Filepath) != ".sln")
                 throw new FileFormatException();
         }
 
@@ -95,7 +95,7 @@ namespace Dumbledore
         {
             if (_csProjsCache == null)
             {
-                var dir = Path.GetDirectoryName(FilePath);
+                var dir = Path.GetDirectoryName(Filepath);
                 _csProjsCache = new Librarian(_csProjPattern, Text)
                     .Get("capturegroup")
                     .Select(csProjRelPath => Path.Combine(dir, csProjRelPath))
@@ -123,7 +123,7 @@ namespace Dumbledore
         private void AddProjectText(CsProj projectToAdd)
         {
             Uri mercurySourcePath = new Uri(Wand.MercurySourceDir);
-            Uri referencedProjectPath = new Uri(projectToAdd.FilePath);
+            Uri referencedProjectPath = new Uri(projectToAdd.Filepath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
 
             Text = Text.ReplaceLastOccurrence(_endProject,

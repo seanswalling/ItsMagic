@@ -20,10 +20,10 @@ namespace Dumbledore
 
         private CsProj(string path) : base(path)
         {
-            if (Path.GetExtension(FilePath) != ".csproj")
+            if (Path.GetExtension(Filepath) != ".csproj")
                 throw new FileFormatException();
 
-            if (File.Exists(FilePath))
+            if (File.Exists(Filepath))
             {
                 Guid = new Librarian(_csProjGuidPattern, Text)
                     .Get("capturegroup")
@@ -50,7 +50,7 @@ namespace Dumbledore
         public CsFile[] CsFiles()
         {
             if (_csFilesCache != null) return _csFilesCache;
-            var dir = Path.GetDirectoryName(FilePath);
+            var dir = Path.GetDirectoryName(Filepath);
             _csFilesCache = new Librarian(_csFilesPattern, Text)
                 .Get("capturegroup")
                 .Select(csFileRelPath => System.IO.Path.Combine(dir, csFileRelPath))
@@ -65,7 +65,7 @@ namespace Dumbledore
             if (ContainsNugetProjectReference(referenceToAdd))
                 return;
 
-            Cauldron.Add($"Adding nuget Reference to {FilePath}");
+            Cauldron.Add($"Adding nuget Reference to {Filepath}");
             var isCopyLocal = IsHost();
             var regex = new Regex(_itemGroupTag);
             Text = regex.Replace(Text, _itemGroupTag + Environment.NewLine +
@@ -75,7 +75,7 @@ namespace Dumbledore
                                         "</Reference>" + Environment.NewLine
                                         , 1);
             WriteFile();
-            ReformatXml(FilePath);
+            ReformatXml(Filepath);
             PackagesConfig().AddPackageEntry(referenceToAdd);
             _NuPkgCache = null;
         }
@@ -88,9 +88,9 @@ namespace Dumbledore
             if (ContainsProjectReference(referencedProject))
                 return;
 
-            Cauldron.Add($"Adding {referencedProject.FilePath} project reference to {FilePath}");
-            Uri mercurySourcePath = new Uri(FilePath);
-            Uri referencedProjectPath = new Uri(referencedProject.FilePath);
+            Cauldron.Add($"Adding {referencedProject.Filepath} project reference to {Filepath}");
+            Uri mercurySourcePath = new Uri(Filepath);
+            Uri referencedProjectPath = new Uri(referencedProject.Filepath);
             Uri relPath = mercurySourcePath.MakeRelativeUri(referencedProjectPath);
             var projectRefPath = relPath.ToString().Replace("/", "\\");
 
@@ -102,7 +102,7 @@ namespace Dumbledore
                                 "</ProjectReference>" + Environment.NewLine +
                                 "<ProjectReference ", 1);
             WriteFile();
-            ReformatXml(FilePath);
+            ReformatXml(Filepath);
             _csProjCache = null;
         }
 
@@ -124,7 +124,7 @@ namespace Dumbledore
                 
         public PackagesConfig PackagesConfig()
         {
-            return new PackagesConfig(Directory.GetParent(FilePath) + @"\packages.config");
+            return new PackagesConfig(Directory.GetParent(Filepath) + @"\packages.config");
         }
 
         public void RemoveProjectReference(string projectGuid)
@@ -136,7 +136,7 @@ namespace Dumbledore
                 Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
                 Text = regex.Replace(Text, "");
                 WriteFile();
-                ReformatXml(FilePath);
+                ReformatXml(Filepath);
                 _csProjCache = null;
             }
             else
@@ -148,9 +148,9 @@ namespace Dumbledore
         public bool IsHost()
         {
             //Does file name end with ".Tests.csproj"
-            return FilePath.EndsWith(".Tests.csproj")
+            return Filepath.EndsWith(".Tests.csproj")
                    || Text.Contains("349c5851-65df-11da-9384-00065b846f21") //IsWebApp/Site/MVC/WebRole
-                   || IsInHostPath(FilePath);
+                   || IsInHostPath(Filepath);
 
             // is in services.json
         }
@@ -218,7 +218,7 @@ namespace Dumbledore
 
         private CsProj[] GetProjectReferences(string[] removedProjects = null)
         {
-            Cauldron.Add($"Getting Project references for {FilePath}");
+            Cauldron.Add($"Getting Project references for {Filepath}");
             List<CsProj> dependencies = new List<CsProj>();
             foreach (var csProjRelPath in new Librarian(_csProjPathPattern, Text).Get("capturegroup"))
             {
@@ -226,7 +226,7 @@ namespace Dumbledore
                 {
                     continue;
                 }
-                var path = Path.Combine(Directory.GetParent(FilePath).FullName, csProjRelPath);
+                var path = Path.Combine(Directory.GetParent(Filepath).FullName, csProjRelPath);
                 var csProjFullPath = Path.GetFullPath(path);
                 dependencies.Add(Get(csProjFullPath));
             }
@@ -245,7 +245,7 @@ namespace Dumbledore
 
             //Additional problem - How do I map csproj nuget references to packages.config entries. The Id's dont always align?
 
-            Cauldron.Add($"Getting Nuget references for {FilePath}");
+            Cauldron.Add($"Getting Nuget references for {Filepath}");
             List<NugetPackageReference> nugetReferences = new List<NugetPackageReference>();
             var references = new Librarian(_nugetReferencePattern, Text)
                 .Get("capturegroup")
